@@ -2,9 +2,9 @@
 pkg_name=nghttp2
 pkg_ver=1.39.2
 cur_archive_type=tar.gz
+pkg_source_url=https://codeload.github.com/nghttp2
 source $TOP_DIR/build/gloable_utils.sh
 source $TOP_DIR/build/make_com_var.sh
-package_source_url=https://codeload.github.com/nghttp2
 
 function pkg_config(){
 	[ -e $dst_path/$config_sfile ] && return 0

@@ -2,9 +2,9 @@
 pkg_name=android-ndk
 pkg_ver=r21b-linux-x86_64
 cur_archive_type=zip
+pkg_source_url=https://dl.google.com/android/repository
 source $TOP_DIR/build/gloable_utils.sh
 source $TOP_DIR/build/make_com_var.sh
-package_source_url=https://dl.google.com/android/repository
 dst_path=$PRO_HOST_PATH/android-ndk-r21b-linux-x86_64
 
 function pkg_build(){

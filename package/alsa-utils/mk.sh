@@ -2,9 +2,9 @@
 pkg_name=alsa-utils
 pkg_ver=1.2.1
 cur_archive_type=tar.bz2
+pkg_source_url=ftp://ftp.alsa-project.org/pub/utils
 source $TOP_DIR/build/gloable_utils.sh
 source $TOP_DIR/build/make_com_var.sh
-package_source_url=ftp://ftp.alsa-project.org/pub/utils
 
 export LIBPTHREAD=""
 function pkg_config(){

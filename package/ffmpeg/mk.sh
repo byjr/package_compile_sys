@@ -2,9 +2,9 @@
 pkg_name=ffmpeg
 pkg_ver=snapshot
 cur_archive_type=tar.bz2
+pkg_source_url=http://ffmpeg.org/releases
 source $TOP_DIR/build/gloable_utils.sh
 source $TOP_DIR/build/make_com_var.sh
-package_source_url=http://ffmpeg.org/releases
 
 function pkg_config(){
 	[ -e $dst_path/$config_sfile ] && return 0

@@ -4,8 +4,9 @@ function def_download(){
 	[ -e $src_path ] && return 0
 	rm -rf $PRO_DL_TMP_PATH/* && \
 	cd $PRO_DL_TMP_PATH && \
-		wget "$package_source_uri" && \
-	mv $PRO_DL_TMP_PATH/* $src_path
+		wget "$pkg_source_uri" && \
+		mv $PRO_DL_TMP_PATH/* $src_path &&\
+		install_path $dst_path
 }
 function def_sync(){
 	[ -e $dst_path/$sync_sfile ] && return 0
@@ -14,10 +15,9 @@ function def_sync(){
 		touch $dst_path/$patch_sfile
 		return 0
 	fi
-	install_path $dst_path
 	case $cur_archive_type in
 	src)
-		return 0
+		install_path $dst_path
 		;;
 	tar.xz|xz)
 		def_download && \
@@ -44,8 +44,9 @@ function def_sync(){
 			mv -T "$dst_path"_tmp $dst_path
 		;;
 	git)
+		install_path $dst_path
 		cd $dst_path && \
-			git clone $package_source_uri
+			git clone $pkg_source_uri
 		;;			
 	* )			
 		echo unsurport archive type:$cur_archive_type !!

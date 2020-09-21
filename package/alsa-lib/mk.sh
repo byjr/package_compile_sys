@@ -2,9 +2,10 @@
 pkg_name=alsa-lib
 pkg_ver=1.2.1.2
 cur_archive_type=tar.bz2
+pkg_source_url=https://www.alsa-project.org/files/pub/lib
 source $TOP_DIR/build/gloable_utils.sh
 source $TOP_DIR/build/make_com_var.sh
-package_source_url=https://www.alsa-project.org/files/pub/lib
+
 
 function pkg_config(){
 	[ -e $dst_path/$config_sfile ] && return 0

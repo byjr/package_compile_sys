@@ -2,9 +2,9 @@
 pkg_name=x264
 pkg_ver=snapshot-20191217-2245
 cur_archive_type=tar.bz2
+pkg_source_url=http://download.videolan.org/x264/snapshots
 source $TOP_DIR/build/gloable_utils.sh
 source $TOP_DIR/build/make_com_var.sh
-package_source_url=http://download.videolan.org/x264/snapshots
 
 AS=$CC
 function pkg_config(){

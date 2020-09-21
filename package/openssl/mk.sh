@@ -2,9 +2,9 @@
 pkg_name=openssl
 pkg_ver=1.1.1g
 cur_archive_type=tar.gz
+pkg_source_url=https://www.openssl.org/source
 source $TOP_DIR/build/gloable_utils.sh
 source $TOP_DIR/build/make_com_var.sh
-package_source_url=https://www.openssl.org/source
 
 function pkg_config(){
 	[ -e $dst_path/$config_sfile ] && return 0

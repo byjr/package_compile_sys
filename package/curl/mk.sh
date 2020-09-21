@@ -2,9 +2,10 @@
 pkg_name=curl
 pkg_ver=7.68.0
 cur_archive_type=tar.xz
+pkg_source_url=https://curl.haxx.se/download
 source $TOP_DIR/build/gloable_utils.sh
 source $TOP_DIR/build/make_com_var.sh
-package_source_url=https://curl.haxx.se/download
+
 
 function pkg_config(){
 	[ -e $dst_path/$config_sfile ] && return 0
