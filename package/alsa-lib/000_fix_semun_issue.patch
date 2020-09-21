@@ -1,0 +1,22 @@
+diff --git a/src/pcm/pcm_direct.c b/src/pcm/pcm_direct.c
+index 54d9900..80ad7cb 100755
+--- a/src/pcm/pcm_direct.c
++++ b/src/pcm/pcm_direct.c
+@@ -44,7 +44,7 @@
+  *
+  */
+  
+-union semun {
++union alsa_semun {
+ 	int              val;    /* Value for SETVAL */
+ 	struct semid_ds *buf;    /* Buffer for IPC_STAT, IPC_SET */
+ 	unsigned short  *array;  /* Array for GETALL, SETALL */
+@@ -58,7 +58,7 @@ union semun {
+ 
+ int snd_pcm_direct_semaphore_create_or_connect(snd_pcm_direct_t *dmix)
+ {
+-	union semun s;
++	union alsa_semun s;
+ 	struct semid_ds buf;
+ 	int i;
+ 

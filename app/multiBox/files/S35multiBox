@@ -1,0 +1,52 @@
+#!/bin/sh
+
+#close kernel print
+echo 0 > /proc/sys/kernel/printk
+
+if [ ! -e '/storage/lost+found' ];then
+	mkdir -p /storage
+	mount -t yaffs2 /dev/mtdblock8 /storage
+	[ $? = 0 ] && echo "mount storage OK!" || echo "mount storage FAIL!"
+fi
+
+#initialize multiBox app
+if [ -e /usr/bin/Misc ];then
+	/usr/bin/multiBox
+fi	
+
+#app start contex
+LOGCTRL_PATH="/dev/null"
+COMMON_ARGS=""
+SPECIAL_ARGS=""
+APP_NAME=RtPlayer
+
+start(){
+	$APP_NAME $COMMON_ARGS $SPECIAL_ARGS 2>> $LOGCTRL_PATH 1>> $LOGCTRL_PATH &
+	[ $? = 0 ] && echo "$0 start OK!" || echo "$0 start FAIL!"
+}
+
+stop(){
+	killall $APP_NAME
+}
+
+case "$1" in
+	start)
+		echo $0 start ...
+		start
+	;;
+	stop)
+		echo $0 stop ...
+		stop
+	;;
+	restart)
+		echo $0 restart ...
+		stop
+		sleep 1
+		start
+	;;
+	*)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?
