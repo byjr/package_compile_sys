@@ -3,8 +3,8 @@ pkg_name=openssl
 pkg_ver=1.1.1g
 cur_archive_type=tar.gz
 pkg_source_url=https://www.openssl.org/source
-source $TOP_DIR/build/gloable_utils.sh
-source $TOP_DIR/build/make_com_var.sh
+source $TOP_DIR/include/gloable_utils.sh
+source $TOP_DIR/include/make_com_var.sh
 
 function pkg_config(){
 	[ -e $dst_path/$config_sfile ] && return 0
@@ -15,6 +15,7 @@ function pkg_config(){
 			--openssldir=$cur_prefix/etc/ssl -latomic \
 			threads shared no-rc5 enable-camellia enable-mdc2 \
 			no-tests no-fuzz-libfuzzer no-fuzz-afl zlib-dynamic
+	res_info $? "[$0:$LINENO]:$FUNCNAME"
 }
 
-source $TOP_DIR/build/make_com_script.sh
+source $TOP_DIR/include/make_com_script.sh

@@ -1,11 +1,37 @@
+function get_time_stamp(){
+	local ts_arr=(`date "+%s %N"`)
+	local ns_val=`echo ${ts_arr[1]} | sed 's/^0*//'`
+	local ms_var=$(($ns_val/1000000))
+	local date_var=`date -d @"${ts_arr[0]}" "+%Y-%m-%d %H:%M:%S"`
+	printf "%s.%03d" "$date_var" "$ms_var"
+}
 function func_info(){
-	echo -e "\e[0;32m>>>[$1:$2]:$3 ...\n\e[0m"
+	local log_str="[`get_time_stamp`]:>>> [$1:$2]:$3 ..."
+	echo -e "\e[0;32m$log_str\e[0m" >> $TERMINAL_PATH
+	echo -e $log_str
 }
 function tip_msg(){
-	echo -e "\e[1;32m>>>>>> $@ done!!!\n\e[0m"
+	local log_str="[`get_time_stamp`]:>>> $@ done!"
+	echo -e "\e[1;32m$log_str\e[0m" >> $TERMINAL_PATH
+	echo -e $log_str
 }
 function err_msg(){
-	echo -e "\e[1;31m>>>>>> $@ failed!!!!\n\e[0m"
+	local log_str="[`get_time_stamp`]:>>> $@ failed!"
+	echo -e "\e[1;31m$log_str\e[0m" >> $TERMINAL_PATH
+	echo $log_str
+}
+function res_info(){
+	local res=$1
+	shift
+	[ $res == 0 ] && tip_msg $@ || err_msg $@
+	return $res
+}
+function make_res_info(){
+	local res=$1
+	shift
+	[ $res == 0 ] && tip_msg $@ || err_msg $@
+	echo -e "================================================================================\n" >> $TERMINAL_PATH
+	return $res
 }
 function fifo_show(){
 	echo $@ >> /tmp/1.fifo

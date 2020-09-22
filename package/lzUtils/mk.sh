@@ -2,8 +2,8 @@
 pkg_name=lzUtils
 pkg_ver=1.2.0
 cur_archive_type=src
-source $TOP_DIR/build/gloable_utils.sh
-source $TOP_DIR/build/make_com_var.sh
+source $TOP_DIR/include/gloable_utils.sh
+source $TOP_DIR/include/make_com_var.sh
 src_path=$PRO_APP_PATH/$pkg_name
 
 function pkg_config(){
@@ -14,4 +14,4 @@ function pkg_config(){
 			$src_path
 }
 
-source $TOP_DIR/build/make_com_script.sh
+source $TOP_DIR/include/make_com_script.sh

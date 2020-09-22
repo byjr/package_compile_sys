@@ -1,7 +1,7 @@
-NDK_ROOT=$PRO_HOST_PATH/android-ndk-r21b-linux-x86_64
+NDK_ROOT=$PRO_HOST_PATH/android-ndk-r21d-linux-x86_64
 PLATFORM_ARCH=arm
 export TOOLCHAIN=$NDK_ROOT/toolchains/llvm/prebuilt/linux-x86_64
-export API=26
+export API=29
 export ABI=eabi
 export ARCH=armv7a
 export TARGET=$ARCH-linux-android$ABI
