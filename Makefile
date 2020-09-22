@@ -1,54 +1,46 @@
-all:
-	./mk.sh
+TerminalLog=
+ifeq ($(V),s)
+	TerminalLog='--vbs'
+endif
 
-show:
-	./mk.sh -s
+all:
+	./mk.sh $(TerminalLog)
 
 distclean:
-	rm -rf output
-
-dlclean:
-	rm -rf dl/*
+	./mk.sh -c distclean $(TerminalLog)
 
 clean:
-	./mk.sh -c bclean
+	./mk.sh -c bclean $(TerminalLog)
+
+cclean:
+	./mk.sh -c cclean $(TerminalLog)
 
 %-remake:
-	@echo $@
-	./mk.sh -nc remake $(@:-remake=)
+	./mk.sh -nc remake $(@:-remake=) $(TerminalLog)
 
 %-resync:
-	@echo $@
-	./mk.sh -nc resync $(@:-resync=)
+	./mk.sh -nc remake $(@:-resync=) $(TerminalLog)
 
-%-reconfigure:
-	@echo $@
-	./mk.sh -nc reconfig $(@:-reconfigure=)
+%-reconfig:
+	./mk.sh -nc reconfig $(@:-reconfig=) $(TerminalLog)
 
 %-rebuild:
-	@echo $@
-	./mk.sh -nc rebuild $(@:-rebuild=)
+	./mk.sh -nc rebuild $(@:-rebuild=) $(TerminalLog)
 
 %-reinstall:
-	@echo $@
-	./mk.sh -nc reinstall $(@:-reinstall=)
+	./mk.sh -nc reinstall $(@:-reinstall=) $(TerminalLog)
 
 %-sync:
-	@echo $@
-	./mk.sh -nc sync $(@:-sync=)
+	./mk.sh -nc sync $(@:-sync=) $(TerminalLog)
 
 %-configure:
-	@echo $@
-	./mk.sh -nc config $(@:-configure=)
+	./mk.sh -nc config $(@:-configure=) $(TerminalLog)
 
 %-build:
-	@echo $@
-	./mk.sh -nc build $(@:-build=)
+	./mk.sh -nc build $(@:-build=) $(TerminalLog)
 
 %-install:
-	@echo $@
-	./mk.sh -nc install $(@:-install=)
+	./mk.sh -nc install $(@:-install=) $(TerminalLog)
 
 %-clean:
-	@echo $@
-	./mk.sh -nc clean $(@:-clean=)
+	./mk.sh -nc clean $(@:-clean=) $(TerminalLog)

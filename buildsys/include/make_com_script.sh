@@ -14,11 +14,6 @@ function def_download(){
 function def_sync(){
 	[ -e $dst_path/$sync_sfile ] && return 0
 	func_info $0 $LINENO $FUNCNAME
-	if [ -d $dst_path ];then
-		touch $dst_path/$patch_sfile
-		res_info $? "[$0:$LINENO]:$FUNCNAME"
-		return 0
-	fi
 	case $cur_archive_type in
 	src)
 		install_path $dst_path

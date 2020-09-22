@@ -11,11 +11,12 @@ export PRO_STAG_PATH=$PRO_OUT_ROOT/staging
 export PRO_TARGET_PATH=$PRO_OUT_ROOT/target
 export PRO_TARGET_USR_PATH=$PRO_OUT_ROOT/target/usr
 export PRO_STUB_PATH=$PRO_OUT_ROOT/stub
+export PRO_LOG_PATH=$PRO_OUT_ROOT/logs
 export PRO_DL_PATH=$TOP_DIR/dl
 export PRO_DL_TMP_PATH=$PRO_DL_PATH/.tmp
 export PRO_DL_EXT_PATH=$PRO_DL_PATH/.ext
-export PRO_APP_PATH=$TOP_DIR/app
-export PRO_LOG_PATH=$TOP_DIR/logs
+export PRO_APP_PATH=$TOP_DIR/../app
+
 export state_list="sync patch config build install final"
 
 #export calc var
