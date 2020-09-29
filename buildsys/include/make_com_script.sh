@@ -35,7 +35,7 @@ function def_sync(){
 			mv $dst_path/* "$dst_path"_tmp && \
 			mv -T "$dst_path"_tmp $dst_path
 		;;
-	tar.gz|tgz|tar.bz2)
+	tar|tar.gz|tgz|tar.bz2)
 		def_download && \
 		cd $dst_path && \
 			tar xvf $src_path &&\
@@ -121,11 +121,12 @@ function call_build(){
 }
 #=========================================================================
 function def_install_stag(){
-	[ -d $cur_prefix/lib ] && \
-		cp -raf $cur_prefix/* $PRO_STAG_PATH/usr/
-	[ -d $cur_prefix/include ] && \
-		cp -raf $cur_prefix/include $PRO_STAG_PATH/usr/
-	return 0
+	if [ -d $cur_prefix/lib ];then
+		cp -raf $cur_prefix/* $PRO_STAG_PATH/usr/ || return 1
+	fi
+	if [ -d $cur_prefix/include ];then
+		cp -raf $cur_prefix/include $PRO_STAG_PATH/usr/ || return 1
+	fi	
 }
 function def_install_stub(){
 	local done_count=0
@@ -150,7 +151,7 @@ function def_install_target(){
 	# echo so_list:$so_list
 	if [ x"$so_list" != x"" ];then
 		install_path $PRO_TARGET_PATH/usr/lib
-		cp -raf $so_list $PRO_TARGET_PATH/usr/lib/
+		cp -raf $so_list $PRO_TARGET_PATH/usr/lib/ && \
 		done_count=$((done_count+1))
 	fi
 	# echo done_count=$done_count
@@ -193,7 +194,7 @@ function pkg_clean_for(){
 	# res_info $? "[$0:$LINENO]:$FUNCNAME"
 }
 
-function ex_make(){
+function def_ex_make(){
 	func_info $0 $LINENO $FUNCNAME
 	# [ -e $dst_path/$install_sfile ] && exit 0
 	call_sync 		&& touch $dst_path/$sync_sfile			&& \
@@ -203,18 +204,30 @@ function ex_make(){
 	call_install 	&& touch $dst_path/$install_sfile		&& \
 	make_res_info $? "[$0:$LINENO]:$FUNCNAME"
 }
-
-function ex_clean(){
+function call_ex_make(){
+	if [ "`type -t pkg_ex_make`" == "function" ];then
+		pkg_ex_make $@
+	else
+		def_ex_make $@
+	fi
+}
+function def_ex_clean(){
 	func_info $0 $LINENO $FUNCNAME
 	rm -rf $dst_path
 	res_info $? "[$0:$LINENO]:$FUNCNAME"
 }
-
+function call_ex_clean(){
+	if [ "`type -t pkg_ex_clean`" == "function" ];then
+		pkg_ex_clean $@
+	else
+		def_ex_clean $@
+	fi
+}
 case $1 in
-clean) 		ex_clean
+clean) 		call_ex_clean
 			;;
-remake)		ex_clean;ex_make
+remake)		call_ex_clean;call_ex_make
 			;;
-* )			pkg_clean_for $1;ex_make
+* )			pkg_clean_for $1;call_ex_make
 			;;
 esac
