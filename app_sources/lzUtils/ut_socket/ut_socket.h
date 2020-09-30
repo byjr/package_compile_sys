@@ -3,7 +3,6 @@
 #include <stdio.h>
 #define __USE_GNU 1
 #include <sys/types.h>/* See NOTES */
-#include <sys/socket2.h>
 #include <sys/epoll.h>
 #include <sys/un.h>
 #include <netinet/in.h>
@@ -19,8 +18,8 @@ int socket(int domain, int type, int protocol);
 // 只能用于亲缘进程间的通讯，即使共享内存也没用
 int socketpair(int domain, int type, int protocol, int sv);
 struct sockaddr {
-    sa_family_t sa_family;
-    char        sa_data[14];
+	sa_family_t sa_family;
+	char        sa_data[14];
 }
 
 int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
@@ -36,8 +35,8 @@ ssize_t recv(int sockfd, *buf, len, int flags);
 ssize_t recvfrom(int sockfd, *buf, len, int flags, struct sockaddr *src_addr, socklen_t *addrlen);
 ssize_t recvmsg(int sockfd, struct msghdr *msg, int flags);
 struct mmsghdr {
-    struct msghdr msg_hdr;
-    int  msg_len;
+	struct msghdr msg_hdr;
+	int  msg_len;
 };
 // __vlen:消息数
 int sendmmsg(int sockfd, struct mmsghdr *msgvec, int vlen, int flags);
@@ -63,9 +62,9 @@ int  FD_ISSET(int fd, fd_set *set);
 void FD_SET(int fd, fd_set *set);
 void FD_ZERO(fd_set *set);
 int select( int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, \
-            struct timeval *timeout);
+			struct timeval *timeout);
 int pselect(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, \
-            const struct timespec *timeout, const sigset_t *sigmask);
+			const struct timespec *timeout, const sigset_t *sigmask);
 #endif
 #define my_select(nFds,rSet,wSet,exSet,pTv,pSmsk) ({\
 	int ret=pselect(nFds,rSet,wSet,exSet,pTv,pSmsk);\
@@ -191,11 +190,11 @@ int in_connect(int sfd, char *ip, in_port_t port);
 #define MSG_BUF_BYTE 1024
 typedef int proc_t(int conn);
 typedef struct net_serv_t {
-    proc_t *pRcbk;
-    proc_t *pWcbk;
-    char *addr;
-    in_port_t port;
-    int fd;
+	proc_t *pRcbk;
+	proc_t *pWcbk;
+	char *addr;
+	in_port_t port;
+	int fd;
 } net_serv_t;
 
 void un_select_tcp_server(net_serv_t *pServ);

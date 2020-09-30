@@ -16,9 +16,7 @@ function pkg_config(){
 			--enable-shared \
 			--enable-pic \
 			--cross-prefix=$PRO_CROSS_PREFIX \
-			--sysroot=$TOOLCHAIN/sysroot \
-			--disable-asm
-			
+			--disable-asm			
 	res_info $? "[$0:$LINENO]:$FUNCNAME"			
 }
 

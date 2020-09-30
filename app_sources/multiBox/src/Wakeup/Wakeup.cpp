@@ -34,8 +34,8 @@ int Wakeup_main(int argc, char *argv[]) {
 	}
 	showCompileTmie(argv[0], s_war);
 	WaitOthersInstsExit(argv[0], 20);
-	if(chdir("/root/WakeupEvnRoot")){
-		show_errno(0,"chdir");
+	if(chdir("/root/WakeupEvnRoot")) {
+		show_errno(0, "chdir");
 		return -1;
 	}
 	// Parameter section.

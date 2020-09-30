@@ -150,10 +150,10 @@ public:
 		s_inf("stop %s ...", appName.data());
 		cmd_excute("killall %s 2>> /dev/null 1>> /dev/null", appName.data());
 		int retryTimes = 100;
-		for(;isRunning() && retryTimes > 0;retryTimes --){
+		for(; isRunning() && retryTimes > 0; retryTimes --) {
 			usleep(10 * 1000);
 		}
-		if(retryTimes <= 0){
+		if(retryTimes <= 0) {
 			s_war("force stop %s ...", appName.data());
 			cmd_excute("killall -KILL %s 2>> /dev/null 1>> /dev/null", appName.data());
 		}

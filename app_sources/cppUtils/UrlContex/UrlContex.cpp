@@ -36,7 +36,7 @@ bool UrlContex::parse(std::string url) {
 	if(idx < 0) {
 		return false;
 	}
-	mMethod = tail.substr(0,idx);
+	mMethod = tail.substr(0, idx);
 	tail = tail.substr(idx + 2);
 	idx = tail.find_first_of('?');
 	if(idx < 0) {
@@ -53,9 +53,9 @@ bool UrlContex::parse(std::string url) {
 	std::string newStr = tail.substr(idx + 1);
 	return paraParse(newStr);
 }
-std::string UrlContex::getParaVal(std::string key){
-	for(auto i:mPars){
-		if(i.key == key){
+std::string UrlContex::getParaVal(std::string key) {
+	for(auto i : mPars) {
+		if(i.key == key) {
 			return i.value;
 		}
 	}

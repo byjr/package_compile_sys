@@ -179,6 +179,9 @@ add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
 target_link_libraries(${PROJECT_NAME}
 	cppUtils
 	lzUtils
+	asound
+	pthread
+	rt
 	${allPlay_EX_LIBS}
 	${uartd_EX_LIBS}
 )

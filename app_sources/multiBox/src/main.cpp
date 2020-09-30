@@ -21,9 +21,9 @@ extern int Broadcast_main(int argc, char *argv[]);
 extern int RecvBc_main(int argc, char *argv[]);
 extern int HttpCli_main(int argc, char *argv[]);
 app_item_t item_tbl[] = {
-#ifndef _WIN_API_	
+#ifndef _WIN_API_
 	ADD_APP_ITEM(multiBox, NULL)
-#endif	
+#endif
 #ifdef Misc_ENABLE
 	ADD_APP_ITEM(Misc, NULL)
 #endif

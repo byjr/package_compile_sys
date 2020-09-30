@@ -155,7 +155,7 @@ public:
 			}
 		}
 		return true;
-	}	
+	}
 	bool monitorAll() {
 		std::lock_guard<std::mutex> lck (mMtx);
 		for(auto task : mVct) {
@@ -321,7 +321,7 @@ public:
 static void signal_handle(int sig) {
 	switch(sig) {
 	// case SIGCLD: {
-		// break;
+	// break;
 	// }
 	case SIGINT: {
 		break;

@@ -31,8 +31,8 @@ int Broadcast_main(int argc, char *argv[]) {
 	}
 	//打印编译时间
 	showCompileTmie(argv[0], s_war);
-	std::vector<char> ip(17,0);
-	if(get_local_ip_by_name("wlan0",ip.data(),ip.size())){
+	std::vector<char> ip(17, 0);
+	if(get_local_ip_by_name("wlan0", ip.data(), ip.size())) {
 		s_err("get_local_ip_by_name failed");
 		return -1;
 	}
@@ -44,7 +44,7 @@ int Broadcast_main(int argc, char *argv[]) {
 	BroadcastPar mBroadcastPar;
 	mBroadcastPar.userCtt = ctts.str();
 	std::unique_ptr<Broadcast> mBroadcast(new Broadcast(&mBroadcastPar));
-	if(!(mBroadcast.get() && mBroadcast->IsRunning())){
+	if(!(mBroadcast.get() && mBroadcast->IsRunning())) {
 		s_err("new mBroadcast failed!!");
 		return -1;
 	}

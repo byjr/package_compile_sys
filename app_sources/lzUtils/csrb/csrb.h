@@ -8,16 +8,16 @@ extern "C" {
 #include <stdlib.h>
 #include <pthread.h>
 typedef struct csrb_t {
-    size_t ri;
-    size_t wi;
-    volatile size_t contex;
-    volatile size_t empty;
-    char *head;
-    size_t capacity;//读方和写方最大方单元字节数的最小公倍数
-    char *tail;
-    char alloc;//在栈区中取 buffer
-    pthread_mutex_t *mMtx;//读写互斥锁
-    volatile int isExitSeted;
+	size_t ri;
+	size_t wi;
+	volatile size_t contex;
+	volatile size_t empty;
+	char *head;
+	size_t capacity;//读方和写方最大方单元字节数的最小公倍数
+	char *tail;
+	char alloc;//在栈区中取 buffer
+	pthread_mutex_t *mMtx;//读写互斥锁
+	volatile int isExitSeted;
 } csrb_t;
 
 csrb_t *csrb_create(char *head, size_t size);

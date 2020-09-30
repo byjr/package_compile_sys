@@ -12,7 +12,6 @@ function pkg_config(){
 	cd $dst_path && \
 		cmake $src_path \
 			-DCMAKE_INSTALL_PREFIX=$cur_prefix \
-			-DCMAKE_SYSTEM_NAME="Windows" \
 			-DCMAKE_INCLUDE_PATH=$PRO_STAG_USR_PATH/include \
 			-DCMAKE_LIBRARY_PATH=$PRO_STAG_USR_PATH/lib
 		res_info $? "[$0:$LINENO]:$FUNCNAME"

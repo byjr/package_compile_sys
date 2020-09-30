@@ -10,7 +10,7 @@ function pkg_config(){
 	[ -e $dst_path/$config_sfile ] && return 0
 	func_info $0 $LINENO $FUNCNAME
 	cd $dst_path && \
-		./Configure linux-armv4 \
+		./Configure linux-x86_64 \
 			--prefix=$cur_prefix \
 			--openssldir=$cur_prefix/etc/ssl -latomic \
 			threads shared no-rc5 enable-camellia enable-mdc2 \

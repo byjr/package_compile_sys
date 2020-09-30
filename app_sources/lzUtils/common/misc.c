@@ -2,10 +2,10 @@
 #include <stdarg.h>
 #include <sys/types.h>
 #ifndef _WIN_API_
-	#include <sys/ioctl.h>
-	#include <sys/wait.h>
-	#include <syscall.h>
-	#include <linux/input.h>
+#include <sys/ioctl.h>
+#include <sys/wait.h>
+#include <syscall.h>
+#include <linux/input.h>
 #endif
 #include <ctype.h>
 #include <string.h>
@@ -35,8 +35,8 @@ int openInputByName ( const char *inputName ) {
 	*filename++ = '/';
 	while ( ( de = readdir ( dir ) ) ) {
 		if ( de->d_name[0] == '.' &&
-		                ( de->d_name[1] == '\0' ||
-		                  ( de->d_name[1] == '.' && de->d_name[2] == '\0' ) ) )
+				( de->d_name[1] == '\0' ||
+				  ( de->d_name[1] == '.' && de->d_name[2] == '\0' ) ) )
 			continue;
 		strcpy ( filename, de->d_name );
 		fd = open ( devname, O_RDONLY );
@@ -269,15 +269,15 @@ int my_popen_get ( char *rbuf, int rbuflen, const char *cmd, ... ) {
 #endif // _WIN_API_
 }
 
-char* cmd_res_get ( char* buf, size_t bytes, const char *cmd, ... ) {
+char *cmd_res_get ( char *buf, size_t bytes, const char *cmd, ... ) {
 	//组装命令行参数
 	va_list args;
 	va_start ( args, ( char * ) cmd );
-	char* cmdBuf = NULL;
+	char *cmdBuf = NULL;
 	vasprintf ( &cmdBuf, cmd, args );
 	va_end ( args );
 	//打开命令执行句柄
-	FILE* fp = popen ( cmdBuf, "r" );
+	FILE *fp = popen ( cmdBuf, "r" );
 	if ( !fp ) {
 		show_errno ( 0, "cmd_res_get/popen" );
 		free ( cmdBuf );
@@ -290,14 +290,14 @@ char* cmd_res_get ( char* buf, size_t bytes, const char *cmd, ... ) {
 #endif
 #define CMD_RES_GET_RBUF_SIZE 128
 	size_t count_bytes = 0;         //累计读到了的字节数
-	char* rBuf = NULL;              //结果内容首地址
+	char *rBuf = NULL;              //结果内容首地址
 	size_t rbytes = 0;              //要读的字节数
-	char* wIdx = NULL;              //（写索引）每次从这里开始写
+	char *wIdx = NULL;              //（写索引）每次从这里开始写
 	ssize_t res = 0;                //返回值
 	do {
 		//确定本次buffer中能写的字节数
 		rbytes = count_bytes + CMD_RES_GET_RBUF_SIZE < bytes - 1 ?
-		         CMD_RES_GET_RBUF_SIZE : bytes - count_bytes;
+				 CMD_RES_GET_RBUF_SIZE : bytes - count_bytes;
 
 		if ( !buf ) { //如果外面没有给定buffer,就分配buffer
 			rBuf = realloc ( rBuf, count_bytes + rbytes + 1 );
@@ -341,12 +341,16 @@ int cmd_excute(const char *fmt, ...) {
 		s_err("cmd can't be excuted!");
 		goto exit;
 	}
-	// if(!WIFEXITED(res)) {
-		// s_err("cmd abort!");
-		// goto exit;
-	// }
+#ifndef _WIN_API_
+	if(!WIFEXITED(res)) {
+		s_err("cmd abort!");
+		goto exit;
+	}
+#endif
 	ret = 0;
-	// s_dbg("sub process exited:%d", WEXITSTATUS(res));
+#ifndef _WIN_API_
+	s_dbg("sub process exited:%d", WEXITSTATUS(res));
+#endif
 exit:
 	if(cmd) {
 		free(cmd);
@@ -403,6 +407,59 @@ char **argl_to_argv ( char argl[], int *pArgc ) {
 		*pArgc = count;
 	}
 	return argv;
+}
+void argv_dup_free(char *argv[]) {
+	int i = 0;
+	for(i = 0; argv[i]; i++) {
+		free(argv[i]);
+	}
+	free(argv);
+	argv = NULL;
+}
+char **argl_dup2_argv(const char argl[], int *pArgc) {
+	int i = 0, count = 0;
+	if(!(argl && argl[0]))return NULL;
+	char **argv = (char **)calloc(1, sizeof(char *));
+	if(!argv)return NULL;
+	argv[0] = (char *)argl;
+	for(i = 0;; i++) {
+		if(argl[i] == ' ' || argl[i] == '\n' || argl[i] == '\0' ) {
+			while(argl[i] == ' ' && argl[i + 1] == ' ') {
+				i++;
+			}
+			count++;
+			argv = (char **)realloc(argv, (count + 1) * sizeof(char *));
+			if(!argv)return NULL;
+			argv[count] = (char *)argl + i + 1;
+			char *arg = (char *)calloc(1, argv[count] - argv[count - 1]);
+			if(!arg) {
+				argv_dup_free(argv);
+				return NULL;
+			}
+			strncpy(arg, argv[count - 1], argv[count] - argv[count - 1] - 1);
+			argv[count - 1] = arg;
+		}
+		if(argl[i] == '\0' || argl[i] == '\n')break;
+	}
+	argv[count] = NULL;
+	if(pArgc) {
+		*pArgc = count;
+	}
+	return argv;
+}
+char *dup_argl_cmd(const char *argl) {
+	int i = 0;
+	for(i = 0; argl[i]; i++) {
+		if(argl[i] == ' ' || argl[i] == '\n' || argl[i] == '\0' ) {
+			break;
+		}
+	}
+	char *cmd = strndup(argl, i + 2);
+	if(!cmd) {
+		s_err("%s/strndup", __func__);
+		return NULL;
+	}
+	return cmd;
 }
 #ifndef _WIN_API_
 int vfexec ( char *argl, char isBlock ) {
@@ -526,47 +583,95 @@ size_t base64Decode ( char *base64, size_t baseSize, char *bin, size_t binSize )
 		}
 
 		bin[j++] = ( ( char ) ( ( ( char ) ( temp[0] << 2 ) ) & 0xFC ) ) |
-		           ( ( char ) ( ( char ) ( temp[1] >> 4 ) & 0x03 ) );
+				   ( ( char ) ( ( char ) ( temp[1] >> 4 ) & 0x03 ) );
 		if ( base64[i + 2] == '=' )
 			break;
 
 		bin[j++] = ( ( char ) ( ( ( char ) ( temp[1] << 4 ) ) & 0xF0 ) ) |
-		           ( ( char ) ( ( char ) ( temp[2] >> 2 ) & 0x0F ) );
+				   ( ( char ) ( ( char ) ( temp[2] >> 2 ) & 0x0F ) );
 		if ( base64[i + 3] == '=' )
 			break;
 
 		bin[j++] = ( ( char ) ( ( ( char ) ( temp[2] << 6 ) ) & 0xF0 ) ) |
-		           ( ( char ) ( temp[3] & 0x3F ) );
+				   ( ( char ) ( temp[3] & 0x3F ) );
 	}
 	return j;
 }
 #ifndef _WIN_API_
-int unique_process_lock ( const char *name ) {
-	char buf[1024] = "";
-	snprintf ( buf, sizeof ( buf ), "/var/run/%s.pid", get_last_name ( name ) );
-	int fd = open ( buf, O_WRONLY | O_CREAT, 0666 );
-	if ( fd < 0 ) {
-		s_err ( "Fail to open %s", buf );
-		exit ( 1 );
+int unique_process_lock(const char *name) {
+	int ret = -1;
+	char *path = NULL;
+	asprintf(&path, "/var/run/%s.pid", get_last_name(name));
+	if(!path) {
+		s_err("%s/asprintf oom", __func__);
+		exit(-1);
+	}
+	int fd = open(path, O_WRONLY | O_CREAT, 0666);
+	if (fd < 0) {
+		disp_syserr(0, fcntl);
+		s_err("Fail to open %s", path);
+		exit(-1);
 	}
 	struct flock lock = {0};
-	if ( fcntl ( fd, F_GETLK, &lock ) < 0 ) {
-		s_err ( "Fail to fcntl F_GETLK" );
-		exit ( 1 );
-	}
 	lock.l_type = F_WRLCK;
 	lock.l_whence = SEEK_SET;
-	if ( fcntl ( fd, F_SETLK, &lock ) < 0 ) {
-		s_err ( "Fail to fcntl F_SETLK" );
-		return -1;
+	if (fcntl(fd, F_SETLK, &lock) < 0) {
+		disp_syserr(0, fcntl);
+		s_err("Fail to fcntl %s F_SETLK", name);
+		goto exit;
 	}
-	bzero ( buf, sizeof ( buf ) );
-	snprintf ( buf, sizeof ( buf ), "%d", getpid() );
-	int res = write ( fd, buf, strlen ( buf ) );
-	if ( res < strlen ( buf ) ) {
-		s_war ( "Fail to write pidfile" );
+	char *ctx = NULL;
+	asprintf(&ctx, "%d", getpid());
+	if(!ctx) {
+		s_err("%s/asprintf oom", __func__);
+		exit(-1);
 	}
-	return 0;
+	int res = write(fd, ctx, strlen(ctx));
+	if(res < strlen(ctx)) {
+		s_war("Fail to write pidfile");
+	}
+	ret = 0;
+exit:
+	if(ctx) {
+		free(ctx);
+	}
+	if(fd >= 0 && ret) {
+		close(fd);
+	}
+	if(path) {
+		free(path);
+	}
+	return ret;
+}
+int is_process_has_locked(const char *name) {
+	int ret = -1;
+	char *path = NULL;
+	asprintf(&path, "/var/run/%s.pid", get_last_name(name));
+	if(!path) {
+		s_err("%s/asprintf oom", __func__);
+		goto exit;
+	}
+	int fd = open(path, O_WRONLY | O_CREAT, 0666);
+	if (fd < 0) {
+		disp_syserr(0, open);
+		s_err("Fail to open %s", path);
+		goto exit;
+	}
+	struct flock lock = {0};
+	if (fcntl(fd, F_GETLK, &lock) < 0) {
+		disp_syserr(0, fcntl);
+		s_err("Fail to fcntl F_GETLK");
+		goto exit;
+	}
+	ret = (lock.l_type == F_WRLCK) ? 1 : 0;
+exit:
+	if(path) {
+		free(path);
+	}
+	if(fd >= 0) {
+		close(fd);
+	}
+	return ret;
 }
 int WaitOthersInstsExit ( const char *name, size_t _10ms ) {
 	while ( unique_process_lock ( name ) < 0 ) {
@@ -579,11 +684,84 @@ int WaitOthersInstsExit ( const char *name, size_t _10ms ) {
 	}
 	return 0;
 }
+#include <sys/prctl.h>
+int set_thread_name(pthread_t ptid, const char *name) {
+	if(!ptid) {
+		int res = prctl(PR_SET_NAME, name);
+		if(res) {
+			s_err("%s/prctl", __func__);
+			return -1;
+		}
+	} else {
+		int res = pthread_setname_np(ptid, name);
+		if(res) {
+			s_err("%s/pthread_setname_np", __func__);
+			return -1;
+		}
+	}
+	return 0;
+}
+#include <net/if.h>
+#include <arpa/inet.h>
+int get_local_ip_by_name(const char *name, char *ip_buf, size_t buf_bytes) {
+	int res = 0;
+	size_t i = 0;
+	struct ifreq *ifr = NULL;
+	if(!name) {
+		s_err("Plz a vaild ifr_name by arg1!");
+		return -1;
+	}
+	if(!(ip_buf)) {
+		s_err("Plz a vaild ip_buf by arg2!");
+		return -1;
+	}
+	if(buf_bytes < 17) {
+		s_err("buf_bytes can't less then 17!");
+		return -1;
+	}
+	int fd = socket(AF_INET, SOCK_DGRAM, 0);
+	if(fd < 0) {
+		s_err(__func__);
+		show_errno(0, "socket");
+		return -1;
+	}
+	struct ifconf ifc;
+	ifc.ifc_len = 1024;
+	ifc.ifc_buf = (char *)calloc(1, ifc.ifc_len);
+	if(!ifc.ifc_buf) {
+		s_err("%s/calloc/oom", __func__);
+		goto ErrHandle;
+	}
+	res = ioctl(fd, SIOCGIFCONF, &ifc);
+	if(res < 0) {
+		s_err(__func__);
+		show_errno(0, "ioctl SIOCGIFCONF");
+		goto ErrHandle;
+	}
+	ifr = (struct ifreq *)ifc.ifc_buf;
+	for(; ifr->ifr_name; ifr++) {
+		if(strcmp(name, ifr->ifr_name)) {
+			continue;
+		}
+		inet_ntop(AF_INET, &((struct sockaddr_in *)&ifr->ifr_addr)->sin_addr, ip_buf, 17);
+		free(ifc.ifc_buf);
+		close(fd);
+		return 0;
+	}
+ErrHandle:
+	if(ifc.ifc_buf) {
+		free(ifc.ifc_buf);
+	}
+	if(fd >= 0) {
+		close(fd);
+	}
+	return -1;
+}
 #endif
 #ifdef _WIN_API_
 void *memmem ( const void *mp, size_t mb, const void *sp, size_t sb ) {
-	char* mcb = ( char* ) mp;
-	char* scb = ( char* ) sp;
+	char *mcb = ( char * ) mp;
+	char *scb = ( char * ) sp;
 	size_t i = 0, j = 0, k = 0;
 	for ( ; i < mb; i++ ) {
 		for ( j = 0, k = i; j < sb; j++, k++ ) {

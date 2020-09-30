@@ -279,18 +279,18 @@ int SockClient::HandleResponse(std::string &req) {
 				}
 			}
 			ResponseText("send_wifi_info&state=recived");
-			int res = cmd_excute("wl_cfg.sh sta '%s' '%s'",ssid.data(),psk.data());
-			if(res < 0){
-				ResponseText("dev_connect_ap&state=failed");				
-			}else{
+			int res = cmd_excute("wl_cfg.sh sta '%s' '%s'", ssid.data(), psk.data());
+			if(res < 0) {
+				ResponseText("dev_connect_ap&state=failed");
+			} else {
 				ResponseText("dev_connect_ap&state=succeed");
 				res = cmd_excute("Broadcast &");
-				if(res < 0){
+				if(res < 0) {
 					ResponseText("dev_start_broadcast&state=failed");
-				}else{
+				} else {
 					ResponseText("dev_start_broadcast&state=succeed");
 				}
-			}			
+			}
 		} else if(reqCtx.mCmd == "SendApInf") {
 			std::string ssid, psk;
 			for(auto para : reqCtx.m_params) {
@@ -301,7 +301,7 @@ int SockClient::HandleResponse(std::string &req) {
 				}
 			}
 			ResponseText("send_wifi_info&state=recived");
-			my_popen("wl_cfg.sh conn '%s' '%s'",ssid.data(),psk.data());
+			my_popen("wl_cfg.sh conn '%s' '%s'", ssid.data(), psk.data());
 		} else if(reqCtx.m_params.size() < 1 &&
 				  reqCtx.mCmd.find(".fifo") != std::string::npos) {
 			res = ResponseMime(reqCtx);

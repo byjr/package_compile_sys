@@ -1,1 +1,1 @@
-g_dep_dic+=([multiBox]="cppUtils")
+g_dep_dic+=([multiBox]="ffmpeg cppUtils")

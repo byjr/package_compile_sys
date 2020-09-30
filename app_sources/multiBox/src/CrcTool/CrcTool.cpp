@@ -41,7 +41,7 @@ int CrcTool_main(int argc, char *argv[]) {
 	}
 	//打印编译时间
 	showCompileTmie(argv[0], s_war);
-#ifndef _WIN_API_	
+#ifndef _WIN_API_
 	WaitOthersInstsExit(argv[0], 20);
 #endif
 	CrcToolPar CrcToolArgs;
@@ -54,15 +54,15 @@ int CrcTool_main(int argc, char *argv[]) {
 		s_raw("%04x\n", mCrcTool->GetCrc32Val((CrcU8_t *)rawData.data(), rawData.size()));
 	} else if(iPath) {
 		std::vector<char>rdata;
-		std::ifstream is(iPath,std::ios::binary);
-		char ch=0;
-		do{
-			is.read(&ch,1);
-			if(is.eof()){
+		std::ifstream is(iPath, std::ios::binary);
+		char ch = 0;
+		do {
+			is.read(&ch, 1);
+			if(is.eof()) {
 				break;
 			}
 			rdata.push_back(ch);
-		}while(!is.eof());
+		} while(!is.eof());
 		// show_str_nbytes(rdata.data(), 32, s_war);
 		s_raw("crc:0x%x\n", mCrcTool->GetCrc32Val((CrcU8_t *)rdata.data(), rdata.size()));
 	}

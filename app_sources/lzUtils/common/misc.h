@@ -1,7 +1,7 @@
 #ifndef __MISC_H__
 #define __MISC_H__ 1
 #ifndef _WIN_API_
-	#include <sys/syscall.h>
+#include <sys/syscall.h>
 #endif
 #define MAX_USER_COMMAND_LEN     2048
 
@@ -29,27 +29,34 @@ extern int fexec ( char *argl, char block );
 extern int my_popen ( const char *fmt, ... );
 extern int my_popen_get ( char *rbuf, int rbuflen, const char *cmd, ... );
 int cmd_excute(const char *fmt, ...);
+char *cmd_res_get(char *buf, size_t bytes, const char *cmd, ...);
 extern int pkill ( const char *name, int sig );
 extern size_t get_pids_by_name ( const char *pidName, pid_t **pp_pid, size_t max );
 char **argl_to_argv ( char argl[], int *pArgc );
+char **argl_dup2_argv(const char argl[], int *pArgc);
 char *argv_to_argl ( char *argv[] );
 void argv_free ( char *argv[] );
+void argv_dup_free(char *argv[]);
 char *get_name_cmdline ( char *name, size_t size );
 char *get_pid_cmdline ( pid_t pid, size_t size );
 int get_tids_by_name ( const char *tid_name, pid_t **pp_pid );
 char *getPathtItem ( const char *path, const char *delim, size_t n );
-char* cmd_res_get ( char* rBuf, size_t bytes, const char *cmd, ... ) ;
+char *cmd_res_get ( char *rBuf, size_t bytes, const char *cmd, ... ) ;
 
 #define base64GetEncodeSafeOutBytes(x) (((x)%3)?((x)/3+1)*4:(x)/3*4)
 #define base64GetDecodeSafeOutBytes(x) ((x)*3/4)
 size_t base64Encode ( char *bin, size_t binSize, char *base64, size_t baseSize );
 size_t base64Decode ( char *base64, size_t baseSize, char *bin, size_t binSize );
 int unique_process_lock ( const char *name );
+int is_process_has_locked(const char *name);
+int WaitOthersInstsExit(const char *name, size_t _10ms);
 int openInputByName ( const char *inputNmae );
+int set_thread_name(pthread_t ptid, const char *name);
 int WaitOthersInstsExit ( const char *name, size_t _10ms );
 #ifdef _WIN_API_
-	void *memmem ( const void *mp, size_t mb, const void *sp, size_t sb );
+void *memmem ( const void *mp, size_t mb, const void *sp, size_t sb );
 #endif
+int get_local_ip_by_name(const char *name, char *ip_buf, size_t buf_bytes);
 #define showProcessThreadId(msg) ({\
         plog("/tmp/tid.rec","%s:%s,pid=%u,tid=%u",\
                 msg,__func__,\

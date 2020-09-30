@@ -20,27 +20,27 @@ typedef struct log_ctrl_t {
 	char *color;
 } log_ctrl_t;
 
-char* lzUtils_getTimeMs ( char *ts, size_t size ) ;
+char *lzUtils_getTimeMs ( char *ts, size_t size ) ;
 int lzUtils_logInit ( const char *ctrl, const char *path );
 
 extern char log_ctrl_set[MAX_TYPE + 1];
 
 void lzUtils_slog (
-        log_type_t type,            //log 类型（级别）：
-        char lock_en,                       //是否启用互斥锁
-        char *log_ctrl_set,         //log 开关控制
-        const char *ts,                     //时间字符串
-        const char *file,           //调用该函数的文件名
-        const int line,                     //调用该函数的行号
-        const char *fmt,            //用于输出的格式化字符串
-        ... );
+	log_type_t type,            //log 类型（级别）：
+	char lock_en,                       //是否启用互斥锁
+	char *log_ctrl_set,         //log 开关控制
+	const char *ts,                     //时间字符串
+	const char *file,           //调用该函数的文件名
+	const int line,                     //调用该函数的行号
+	const char *fmt,            //用于输出的格式化字符串
+	... );
 
 void lzUtils_rlog (
-        log_type_t type,
-        char lock,
-        char *log_ctrl_set,
-        const char *fmt,
-        ... );
+	log_type_t type,
+	char lock,
+	char *log_ctrl_set,
+	const char *fmt,
+	... );
 
 #define tlog(type,lock,x...) ({\
         char ts[16]="";\
@@ -75,11 +75,12 @@ void lzUtils_rlog (
 #define dbg_t(x...)     tlog(_DBG,1,x);
 #define trc_t(x...)     tlog(_TRC,1,x);
 
-#define show_errno(ret, msg) ({\
-        int num=(ret);\
-        if(!num)num=errno;\
-        s_err("%s failure,errno:%d[%s]",msg,num,strerror(num));\
+#define disp_syserr(ret, msg) ({\
+	int num=(ret);\
+	if(!num)num=errno;\
+	s_err("%s failure,errno:%d[%s]",#msg,num,strerror(num));\
 })
+#define show_errno(ret, msg) disp_syserr(ret,msg)
 #endif
 #ifdef __cplusplus
 }

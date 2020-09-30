@@ -6,7 +6,7 @@ extern "C" {
 #include <stdio.h>
 #include <stdbool.h>
 
-typedef void * ( *df_dat_create_t ) ( void *par );
+typedef void *( *df_dat_create_t ) ( void *par );
 typedef bool ( *df_dat_destroy_t ) ( void *par, void *data );
 typedef bool ( *df_dat_show_t ) ( void *par, void *data );
 

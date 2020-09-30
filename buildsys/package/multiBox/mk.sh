@@ -12,13 +12,22 @@ function pkg_config(){
 	cd $dst_path && \
 		cmake $src_path \
 			-DCMAKE_INSTALL_PREFIX=$cur_prefix \
-			-DCMAKE_SYSTEM_NAME="Windows" \
 			-DCMAKE_INCLUDE_PATH=$PRO_STAG_USR_PATH/include \
 			-DCMAKE_LIBRARY_PATH=$PRO_STAG_USR_PATH/lib	\
+			-DallPlay_ENABLE=1 \
+			-DSockServ_ENABLE=1 \
 			-DMisc_ENABLE=1 \
+			-Dhotplug_ENABLE=1 \
+			-Duartd_ENABLE=1 \
 			-DBase64Tool_ENABLE=1 \
-			-DCrcTool_ENABLE=1
-	res_info $? "[$0:$LINENO]:$FUNCNAME"
+			-DPaOption_ENABLE=1 \
+			-DCrcTool_ENABLE=1 \
+			-Dmixer_ENABLE=1 \
+			-DAppManager_ENABLE=1 \
+			-Dntop_ENABLE=1 \
+			-DBroadcast_ENABLE=1 \
+			-DHttpCli_ENABLE=1
+	res_info $? "[$0:$LINENO]:$FUNCNAME"			
 }
 
 source $TOP_DIR/include/make_com_script.sh

@@ -7,7 +7,7 @@ if [ $? != 0 ]; then
 fi
 eval set -- "$ARGS"
 
-PRO_NAME=i686-w64-mingw32
+PRO_NAME=x86_64-linux-gnu
 active_pkgs="multiBox curl nghttp2 alsa-utils"
 user_cmds="default"
 just_show_active_pkgs=0

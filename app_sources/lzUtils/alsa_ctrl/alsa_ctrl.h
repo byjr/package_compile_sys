@@ -13,26 +13,26 @@ extern "C" {
 #define ALSA_MAX_BUFFER_TIME 500000
 
 typedef struct alsa_args_t {
-    const char *device;
-    size_t sample_rate;
-    char channels;
-    char action;
-    char flags;
-    size_t fmt;
-    size_t ptime;
-    size_t btime;
+	const char *device;
+	size_t sample_rate;
+	char channels;
+	char action;
+	char flags;
+	size_t fmt;
+	size_t ptime;
+	size_t btime;
 } alsa_args_t;
 
 typedef struct alsa_ctrl_t {
-    snd_pcm_t *handle;
-    pthread_mutex_t mtx;
-    char can_pause;
-    snd_pcm_uframes_t period_frames;
-    snd_pcm_uframes_t buffer_bytes;
-    size_t bytes_per_sample;
-    size_t bytes_per_frame;
-    volatile char abort_flag;
-    alsa_args_t *mPar;
+	snd_pcm_t *handle;
+	pthread_mutex_t mtx;
+	char can_pause;
+	snd_pcm_uframes_t period_frames;
+	snd_pcm_uframes_t buffer_bytes;
+	size_t bytes_per_sample;
+	size_t bytes_per_frame;
+	volatile char abort_flag;
+	alsa_args_t *mPar;
 } alsa_ctrl_t;
 
 
@@ -47,11 +47,11 @@ declar_auto_lock(alsa_ctrl_clear)
 declar_auto_lock(alsa_ctrl_close)
 declar_auto_lock(alsa_ctrl_destroy)
 extern int alsa_ctrl_write_stream(alsa_ctrl_t *ptr,
-                                  const void *buffer,
-                                  size_t buff_size);
+								  const void *buffer,
+								  size_t buff_size);
 extern int alsa_ctrl_read_stream(alsa_ctrl_t *ptr,
-                                 const void *buffer,
-                                 size_t bytes);
+								 const void *buffer,
+								 size_t bytes);
 extern int alsa_ctrl_reset(alsa_ctrl_t *ptr);
 #endif
 //--------------------csrb.h end------------------------------

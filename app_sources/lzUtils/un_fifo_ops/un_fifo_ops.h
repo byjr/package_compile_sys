@@ -8,10 +8,10 @@
 #include <pthread.h>
 #include <limits.h>
 typedef struct unixFifoOps_t {
-    int fd;
-    char *path;
-    char needLock;
-    pthread_mutex_t mtx;
+	int fd;
+	char *path;
+	char needLock;
+	pthread_mutex_t mtx;
 } unixFifoOps_t;
 
 int un_fifo_ops_init(unixFifoOps_t *ptr);

@@ -1,15 +1,15 @@
 export TOOLCHAIN=/usr
-export ARCH=i686
-export UTIL_ARCH=i686
-export TARGET=i686-w64-mingw32
+export ARCH=x86_64
+export UTIL_ARCH=x86_64
+export TARGET=x86_64-linux-gnu
 CROSS_PREFIX=$TOOLCHAIN/bin/$TARGET-
-export PRO_CC_HOST=i686-w64-mingw32
-UTIL_TARGET=i686-w64-mingw32
+export PRO_CC_HOST=x86_64-linux-gnu
+UTIL_TARGET=x86_64-linux-gnu
 export PRO_CROSS_PREFIX=$TOOLCHAIN/bin/$UTIL_TARGET-
 
 export CC="$CROSS_PREFIX"gcc
-export CXX="$CROSS_PREFIX"g++-posix
-export CPP="$CROSS_PREFIX"c++-posix
+export CXX="$CROSS_PREFIX"g++
+export CPP="$CROSS_PREFIX"cpp
 export FC="$CROSS_PREFIX"gfortran
 export F77="$CROSS_PREFIX"gfortran
 

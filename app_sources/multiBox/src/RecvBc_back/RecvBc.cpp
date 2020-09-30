@@ -15,17 +15,17 @@ static int help_info(int argc, char *argv[]) {
 	return 0;
 }
 
-static void PackCallback(const char* data){
+static void PackCallback(const char *data) {
 	UrlContex url;
-	if(!url.parse(data)){
+	if(!url.parse(data)) {
 		s_err("%s/url.parse failed!!");
 		return;
 	}
 	std::string ip = url.getParaVal("devIp");
-	if(ip.size() > 0){
-		s_inf("recive the devIp:%s",ip.data());
+	if(ip.size() > 0) {
+		s_inf("recive the devIp:%s", ip.data());
 		return ;
-	}	
+	}
 }
 #include <getopt.h>
 int RecvBc_main(int argc, char *argv[]) {
@@ -47,7 +47,7 @@ int RecvBc_main(int argc, char *argv[]) {
 	RecvBcPar mRecvBcPar;
 	mRecvBcPar.parseCallback = &PackCallback;
 	std::unique_ptr<RecvBc> mRecvBc(new RecvBc(&mRecvBcPar));
-	if(!(mRecvBc.get() && mRecvBc->IsRunning())){
+	if(!(mRecvBc.get() && mRecvBc->IsRunning())) {
 		s_err("new mRecvBc failed!!");
 		return -1;
 	}

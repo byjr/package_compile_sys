@@ -51,7 +51,7 @@ RtPlayer::RtPlayer(RtPlayerPar *par) {
 	mChunkBytes = mRec->mPar->sample_rate * mRec->bytes_per_frame / 1000 * mPar->mChunkTimeMs;
 	s_inf("mChunkBytes:%u", mChunkBytes);
 	mRecTrd = std::thread([this]() {
-		set_thread_name(0,"RecorderThread");
+		set_thread_name(0, "RecorderThread");
 		auto framesBuf = new char[mChunkBytes];
 		chunkData *chunk;
 		for(;;) {
@@ -78,7 +78,7 @@ RtPlayer::RtPlayer(RtPlayerPar *par) {
 	}
 	mPlyTrd = std::thread([this]() {
 		chunkData *chunk;
-		set_thread_name(0,"PlayerThread");
+		set_thread_name(0, "PlayerThread");
 		for(;;) {
 			if(mPauseFlag) {
 				usleep(1000 * 100);

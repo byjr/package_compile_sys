@@ -14,7 +14,7 @@ function pkg_config(){
 		./configure \
 			--target=$TARGET \
 			--host=$PRO_CC_HOST \
-			--build=x86_64-pc-linux-gnu \
+			--build=x86_64-linux-gnu \
 			--prefix=$cur_prefix \
 			--disable-dependency-tracking \
 			--enable-ipv6 \
