@@ -6,4 +6,3 @@ dst_path=$PRO_BUILD_PATH/$pkg_all_name
 cur_prefix=$dst_path/ipkg-install
 cur_stub_path=$PRO_STUB_PATH/$pkg_all_name/$ARCH
 cur_dir=`pwd`/`dirname $0`
-export CFLAGS=$CFLAGS" -DPIC -DANDROID "

@@ -5,7 +5,7 @@ cur_archive_type=tar.bz2
 pkg_source_url=https://www.alsa-project.org/files/pub/lib
 source $TOP_DIR/include/gloable_utils.sh
 source $TOP_DIR/include/make_com_var.sh
-
+export CPP=
 function pkg_config(){
 	[ -e $dst_path/$config_sfile ] && return 0
 	func_info $0 $LINENO $FUNCNAME

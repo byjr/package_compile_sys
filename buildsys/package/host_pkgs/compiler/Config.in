@@ -1,0 +1,26 @@
+export TOOLCHAIN=/usr
+export ARCH=i686
+export UTIL_ARCH=i686
+export TARGET=i686-w64-mingw32
+CROSS_PREFIX=$TOOLCHAIN/bin/$TARGET-
+export PRO_CC_HOST=i686-w64-mingw32
+UTIL_TARGET=i686-w64-mingw32
+export PRO_CROSS_PREFIX=$TOOLCHAIN/bin/$UTIL_TARGET-
+
+export CC="$CROSS_PREFIX"gcc
+export CXX="$CROSS_PREFIX"g++-posix
+export CPP="$CROSS_PREFIX"c++-posix
+export FC="$CROSS_PREFIX"gfortran
+export F77="$CROSS_PREFIX"gfortran
+
+export AR="$PRO_CROSS_PREFIX"ar
+export AS="$PRO_CROSS_PREFIX"as
+export LD="$PRO_CROSS_PREFIX"ld
+export NM="$PRO_CROSS_PREFIX"nm
+export RANLIB="$PRO_CROSS_PREFIX"ranlib
+export READELF="$PRO_CROSS_PREFIX"readelf
+export STRIP="$PRO_CROSS_PREFIX"strip
+export OBJCOPY="$PRO_CROSS_PREFIX"objcopy
+export OBJDUMP="$PRO_CROSS_PREFIX"objdump
+
+g_dep_dic+=([compiler]="")

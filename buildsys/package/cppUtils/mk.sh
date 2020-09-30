@@ -10,9 +10,12 @@ function pkg_config(){
 	[ -e $dst_path/$config_sfile ] && return 0
 	func_info $0 $LINENO $FUNCNAME
 	cd $dst_path && \
-		cmake -DCMAKE_INSTALL_PREFIX=$cur_prefix \
-			$src_path
-	res_info $? "[$0:$LINENO]:$FUNCNAME"			
+		cmake $src_path \
+			-DCMAKE_INSTALL_PREFIX=$cur_prefix \
+			-DCMAKE_SYSTEM_NAME="Windows" \
+			-DCMAKE_INCLUDE_PATH=$PRO_STAG_USR_PATH/include \
+			-DCMAKE_LIBRARY_PATH=$PRO_STAG_USR_PATH/lib			
+	res_info $? "[$0:$LINENO]:$FUNCNAME"
 }
 
 source $TOP_DIR/include/make_com_script.sh

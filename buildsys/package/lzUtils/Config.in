@@ -1,1 +1,1 @@
-g_dep_dic+=([lzUtils]="compiler alsa-lib ffmpeg")
+g_dep_dic+=([lzUtils]="compiler")

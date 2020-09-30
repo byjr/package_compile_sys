@@ -8,14 +8,15 @@ export PRO_OUT_ROOT=$TOP_DIR/output/$PRO_NAME
 export PRO_BUILD_PATH=$PRO_OUT_ROOT/build
 export PRO_HOST_PATH=$PRO_OUT_ROOT/host
 export PRO_STAG_PATH=$PRO_OUT_ROOT/staging
+export PRO_STAG_USR_PATH=$PRO_STAG_PATH/usr
 export PRO_TARGET_PATH=$PRO_OUT_ROOT/target
-export PRO_TARGET_USR_PATH=$PRO_OUT_ROOT/target/usr
+export PRO_TARGET_USR_PATH=$PRO_TARGET_PATH/usr
 export PRO_STUB_PATH=$PRO_OUT_ROOT/stub
 export PRO_LOG_PATH=$PRO_OUT_ROOT/logs
 export PRO_DL_PATH=$TOP_DIR/dl
 export PRO_DL_TMP_PATH=$PRO_DL_PATH/.tmp
 export PRO_DL_EXT_PATH=$PRO_DL_PATH/.ext
-export PRO_APP_PATH=$TOP_DIR/../app
+export PRO_APP_PATH=$TOP_DIR/../app_sources
 
 export state_list="sync patch config build install final"
 
@@ -34,7 +35,7 @@ export install_sfile=`get_file_by_state install`
 export final_sfile=`get_file_by_state final`
 
 #excute segment
-install_path_list $PRO_BUILD_PATH $PRO_HOST_PATH $PRO_TARGET_USR_PATH\
+install_path_list $PRO_BUILD_PATH $PRO_HOST_PATH $PRO_TARGET_USR_PATH \
 	 $PRO_STUB_PATH $PRO_DL_EXT_PATH $PRO_DL_TMP_PATH $PRO_LOG_PATH
 
 declare -A g_pkg_path_dic

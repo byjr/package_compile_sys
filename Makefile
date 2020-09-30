@@ -12,9 +12,12 @@ distclean:
 clean:
 	./mk.sh -c bclean $(TerminalLog)
 
-cclean:
-	./mk.sh -c cclean $(TerminalLog)
-
+hclean:
+	./mk.sh -c hclean $(TerminalLog)
+	
+oclean:
+	./mk.sh -c oclean $(TerminalLog)
+	
 %-remake:
 	./mk.sh -nc remake $(@:-remake=) $(TerminalLog)
 

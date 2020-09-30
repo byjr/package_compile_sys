@@ -6,7 +6,6 @@ pkg_source_url=http://download.videolan.org/x264/snapshots
 source $TOP_DIR/include/gloable_utils.sh
 source $TOP_DIR/include/make_com_var.sh
 
-AS=$CC
 function pkg_config(){
 	[ -e $dst_path/$config_sfile ] && return 0
 	func_info $0 $LINENO $FUNCNAME
@@ -16,9 +15,10 @@ function pkg_config(){
 			--disable-cli \
 			--enable-shared \
 			--enable-pic \
-			--host=$PRO_CC_HOST \
 			--cross-prefix=$PRO_CROSS_PREFIX \
-			--sysroot=$TOOLCHAIN/sysroot
+			--sysroot=$TOOLCHAIN/sysroot \
+			--disable-asm
+			
 	res_info $? "[$0:$LINENO]:$FUNCNAME"			
 }
 

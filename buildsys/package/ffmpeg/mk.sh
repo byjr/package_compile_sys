@@ -26,6 +26,7 @@ function pkg_config(){
 			--arch=$ARCH \
 			--enable-shared \
 			--disable-static \
+			--disable-x86asm \
 			--enable-cross-compile
 	res_info $? "[$0:$LINENO]:$FUNCNAME"			
 }

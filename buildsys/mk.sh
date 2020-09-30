@@ -7,7 +7,7 @@ if [ $? != 0 ]; then
 fi
 eval set -- "$ARGS"
 
-PRO_NAME=multi_media
+PRO_NAME=i686-w64-mingw32
 active_pkgs="multiBox curl nghttp2 alsa-utils"
 user_cmds="default"
 just_show_active_pkgs=0
@@ -59,7 +59,9 @@ fi
 case $user_cmds in
 bclean)		rm -rf $PRO_BUILD_PATH/*
 			exit 0;;
-cclean)		rm -rf $PRO_BUILD_PATH/*
+hclean)		rm -rf $PRO_HOST_PATH/*
+			exit 0;;
+oclean)		rm -rf $PRO_OUT_ROOT/*
 			exit 0;;			
 distclean)	rm -rf $PRO_OUT_ROOT/*
 			rm -rf $PRO_DL_PATH/*
