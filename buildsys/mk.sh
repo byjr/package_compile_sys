@@ -14,8 +14,11 @@ just_show_active_pkgs=0
 do_not_make_dep_pkgs=0
 
 cur_sh_path=`dirname $(readlink -f $0)`
-cd $cur_sh_path 
-[ -L ../output ] || ln -sf $cur_sh_path/output ../output
+cd $cur_sh_path && \
+if [ ! -r ../output ];then
+	echo ln -sf $cur_sh_path/output ../output
+	ln -sf $cur_sh_path/output ../output
+fi
 
 source include/top_env.sh
 log_file_path=$PRO_LOG_PATH/`date +%Y-%m-%d`"_make.log"
@@ -74,9 +77,7 @@ do
 	for p in $active_pkgs
 	do
 		${g_pkg_path_dic[$p]} $c >> $log_file_path 2>&1
-		if [ $? != 0 ];then
-			break
-		fi
+		[ $? != 0 ] && break
 	done
 done
 echo -e "\e[0;43m<<< The $0 excute completed,total spend \e[0;43m$((`date +%s`-$START_TIME)) seconds.\e[0m"	

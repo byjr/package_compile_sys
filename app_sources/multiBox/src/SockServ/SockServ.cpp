@@ -319,6 +319,10 @@ int SockClient::HandleResponse(std::string &req) {
 		} else {
 			return ResponseText("unsurport command!");
 		}
+	}else if(reqCtx.mMethod == "POST"){
+		if(reqCtx.mCmd == "putAudio"){
+			return ResponseText("POST putAudio succeed!");
+		}
 	}
 	return 0;
 }

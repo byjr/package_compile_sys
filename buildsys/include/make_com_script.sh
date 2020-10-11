@@ -121,8 +121,12 @@ function call_build(){
 }
 #=========================================================================
 function def_install_stag(){
+	install_path $cur_stub_path
+	if [ -d $cur_prefix/bin ];then
+		cp -raf $cur_prefix/bin $PRO_STAG_PATH/usr/ || return 1
+	fi
 	if [ -d $cur_prefix/lib ];then
-		cp -raf $cur_prefix/* $PRO_STAG_PATH/usr/ || return 1
+		cp -raf $cur_prefix/lib $PRO_STAG_PATH/usr/ || return 1
 	fi
 	if [ -d $cur_prefix/include ];then
 		cp -raf $cur_prefix/include $PRO_STAG_PATH/usr/ || return 1

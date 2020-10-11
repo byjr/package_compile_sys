@@ -81,7 +81,10 @@ app_item_t item_tbl[] = {
 };
 #ifndef _WIN_API_
 int multiBox_main(int argc, char *argv[]) {
-	const char *app_dir = "/usr/bin";
+	char *app_dir = "/usr/bin";	
+	if(argc > 1){
+		app_dir=argv[1];
+	}
 	char *app_path = NULL;
 	int res = 0;
 	int i = 0;
