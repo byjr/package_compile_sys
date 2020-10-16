@@ -1,5 +1,5 @@
 #include "alsa_ctrl.h"
-#include "../slog/slog.h"
+#include <lzUtils/base.h>
 #define alsa_ctrl_assert(ptr) ({\
 	if(NULL == ptr){\
 		return -1;\

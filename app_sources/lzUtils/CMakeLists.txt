@@ -23,7 +23,6 @@ file(GLOB_RECURSE PROJECT_SOURCES
 )
 else()
 file(GLOB_RECURSE PROJECT_SOURCES
-	alsa_ctrl/*.c
 	autom/*.c
 	ccsrb/*.c
 	common/*.c

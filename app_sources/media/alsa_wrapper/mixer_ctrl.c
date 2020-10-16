@@ -1,5 +1,5 @@
 #include "mixer_ctrl.h"
-#include "../slog/slog.h"
+#include <lzUtils/base.h>
 
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
