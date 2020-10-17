@@ -1,10 +1,16 @@
 #!/bin/bash
 pkg_name=ffmpeg
-pkg_ver=snapshot
+pkg_ver=4.3
 cur_archive_type=tar.bz2
 pkg_source_url=http://ffmpeg.org/releases
 source $TOP_DIR/include/gloable_utils.sh
 source $TOP_DIR/include/make_com_var.sh
+
+rt_func_config="\
+--enable-ffmpeg \
+--enable-ffplay \
+--enable-ffprobe \
+"
 
 function pkg_config(){
 	[ -e $dst_path/$config_sfile ] && return 0
@@ -15,14 +21,9 @@ function pkg_config(){
 			--cc=$CC \
 			--nm=$NM \
 			--ar=$AR \
-			--enable-small \
-			--disable-programs \
-			--disable-avdevice \
-			--disable-encoders \
-			--disable-muxers \
-			--disable-filters \
+			$rt_func_config \
 			--cross-prefix=$PRO_CROSS_PREFIX \
-			--target-os=android \
+			--target-os=linux \
 			--arch=$ARCH \
 			--enable-shared \
 			--disable-static \

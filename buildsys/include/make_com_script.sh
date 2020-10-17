@@ -7,7 +7,7 @@ function def_download(){
 	[ ! -e $src_path ] && \
 	rm -rf $PRO_DL_TMP_PATH/* && \
 	cd $PRO_DL_TMP_PATH && \
-		wget "$pkg_source_uri" && \
+		wget --no-check-certificate "$pkg_source_uri" && \
 		mv $PRO_DL_TMP_PATH/* $src_path \
 	&& res_info $? "[$0:$LINENO]:$FUNCNAME"
 }
@@ -130,7 +130,7 @@ function def_install_stag(){
 	fi
 	if [ -d $cur_prefix/include ];then
 		cp -raf $cur_prefix/include $PRO_STAG_PATH/usr/ || return 1
-	fi	
+	fi
 }
 function def_install_stub(){
 	local done_count=0

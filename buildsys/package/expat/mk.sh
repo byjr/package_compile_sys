@@ -1,8 +1,9 @@
 #!/bin/bash
-pkg_name=x264
-pkg_ver=20200819
+pkg_name=${0%/*}
+pkg_name=${pkg_name##*/}
+pkg_ver=2.2.10
 cur_archive_type=tar.xz
-pkg_source_url=https://ftp.osuosl.org/pub/blfs/conglomeration/$pkg_name
+pkg_source_url=https://github.com/libexpat/libexpat/releases/download/R_2_2_10
 source $TOP_DIR/include/gloable_utils.sh
 source $TOP_DIR/include/make_com_var.sh
 
@@ -15,7 +16,6 @@ function pkg_config(){
 			--disable-cli \
 			--enable-shared \
 			--enable-pic \
-			--cross-prefix=$PRO_CROSS_PREFIX \
 			--disable-asm
 	res_info $? "[$0:$LINENO]:$FUNCNAME"
 }

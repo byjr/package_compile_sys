@@ -1,1 +1,1 @@
-g_dep_dic+=([alsa_wrapper]="compiler alsa-lib")
+g_dep_dic+=([alsa_wrapper]="compiler alsa-lib lzUtils")

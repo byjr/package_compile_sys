@@ -1,8 +1,9 @@
 #!/bin/bash
-pkg_name=x264
-pkg_ver=20200819
+pkg_name=${0%/*}
+pkg_name=${pkg_name##*/}
+pkg_ver=3.1.5
 cur_archive_type=tar.xz
-pkg_source_url=https://ftp.osuosl.org/pub/blfs/conglomeration/$pkg_name
+pkg_source_url=https://ftp.gnu.org/gnu/$pkg_name
 source $TOP_DIR/include/gloable_utils.sh
 source $TOP_DIR/include/make_com_var.sh
 
@@ -12,11 +13,7 @@ function pkg_config(){
 	cd $dst_path && \
 		./configure \
 			--prefix=$cur_prefix \
-			--disable-cli \
-			--enable-shared \
-			--enable-pic \
-			--cross-prefix=$PRO_CROSS_PREFIX \
-			--disable-asm
+			--enable-shared
 	res_info $? "[$0:$LINENO]:$FUNCNAME"
 }
 

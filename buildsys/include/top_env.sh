@@ -17,7 +17,7 @@ export PRO_DL_PATH=$TOP_DIR/dl
 export PRO_DL_TMP_PATH=$PRO_DL_PATH/.tmp
 export PRO_DL_EXT_PATH=$PRO_DL_PATH/.ext
 export PRO_APP_PATH=$TOP_DIR/../app_sources
-
+export PKG_CONFIG_PATH=$PRO_STAG_USR_PATH/lib/pkgconfig
 export state_list="sync patch config build install final"
 
 #export calc var
