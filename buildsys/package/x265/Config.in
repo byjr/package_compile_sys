@@ -1,1 +1,1 @@
-g_dep_dic+=([x264]="compiler")
+g_dep_dic+=([x265]="compiler")
