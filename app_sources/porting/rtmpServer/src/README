@@ -18,8 +18,9 @@ Testing with FFmpeg:
 
     To encode and push a stream:
 
-    ffmpeg -re -i video.mp4 -f flv rtmp://server/live/stream
+    ffmpeg -re -i pj.mp4 -f flv rtmp://127.0.0.1/live/stream
 
     To watch the stream:
 
-    ffplay rtmp://server/live/stream
+    ffplay rtmp://192.168.63.8/live/stream
+	

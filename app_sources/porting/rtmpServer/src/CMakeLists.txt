@@ -1,22 +1,27 @@
-cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
-project(${PACKAGE_NAME})
+project(${PKG_NAME})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Os -D_WIN_API_")
+else()
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -Os")
+endif()
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-write-strings -Wno-deprecated-declarations -DUSE_PIPE_BUFFER=1 -Wfatal-errors")
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_C_FLAGS}")
 
-file(GLOB_RECURSE build_SOURCES
-	"*.cc"
+
+include_directories(${CMAKE_INCLUDE_PATH})
+file(GLOB_RECURSE PROJECT_SOURCES
+	*.cc
 )
 
-include_directories(${CMAKE_INSTALL_PREFIX}/include)
-link_directories(${CMAKE_INSTALL_PREFIX}/lib)
+link_directories(${CMAKE_LIBRARY_PATH})
 
-add_executable(${PACKAGE_NAME} ${build_SOURCES})
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
 
+target_link_libraries(${PROJECT_NAME}
 
-
-target_link_libraries(${PACKAGE_NAME}
-	
 )
 
-install(TARGETS ${PACKAGE_NAME} RUNTIME DESTINATION "bin")
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION "bin")
