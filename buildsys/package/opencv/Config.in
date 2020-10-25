@@ -1,1 +1,1 @@
-g_dep_dic+=([opencv]="compiler")
+g_dep_dic+=([opencv]="ffmpeg")

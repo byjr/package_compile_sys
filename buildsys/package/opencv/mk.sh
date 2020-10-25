@@ -17,6 +17,15 @@ function pkg_sync(){
 		mv * src
 	res_info $? "[$0:$LINENO]:$FUNCNAME"
 }
+
+real_config="
+-DCMAKE_BUILD_TYPE=RELEASE \
+-DBUILD_opencv_apps=OFF \
+-DBUILD_DOCS=OFF \
+-DBUILD_PERF_TESTS=OFF \
+-DBUILD_TESTS=OFF \
+-DBUILD_WITH_DEBUG_INFO=OFF
+"
 function pkg_config(){
 	[ -e $dst_path/$config_sfile ] && return 0
 	func_info $0 $LINENO $FUNCNAMEs 
@@ -25,14 +34,15 @@ function pkg_config(){
 		cmake $dst_path/src \
 			-DCMAKE_INSTALL_PREFIX=$cur_prefix \
 			-DCMAKE_INCLUDE_PATH=$PRO_STAG_USR_PATH/include \
-			-DCMAKE_LIBRARY_PATH=$PRO_STAG_USR_PATH/lib
+			-DCMAKE_LIBRARY_PATH=$PRO_STAG_USR_PATH/lib \
+			$real_config
 		res_info $? "[$0:$LINENO]:$FUNCNAME"
 }
 function pkg_build(){
 	[ -e $dst_path/$build_sfile ] && return 0
 	func_info $0 $LINENO $FUNCNAME
 	cd $dst_path/build && \
-	make -j $PROCESS_NUM && \
+	make  && \
 	make install
 	res_info $? "[$0:$LINENO]:$FUNCNAME"
 }

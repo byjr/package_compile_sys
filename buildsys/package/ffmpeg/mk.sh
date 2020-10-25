@@ -7,6 +7,7 @@ source $TOP_DIR/include/gloable_utils.sh
 source $TOP_DIR/include/make_com_var.sh
 
 rt_func_config="\
+--enable-swresample \
 --enable-ffmpeg \
 --enable-ffplay \
 --enable-ffprobe \
