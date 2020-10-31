@@ -3,20 +3,16 @@ cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 project(${PKG_NAME})
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -g")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wfatal-errors")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror -Wfatal-errors")
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_WIN_API_")
 endif()
-set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_C_FLAGS} -DWEBRTC_POSIX -DWEBRTC_AUDIO_PROCESSING_ONLY_BUILD")
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_C_FLAGS}")
 
-include_directories(
-	${CMAKE_INCLUDE_PATH} 
-	${CMAKE_INCLUDE_PATH}/webrtc_audio_processing
-)
+include_directories(${CMAKE_INCLUDE_PATH})
 
 file(GLOB_RECURSE PROJECT_SOURCES
 	*.cpp
-	*.c
 )
 
 link_directories(

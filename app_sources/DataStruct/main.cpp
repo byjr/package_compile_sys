@@ -4,6 +4,7 @@
 #include <map>
 #include <future>
 #include <iostream>
+#include <vector>
 using namespace std;
  
 void map1(){
@@ -113,6 +114,120 @@ int hash0 ()
 
   return 0;
 }
+#define MacMakeNode(n,x,l,r) ({\
+	auto n = makeNode(x,l,r);\
+	if(!n){\
+		s_err("makeNode "#n" failed!!");\
+		return nullptr;\
+	}\
+	n;\
+})
+struct TreeNode{
+	int val;
+	TreeNode* left;
+	TreeNode* right;
+	TreeNode(int x):val(x),left(nullptr),right(nullptr){}
+};
+
+
+class Solution{
+	void getSubPathSum(TreeNode* root,int sum,vector<int> path,vector<vector<int>>& pathVct){
+		size_t subNum = 0;
+		path.push_back(root->val);
+		if(root->left){
+			subNum ++;
+			getSubPathSum(root->left,sum,path,pathVct);	
+		}
+		if(root->right){
+			subNum ++;
+			if(subNum > 1){
+				vector<int> nPath(path);
+				getSubPathSum(root->right,sum,nPath,pathVct);
+			}else{
+				getSubPathSum(root->right,sum,path,pathVct);
+			}					
+		}
+		if(subNum < 1){
+			int pathSum = 0;
+			printf("[ ");
+			for(auto i:path){
+				pathSum += i;
+				printf("%02d ",i);
+			}
+			printf("]\n");
+			if(pathSum == sum){
+				pathVct.push_back(path);
+			}
+			path.clear();
+		}		
+	}
+	TreeNode* makeNode(int val,TreeNode* left = nullptr,TreeNode* right = nullptr){
+		auto node = new TreeNode(val);
+		if(!node){
+			s_err("oom");
+			return nullptr;
+		}
+		if(left){
+			node->left = left;
+		}
+		if(right){
+			node->right = right;
+		}
+		return node;
+	}
+	TreeNode* createTree(){
+		TreeNode* n4_1 = MacMakeNode(n4_1,7,nullptr,nullptr);
+		TreeNode* n4_2 = MacMakeNode(n4_2,2,nullptr,nullptr);
+		TreeNode* n4_3 = MacMakeNode(n4_3,5,nullptr,nullptr);
+		TreeNode* n4_4 = MacMakeNode(n4_4,1,nullptr,nullptr);
+		TreeNode* n3_1 = MacMakeNode(n3_1,11,n4_1,n4_2);
+		TreeNode* n3_2 = MacMakeNode(n3_2,13,nullptr,nullptr);
+		TreeNode* n3_3 = MacMakeNode(n3_3,4,n4_3,n4_4);
+		TreeNode* n2_1 = MacMakeNode(n2_1,4,n3_1,nullptr);
+		TreeNode* n2_2 = MacMakeNode(n2_2,8,n3_2,n3_3);
+		TreeNode* n1_1 = MacMakeNode(n1_1,5,n2_1,n2_2);
+		return n1_1;
+	}	
+	void showTree(TreeNode* root){
+		if(!root){
+			return;
+		}
+		printf("%02d ",root->val);
+		if(root->left){
+			showTree(root->left);
+		}
+		if(root->right){
+			showTree(root->right);
+		}
+	}
+	vector<vector<int>> pathDance(TreeNode* root,int sum){
+		vector<vector<int>> pathVct;
+		vector<int> path;
+		getSubPathSum(root,sum,path,pathVct);
+		s_war("");
+		return pathVct;
+	}
+public:
+	Solution(){
+		vector<vector<int>> pathVct;
+		TreeNode* root = createTree();
+		if(!root){
+			s_err("createTree failed!");
+			return ;;
+		}
+		printf("raw:[ ");		
+		showTree(root);
+		printf("]\n");
+		pathVct = pathDance(root,22);
+		for(auto i:pathVct){
+			printf("[ ");
+			for(auto j:i){
+				printf("%d ",j);
+			}
+			printf("]\n");
+		}
+	}
+};
 int main(int argc, char *argv[]) {
 	std::string FuncStr;
 	int opt = 0;
@@ -144,6 +259,8 @@ int main(int argc, char *argv[]) {
 		future0();
 	}else if(FuncStr == "hash0"){
 		hash0();
+	}else if(FuncStr == "solution"){
+		Solution solution;
 	}
 	return 0;
 }

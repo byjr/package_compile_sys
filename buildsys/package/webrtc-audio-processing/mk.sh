@@ -1,12 +1,12 @@
 #!/bin/bash
 pkg_name=${0%/*}
 pkg_name=${pkg_name##*/}
-pkg_ver=v0.2
-cur_archive_type=tar.gz
-pkg_source_url=https://github.com/jhgorse/$pkg_name/archive
+pkg_ver=0.3.1
+cur_archive_type=tar.xz
+pkg_source_url=http://freedesktop.org/software/pulseaudio/$pkg_name
 source $TOP_DIR/include/gloable_utils.sh
 source $TOP_DIR/include/make_com_var.sh
-pkg_source_uri=$pkg_source_url/$pkg_ver.$cur_archive_type
+
 function pkg_config(){
 	[ -e $dst_path/$config_sfile ] && return 0
 	func_info $0 $LINENO $FUNCNAME
@@ -17,5 +17,11 @@ function pkg_config(){
 			--enable-shared
 	res_info $? "[$0:$LINENO]:$FUNCNAME"
 }
-
+# function pkg_build(){
+	# def_build $@
+	# [ $? != 0 ] && exit 1
+	# rm -rf $cur_prefix/include/webrtc
+	# mv $cur_prefix/include/webrtc_audio_processing/webrtc $cur_prefix/include/ && \
+	# rm -rf $cur_prefix/include/webrtc_audio_processing
+# }
 source $TOP_DIR/include/make_com_script.sh

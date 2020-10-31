@@ -8,7 +8,7 @@
 // #include <Windows.h>
 
 #include "webrtc/modules/audio_processing/aec/include/echo_cancellation.h"
-#include "webrtc/modules/audio_processing/agc/include/gain_control.h"
+#include "webrtc/modules/audio_processing/agc/legacy/gain_control.h"
 #include "webrtc/modules/audio_processing/ns/include/noise_suppression.h"
 #include "webrtc/common_audio/signal_processing/include/signal_processing_library.h"
 
