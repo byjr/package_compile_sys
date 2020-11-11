@@ -1,26 +1,59 @@
-export TOOLCHAIN=/usr
-export ARCH=x86_64
-export UTIL_ARCH=x86_64
-export TARGET=x86_64-linux-gnu
-CROSS_PREFIX=$TOOLCHAIN/bin/$TARGET-
+export TOOLCHAIN=$PRO_HOST_PATH/usr
+export ARCH=arm64
+export UTIL_ARCH=aarch64
+export TARGET=aarch64-poky-linux
+CROSS_PREFIX=$TOOLCHAIN/bin/$TARGET/$TARGET-
 export PRO_CC_HOST=x86_64-linux-gnu
-UTIL_TARGET=x86_64-linux-gnu
-export PRO_CROSS_PREFIX=$TOOLCHAIN/bin/$UTIL_TARGET-
+UTIL_TARGET=aarch64-poky-linux
+export PRO_CROSS_PREFIX=$TOOLCHAIN/bin/$UTIL_TARGET/$UTIL_TARGET-
 
-export CC="$CROSS_PREFIX"gcc
-export CXX="$CROSS_PREFIX"g++
-export CPP="$CROSS_PREFIX"cpp
-export FC="$CROSS_PREFIX"gfortran
-export F77="$CROSS_PREFIX"gfortran
+# export CC="$CROSS_PREFIX"gcc
+# export CXX="$CROSS_PREFIX"g++
+# export CPP="$CROSS_PREFIX"cpp
+# export FC="$CROSS_PREFIX"gfortran
+# export F77="$CROSS_PREFIX"gfortran
 
-export AR="$PRO_CROSS_PREFIX"ar
-export AS="$PRO_CROSS_PREFIX"as
-export LD="$PRO_CROSS_PREFIX"ld
-export NM="$PRO_CROSS_PREFIX"nm
-export RANLIB="$PRO_CROSS_PREFIX"ranlib
-export READELF="$PRO_CROSS_PREFIX"readelf
-export STRIP="$PRO_CROSS_PREFIX"strip
-export OBJCOPY="$PRO_CROSS_PREFIX"objcopy
-export OBJDUMP="$PRO_CROSS_PREFIX"objdump
+# export AR="$PRO_CROSS_PREFIX"ar
+# export AS="$PRO_CROSS_PREFIX"as
+# export LD="$PRO_CROSS_PREFIX"ld
+# export NM="$PRO_CROSS_PREFIX"nm
+# export RANLIB="$PRO_CROSS_PREFIX"ranlib
+# export READELF="$PRO_CROSS_PREFIX"readelf
+# export STRIP="$PRO_CROSS_PREFIX"strip
+# export OBJCOPY="$PRO_CROSS_PREFIX"objcopy
+# export OBJDUMP="$PRO_CROSS_PREFIX"objdump
+
+export PKG_CONFIG_SYSROOT_DIR=$PRO_STAG_PATH
+export PKG_CONFIG_PATH=$PRO_STAG_USR_PATH/lib/pkgconfig:$PRO_STAG_USR_PATH/share/pkgconfig
+export CONFIG_SITE=$ESDK_ROOT/site-config-aarch64-poky-linux
+export OECORE_NATIVE_SYSROOT="$PRO_HOST_PATH"
+export OECORE_TARGET_SYSROOT="$PRO_STAG_PATH"
+export OECORE_ACLOCAL_OPTS="-I $PRO_HOST_USR_PATH/usr/share/aclocal"
+
+export CC="aarch64-poky-linux-gcc  --sysroot=$PRO_STAG_PATH"
+export CXX="aarch64-poky-linux-g++  --sysroot=$PRO_STAG_PATH"
+export CPP="aarch64-poky-linux-gcc -E  --sysroot=$PRO_STAG_PATH"
+export AS="aarch64-poky-linux-as "
+export LD="aarch64-poky-linux-ld  --sysroot=$PRO_STAG_PATH"
+export GDB=aarch64-poky-linux-gdb
+export STRIP=aarch64-poky-linux-strip
+export RANLIB=aarch64-poky-linux-ranlib
+export OBJCOPY=aarch64-poky-linux-objcopy
+export OBJDUMP=aarch64-poky-linux-objdump
+export AR=aarch64-poky-linux-ar
+export NM=aarch64-poky-linux-nm
+
+export M4=m4
+export TARGET_PREFIX=aarch64-poky-linux-
+export CONFIGURE_FLAGS="--target=aarch64-poky-linux --host=aarch64-poky-linux --build=x86_64-linux --with-libtool-sysroot=$PRO_STAG_PATH"
+export CFLAGS=" -O2 -pipe -g -feliminate-unused-debug-types "
+export CXXFLAGS=" -O2 -pipe -g -feliminate-unused-debug-types "
+export LDFLAGS="-Wl,-O1 -Wl,--hash-style=gnu -Wl,--as-needed"
+export CPPFLAGS=""
+export KCFLAGS="--sysroot=$PRO_STAG_PATH"
+export OECORE_DISTRO_VERSION="4.14-sumo"
+export OECORE_SDK_VERSION="4.14-sumo"
+export ARCH=arm64
+export CROSS_COMPILE=aarch64-poky-linux-
 
 g_dep_dic+=([compiler]="")

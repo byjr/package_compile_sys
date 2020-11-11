@@ -4,10 +4,12 @@ source include/gloable_utils.sh
 #export const var
 
 export TOP_DIR=`pwd`
+export ESDK_ROOT=/home/liuzhuang/work/nxp-yct-sdk-root
 export PRO_OUT_ROOT=$TOP_DIR/output/$PRO_NAME
 export PRO_BUILD_PATH=$PRO_OUT_ROOT/build
-export PRO_HOST_PATH=$PRO_OUT_ROOT/host
-export PRO_STAG_PATH=$PRO_OUT_ROOT/staging
+export PRO_HOST_PATH=$ESDK_ROOT/sysroots/x86_64-pokysdk-linux
+export PRO_HOST_USR_PATH=$PRO_HOST_PATH/usr
+export PRO_STAG_PATH=$ESDK_ROOT/sysroots/aarch64-poky-linux
 export PRO_STAG_USR_PATH=$PRO_STAG_PATH/usr
 export PRO_TARGET_PATH=$PRO_OUT_ROOT/target
 export PRO_TARGET_USR_PATH=$PRO_TARGET_PATH/usr
@@ -17,9 +19,18 @@ export PRO_DL_PATH=$TOP_DIR/dl
 export PRO_DL_TMP_PATH=$PRO_DL_PATH/.tmp
 export PRO_DL_EXT_PATH=$PRO_DL_PATH/.ext
 export PRO_APP_PATH=$TOP_DIR/../app_sources
-export PKG_CONFIG_PATH=$PRO_STAG_USR_PATH/lib/pkgconfig
 export state_list="sync patch config build install final"
 
+export export PATH="\
+$PRO_HOST_PATH/usr/bin:\
+$PRO_HOST_PATH/usr/sbin:\
+$PRO_HOST_PATH/bin:\
+$PRO_HOST_PATH/sbin:\
+$PRO_HOST_PATH/usr/bin/../x86_64-pokysdk-linux/bin:\
+$PRO_HOST_PATH/usr/bin/aarch64-poky-linux:\
+$PRO_HOST_PATH/usr/bin/aarch64-poky-linux-musl:\
+$PATH\
+"
 #export calc var
 CUR_NSSID_PID=`cat /proc/self/stat | awk '{print $6}'`
 export PROCESS_NUM=`cat /proc/cpuinfo | grep process | wc -l`
@@ -35,7 +46,7 @@ export install_sfile=`get_file_by_state install`
 export final_sfile=`get_file_by_state final`
 
 #excute segment
-install_path_list $PRO_BUILD_PATH $PRO_HOST_PATH $PRO_TARGET_USR_PATH \
+install_path_list $PRO_BUILD_PATH $PRO_HOST_USR_PATH $PRO_TARGET_USR_PATH \
 	 $PRO_STUB_PATH $PRO_DL_EXT_PATH $PRO_DL_TMP_PATH $PRO_LOG_PATH
 
 declare -A g_pkg_path_dic

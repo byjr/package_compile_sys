@@ -7,8 +7,8 @@ if [ $? != 0 ]; then
 fi
 eval set -- "$ARGS"
 
-PRO_NAME=x86_64-linux-gnu
-active_pkgs="multiBox curl nghttp2 alsa-utils"
+PRO_NAME=nxp-imx-evb
+active_pkgs="lzUtils"
 user_cmds="default"
 just_show_active_pkgs=0
 do_not_make_dep_pkgs=0

@@ -1,1 +1,0 @@
-g_dep_dic+=([gnutls]="compiler")
