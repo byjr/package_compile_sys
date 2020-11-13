@@ -1,9 +1,9 @@
 #!/bin/bash
 pkg_name=${0%/*}
 pkg_name=${pkg_name##*/}
-pkg_ver=2.2.10
+pkg_ver=5.43.0
 cur_archive_type=tar.xz
-pkg_source_url=https://github.com/libexpat/libexpat/releases/download/R_2_2_10
+pkg_source_url=https://ftp.osuosl.org/pub/blfs/conglomeration/expect
 source $TOP_DIR/include/gloable_utils.sh
 source $TOP_DIR/include/make_com_var.sh
 
@@ -13,10 +13,7 @@ function pkg_config(){
 	cd $dst_path && \
 		./configure \
 			--prefix=$cur_prefix \
-			--disable-cli \
-			--enable-shared \
-			--enable-pic \
-			--disable-asm
+			--enable-shared
 	res_info $? "[$0:$LINENO]:$FUNCNAME"
 }
 

@@ -108,7 +108,7 @@ function def_build(){
 	[ -e $dst_path/$build_sfile ] && return 0
 	func_info $0 $LINENO $FUNCNAME
 	cd $dst_path && \
-	make -j $PROCESS_NUM && \
+	make -j $PROCESS_NUM --trace -w && \
 	make install
 	res_info $? "[$0:$LINENO]:$FUNCNAME"
 }
@@ -123,13 +123,13 @@ function call_build(){
 function def_install_stag(){
 	install_path $cur_stub_path
 	if [ -d $cur_prefix/bin ];then
-		cp -raf $cur_prefix/bin $PRO_STAG_PATH/usr/ || return 1
+		cp -raf $cur_prefix/bin $PRO_STAG_USR_PATH/ || return 1
 	fi
 	if [ -d $cur_prefix/lib ];then
-		cp -raf $cur_prefix/lib $PRO_STAG_PATH/usr/ || return 1
+		cp -raf $cur_prefix/lib $PRO_STAG_USR_PATH/ || return 1
 	fi
 	if [ -d $cur_prefix/include ];then
-		cp -raf $cur_prefix/include $PRO_STAG_PATH/usr/ || return 1
+		cp -raf $cur_prefix/include $PRO_STAG_USR_PATH/ || return 1
 	fi
 }
 function def_install_stub(){
