@@ -34,8 +34,8 @@ function make_dst_archive(){
 	cd $work_dir
 	rm -rf $dst_name
 	cp -r LinkStack $dst_name
-	sub_files=`find $dst_name -type f`
-	new_file_name=""
+	local sub_files=`find $dst_name -type f`
+	local new_file_name=""
 	for i in $sub_files
 	do
 		sed -i "s/LinkStack/$dst_name/g" $i
