@@ -6,7 +6,7 @@ int LinkStack_main(int argc,char* argv[]);
 
 typedef int (*MainImpl_t)(int argc,char* argv[]);
 
-char** shift(char* argv[],size_t n){
+void shift(char* argv[],size_t n){
 	int i = 0;
 	for(;argv[i+n];i++){
 		argv[i]=argv[i+n];
