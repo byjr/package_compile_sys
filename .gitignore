@@ -1,4 +1,4 @@
-buildsys/output/*
-buildsys/dl/*
-buildsys/logs/*
+buildsys/output
+buildsys/dl
+buildsys/logs
 output
