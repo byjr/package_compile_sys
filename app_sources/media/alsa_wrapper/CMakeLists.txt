@@ -22,7 +22,8 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 install(TARGETS ${PROJECT_NAME} DESTINATION "lib")
-install(DIRECTORY ${PROJECT_INCS}
-		DESTINATION "include/${PROJECT_NAME}"
-		FILES_MATCHING PATTERN "*.h"
+
+install(DIRECTORY ""
+	DESTINATION "include/${PROJECT_NAME}"
+	FILES_MATCHING PATTERN "*.h"
 )

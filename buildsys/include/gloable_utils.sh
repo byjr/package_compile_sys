@@ -7,17 +7,20 @@ function get_time_stamp(){
 }
 function func_info(){
 	local log_str="[`get_time_stamp`]:>>> [$1:$2]:$3 ..."
-	echo -e "\e[0;32m$log_str\e[0m" >> $TERMINAL_PATH
+	[ "$log_file_path" != "$TERMINAL_PATH" ] && \
+		echo -e "\e[0;32m$log_str\e[0m" >> $TERMINAL_PATH
 	echo -e $log_str
 }
 function tip_msg(){
 	local log_str="[`get_time_stamp`]:>>> $@ done!"
-	echo -e "\e[1;32m$log_str\e[0m" >> $TERMINAL_PATH
+	[ "$log_file_path" != "$TERMINAL_PATH" ] && \
+		echo -e "\e[1;32m$log_str\e[0m" >> $TERMINAL_PATH
 	echo -e $log_str
 }
 function err_msg(){
 	local log_str="[`get_time_stamp`]:>>> $@ failed!"
-	echo -e "\e[1;31m$log_str\e[0m" >> $TERMINAL_PATH
+	[ "$log_file_path" != "$TERMINAL_PATH" ] && \
+		echo -e "\e[1;31m$log_str\e[0m" >> $TERMINAL_PATH
 	echo $log_str
 }
 function res_info(){

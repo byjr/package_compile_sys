@@ -60,16 +60,16 @@ install(PROGRAMS base.h DESTINATION "include/${PROJECT_NAME}")
 set(last_dir "null")
 foreach(all_path ${PROJECT_SOURCES})
 	string(REGEX REPLACE "(.+)\/(.+)\/.+\.c" "\\2" cur_dir ${all_path})
-	message(cur_dir:${cur_dir},last_dir:${last_dir})
+	# message(cur_dir:${cur_dir},last_dir:${last_dir})
 	if(NOT ${last_dir} STREQUAL ${cur_dir})
 		set(PROJECT_INCS "${PROJECT_INCS};${cur_dir}")
-		message(PROJECT_INCS:${PROJECT_INCS})
+		# message(PROJECT_INCS:${PROJECT_INCS})
 	endif()
 	set(last_dir ${cur_dir})
 endforeach(all_path)
 unset(last_dir)
 
-message(PROJECT_INCS:${PROJECT_INCS})
+# message(PROJECT_INCS:${PROJECT_INCS})
 install(DIRECTORY ${PROJECT_INCS}
 		DESTINATION "include/${PROJECT_NAME}"
 		FILES_MATCHING PATTERN "*.h"

@@ -52,3 +52,6 @@ oclean:
 			 
 %-clean:     
 	./mk.sh $(NeedCompileDeps) -c clean $(@:-clean=) $(TerminalLog)
+	
+help:
+	@./mk.sh --help

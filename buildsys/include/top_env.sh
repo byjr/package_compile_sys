@@ -1,9 +1,17 @@
 source include/gloable_utils.sh
 #local var
+PRO_NAME=x86_64-linux-gnu
+active_pkgs="multiBox curl nghttp2 alsa-utils"
+user_cmds="default"
+just_show_active_pkgs=0
+do_not_make_dep_pkgs=0
 
-#export const var
 
+
+#export var
 export TOP_DIR=`pwd`
+export ESDK_ROOT=$TOP_DIR/toolchains/cur_toolchain
+export HOST_SREVR_IP=192.168.113.12
 export PRO_OUT_ROOT=$TOP_DIR/output/$PRO_NAME
 export PRO_BUILD_PATH=$PRO_OUT_ROOT/build
 export PRO_HOST_PATH=$PRO_OUT_ROOT/host
@@ -19,6 +27,7 @@ export PRO_DL_EXT_PATH=$PRO_DL_PATH/.ext
 export PRO_APP_PATH=$TOP_DIR/../app_sources
 export PKG_CONFIG_PATH=$PRO_STAG_USR_PATH/lib/pkgconfig
 export state_list="sync patch config build install final"
+export log_file_path=$PRO_LOG_PATH/`date +%Y-%m-%d`"_make.log"
 
 #export calc var
 CUR_NSSID_PID=`cat /proc/self/stat | awk '{print $6}'`
@@ -35,7 +44,7 @@ export install_sfile=`get_file_by_state install`
 export final_sfile=`get_file_by_state final`
 
 #excute segment
-install_path_list $PRO_BUILD_PATH $PRO_HOST_PATH $PRO_TARGET_USR_PATH \
+install_path_list $PRO_BUILD_PATH $PRO_HOST_USR_PATH $PRO_TARGET_USR_PATH \
 	 $PRO_STUB_PATH $PRO_DL_EXT_PATH $PRO_DL_TMP_PATH $PRO_LOG_PATH
 
 declare -A g_pkg_path_dic

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset="UTF-8">
+<title>jonnyWebPage</title>
+<style>
+	#ssid,#psk{
+		border-radius: 6px;
+		font-size: 24px;
+		color: #333333;
+		background: none;
+		border-color: #FFCC99;
+	}
+	#submit {
+		font-size: 24px;
+		width: 265px;
+		height: 34px;
+		margin-top: -12px;
+		background: #ef4300;
+		-moz-border-radius: 6px;
+		-webkit-border-radius: 6px;
+		border-radius: 6px;
+		border: 1px solid #ff730e;
+	}
+	#title{
+		font-size: 24px;
+	}
+	.hiden	{
+		display:none		
+	}
+</style>
+<script language="javascript">
+function base64Enc(){
+	var e = document.getElementById("hiden_enc");
+	if(e.value === "true"){
+		e = document.getElementById("hiden_ssid");
+		e.value = window.btoa(e.value);
+		e = document.getElementById("hiden_psk");
+		e.value = window.btoa(e.value);
+	}
+}
+function checkAndSubmit(){
+	var val = document.getElementById("ssid").value;
+	if(val == ""){
+		alert("Please input ssid!");
+		return false;
+	}
+	document.getElementById("hiden_ssid").value = val;
+	
+	val = document.getElementById("psk").value;
+	if(val == ""){
+		alert("Please input password!");
+		return false;
+	}
+	document.getElementById("hiden_psk").value = val;
+	base64Enc();
+	document.forms['cfgnet'].submit();
+}
+</script>
+</head>
+<body bgcolor="#F5F5F5">
+<div align="center">
+	<table>
+		<tr>
+			<td><div id="title" align="center">Send Ap Infomation </div></td>
+		</tr>
+		<tr><td><br/></td></tr>
+		<tr>
+			<td><div align="center">
+				<input value="ASUS_8528_2G" type="text" id="ssid" maxlength="128"  placeholder="ssid">
+			</div></td>
+		</tr>
+		<tr><td><br/></td></tr>
+		<tr>
+			<td><div align="center">
+				<input value="test12345678" type="text" id="psk" maxlength="128" placeholder="password">
+			</div></td>
+		</tr>
+		<tr><td><br/></td></tr>
+		<tr>
+			<td><div align="center">
+				<input type="button" id="submit" value="submit" onClick="checkAndSubmit()"/>
+			</div></td>
+		</tr>
+		</table>
+</div>
+<form class="hiden" name="cfgnet" action="SendApInf" method="get">
+	<input type="text" id="hiden_ssid" name="ssid" value="">
+	<input type="text" id="hiden_psk" name="psk" value="">
+	<input type="text" id="hiden_enc" name="enc" value="true">
+	<input type="submit">
+</form>
+</body>
+</html>

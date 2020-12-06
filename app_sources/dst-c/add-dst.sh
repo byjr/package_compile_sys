@@ -27,8 +27,8 @@ function add_main_ctt(){
 	[ $? != 0 ] && return 1
 	grep "$dst_name" main.cpp
 	[ $? == 0 ] && return 1
-	sed -i  "/<unordered_map>/ a$add_new_line_ctt" main.cpp && \
-	sed -i "/mainMap;/ a$add_contex_ctt" main.cpp
+	sed -i  "/<unordered_map>/ a$add_new_line_ctt" src/main.cpp && \
+	sed -i "/mainMap;/ a$add_contex_ctt" src/main.cpp
 }
 function make_dst_archive(){
 	cd $work_dir

@@ -7,8 +7,8 @@ function def_download(){
 	[ ! -e $src_path ] && \
 	rm -rf $PRO_DL_TMP_PATH/* && \
 	cd $PRO_DL_TMP_PATH && \
-		wget --no-check-certificate "$pkg_source_uri" && \
-		mv $PRO_DL_TMP_PATH/* $src_path \
+		wget -ct5 --no-check-certificate "$pkg_source_uri" -O $PRO_DL_TMP_PATH/$pkg_all_file_name && \
+		mv $PRO_DL_TMP_PATH/$pkg_all_file_name $src_path \
 	&& res_info $? "[$0:$LINENO]:$FUNCNAME"
 }
 function def_sync(){
@@ -108,7 +108,7 @@ function def_build(){
 	[ -e $dst_path/$build_sfile ] && return 0
 	func_info $0 $LINENO $FUNCNAME
 	cd $dst_path && \
-	make -j $PROCESS_NUM --trace -w && \
+	make -j $PROCESS_NUM && \
 	make install
 	res_info $? "[$0:$LINENO]:$FUNCNAME"
 }
@@ -121,45 +121,32 @@ function call_build(){
 }
 #=========================================================================
 function def_install_stag(){
-	install_path $cur_stub_path
-	if [ -d $cur_prefix/bin ];then
-		cp -raf $cur_prefix/bin $PRO_STAG_USR_PATH/ || return 1
-	fi
-	if [ -d $cur_prefix/lib ];then
-		cp -raf $cur_prefix/lib $PRO_STAG_USR_PATH/ || return 1
-	fi
-	if [ -d $cur_prefix/include ];then
-		cp -raf $cur_prefix/include $PRO_STAG_USR_PATH/ || return 1
-	fi
+	install_path $cur_stag_path
+	cp -raf $cur_prefix/* $PRO_STAG_USR_PATH/
 }
 function def_install_stub(){
 	local done_count=0
 	install_path $cur_stub_path
-	[ -d $cur_prefix/bin ] && \
-		cp -raf $cur_prefix/bin $cur_stub_path/ && \
-		done_count=$((done_count+1))
-	[ -d $cur_prefix/lib ] && \
-		cp -raf $cur_prefix/lib $cur_stub_path/ &&\
-		done_count=$((done_count+1))
-	[ -d $cur_prefix/include ] && \
-		cp -raf $cur_prefix/include $cur_stub_path/ && \
-		done_count=$((done_count+1))
-	[ $done_count -gt 0 ] && return 0 || return 1
+		cp -raf $cur_prefix/* $cur_stub_path/
 }
 function def_install_target(){
 	local done_count=0
 	[ -d $cur_prefix/bin ] && \
 		cp -raf $cur_prefix/bin $PRO_TARGET_PATH/usr/ && \
 		done_count=$((done_count+1))
+	[ -d $cur_prefix/etc ] && \
+		cp -raf $cur_prefix/etc $PRO_TARGET_PATH/ && \
+		done_count=$((done_count+1))		
+	[ -d $cur_prefix/sbin ] && \
+		cp -raf $cur_prefix/sbin $PRO_TARGET_PATH/usr/ && \
+		done_count=$((done_count+1))
 	local so_list=`find $cur_prefix -name "*.so*"`
 	[ x"$so_list" != x"" ] || so_list=`find $cur_prefix -name "*.dll*"`
-	# echo so_list:$so_list
 	if [ x"$so_list" != x"" ];then
 		install_path $PRO_TARGET_PATH/usr/lib
 		cp -raf $so_list $PRO_TARGET_PATH/usr/lib/ && \
 		done_count=$((done_count+1))
 	fi
-	# echo done_count=$done_count
 	[ $done_count -gt 0 ] && return 0 || return 1
 }
 function def_install(){

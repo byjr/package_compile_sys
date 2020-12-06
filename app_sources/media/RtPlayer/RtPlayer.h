@@ -1,6 +1,6 @@
 #ifndef __RT_PLAYER_H_
 #define __RT_PLAYER_H_
-#include <lzUtils/alsa_ctrl/alsa_ctrl.h>
+#include <alsa_wrapper/alsa_ctrl.h>
 #include <cppUtils/MTQueue/MTQueue.h>
 #include <thread>
 #include <atomic>

@@ -1,0 +1,17 @@
+diff --git a/configure b/configure
+index 265555a..df796e7 100755
+--- a/configure
++++ b/configure
+@@ -641,10 +641,8 @@ if [ -n "$ffmpegdir" ]; then
+   check_ldflags -L$ffmpegdir/lib
+ fi
+ 
+-echolog "Checking for libavformat ..."
+-check_lib libavformat/avformat.h av_register_all -lavformat || die "Error, can't find libavformat !"
+-echolog "Checking for libavcodec ..."
+-check_lib libavcodec/avcodec.h avcodec_register_all -lavcodec || die "Error, can't find libavcodec !"
++echolog "Checking for ffmpeg librarys ..."
++check_lib libavformat/avformat.h av_register_all -lavformat -lavcodec -lavutil -lswresample || die "Error, can't find libavformat !"
+ 
+ #################################################
+ #   version

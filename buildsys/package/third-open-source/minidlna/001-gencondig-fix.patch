@@ -1,0 +1,13 @@
+diff --git a/genconfig.sh b/genconfig.sh
+index ea933fd..0b5bca8 100755
+--- a/genconfig.sh
++++ b/genconfig.sh
+@@ -61,7 +61,7 @@ if [ -n "$MISSING" ]; then
+ 	echo -e "\nERROR!  Cannot continue."
+ 	echo -e "The following required libraries are either missing, or are missing development headers:\n"
+ 	echo -e "$MISSING\n"
+-	exit 1
++	# exit 1
+ fi
+ 
+ echo "/* MiniDLNA Project" >> ${CONFIGFILE}

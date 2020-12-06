@@ -1,0 +1,15 @@
+diff --git a/configure b/configure
+index 2b102a4..265555a 100755
+--- a/configure
++++ b/configure
+@@ -637,8 +637,8 @@ fi
+ #   check for ffmpeg libavformat/libavcodec
+ #################################################
+ if [ -n "$ffmpegdir" ]; then
+-  check_cflags -I$ffmpegdir
+-  check_ldflags -L$ffmpegdir
++  check_cflags -I$ffmpegdir/include
++  check_ldflags -L$ffmpegdir/lib
+ fi
+ 
+ echolog "Checking for libavformat ..."

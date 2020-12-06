@@ -1,0 +1,1 @@
+g_dep_dic+=([libid3tag]="compiler libmad")

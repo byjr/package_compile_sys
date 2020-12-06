@@ -1,0 +1,12 @@
+diff --git a/configure b/configure
+index ee421cc..5f29d76 100755
+--- a/configure
++++ b/configure
+@@ -19099,7 +19099,6 @@ then
+     case "$optimize" in
+ 	-O|"-O "*)
+ 	    optimize="-O"
+-	    optimize="$optimize -fforce-mem"
+ 	    optimize="$optimize -fforce-addr"
+ 	    : #x optimize="$optimize -finline-functions"
+ 	    : #- optimize="$optimize -fstrength-reduce"

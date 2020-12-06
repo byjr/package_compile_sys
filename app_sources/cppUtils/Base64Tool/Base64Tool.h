@@ -22,7 +22,7 @@ namespace cppUtils {
 		Base64ToolMode_t workMode;
 		Base64ToolPar() {
 			memset(this, 0, sizeof(Base64ToolPar));
-			base64Char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789()";
+			base64Char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 			iPath = "./in.bin";
 			oPath = "./out.bin";
 			eniBytes = 16 * 1024;
