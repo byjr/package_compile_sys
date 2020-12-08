@@ -343,14 +343,14 @@ int UpnpDevice::handle_action_request(struct upnp_device* priv,
         ar_event->ErrCode = 401;
         return -1;
     }
-
+	s_inf(__func__);
     if (event_service->last_change) {
         ithread_mutex_lock(event_service->service_mutex);
         VariableContainer::get_instance()
 			.upnp_last_change_collector_start(event_service->last_change);
         ithread_mutex_unlock(event_service->service_mutex);
     }
-
+		s_inf(__func__);
     if (event_action->callback) {
         struct action_event event;
         int rc = 0;
@@ -363,14 +363,14 @@ int UpnpDevice::handle_action_request(struct upnp_device* priv,
 
         if (rc == 0) {
             ar_event->ErrCode = UPNP_E_SUCCESS;
-        }
+        }s_inf("ar_event->ActionName=%s",ar_event->ActionName);
 
         if (ar_event->ActionResult == NULL) {
             ar_event->ActionResult =
                 UpnpMakeActionResponse(ar_event->ActionName,
                                        event_service->service_type,
                                        0, NULL);
-        }
+        }	s_inf(__func__);
     } else {
         s_err("Got a valid action, but no handler defined (!)\n"
                                           "  ErrCode:    %d\n"
@@ -390,7 +390,7 @@ int UpnpDevice::handle_action_request(struct upnp_device* priv,
         VariableContainer::get_instance()
         .upnp_last_change_collector_finish(event_service->last_change);
         ithread_mutex_unlock(event_service->service_mutex);
-    }
+    }	s_inf(__func__);
 
     return 0;
 }
