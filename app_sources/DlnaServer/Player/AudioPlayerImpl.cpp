@@ -773,11 +773,11 @@ void AudioPlayerImpl::executePlaybackStarted() {
 }
 
 void AudioPlayerImpl::executePlaybackUnderbuffer(bool beforeStart) {
-
+	allPlayerTrc("=========================={%s}m_progressMs:[%d]=========================", __func__, m_progressMs);
 }
 
 void AudioPlayerImpl::executePlaybackBufferrefill() {
-
+	allPlayerTrc("=========================={%s}m_progressMs:[%d]=========================", __func__, m_progressMs);
 }
 
 void AudioPlayerImpl::executePlaybackError() {
@@ -806,19 +806,20 @@ void AudioPlayerImpl::executePlaybackResumed() {
 }
 
 void AudioPlayerImpl::executePlaybackFinished() {
-	allPlayerTrc("==========================report play finished=========================");
+	allPlayerTrc("=========================={%s}m_startOffsetMs:[%d]=========================", __func__, m_startOffsetMs);
 	if(m_listener){
 		m_listener->onPlaybackFinished();
 	}	
 }
 
 void AudioPlayerImpl::executePlaybackNearlyFinished() {
-	allPlayerTrc("==========================report nearly finished=========================");
+	allPlayerInf("=========================={%s}m_startOffsetMs:[%d]=========================", __func__, m_startOffsetMs);
+	if(m_listener){
+		m_listener->onPlaybackNearlyfinished();
+	}		
 }
-
 void AudioPlayerImpl::onStreamInterrupt() {
-
+	allPlayerErr("=========================={%s}m_startOffsetMs:[%d]=========================", __func__, m_startOffsetMs);
 }
-
-	}  // mediaPlayer
+}  // mediaPlayer
 }  // duerOSDcsApp

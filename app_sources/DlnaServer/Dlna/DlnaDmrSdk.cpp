@@ -14,6 +14,8 @@
 #include "Dlna/DlnaDmrUpnpTransport.h"
 #include "Dlna/DlnaDmrUpnpControl.h"
 #include "Dlna/DlnaDmrSdk.h"
+#include <Player/TimerUtil.h>
+using namespace duerOSDcsApp::mediaPlayer;
 // #include "DCSApp/DeviceIoWrapper.h"
 // #include <DeviceTools/TimeUtils.h>
 
@@ -64,20 +66,21 @@ static char* ip_address = nullptr;
 int DlnaDmrSdk::start() {
     // dlna_dmr_sdk::add_output_module(std::shared_ptr<IOutput> output_module)在start()之前必须调用
     assert(Output::get_instance().is_output_module_added());
-    param_init();
+    param_init();//设置uuID
 
-    Output::get_instance().output_init();
+    Output::get_instance().output_init();//初始化播放器
 
     struct upnp_device_descriptor* upnp_renderer;
 
     upnp_renderer = UpnpRender::get_instance().upnp_renderer_descriptor(get_friendly_name().c_str(),
-                    get_uuid().c_str());
+                    get_uuid().c_str());//创建upnp_renderer（就指定了uuid）
 
     if (upnp_renderer == nullptr) {
         s_err("ERROR: upnp_render is null!");
         return -1;
     }
 
+	//获取监听端口
     if (get_listen_port() != 0 &&
             (get_listen_port() < 49152 || get_listen_port() > 65535)) {
         s_err("Parameter error: --port needs to be in "
@@ -85,7 +88,7 @@ int DlnaDmrSdk::start() {
                    get_listen_port());
         return -1;
     }
-
+	//初始化upnu设备
     device = UpnpDevice::get_instance()
              .upnp_device_init(upnp_renderer, ip_address, get_listen_port());
 
@@ -117,7 +120,7 @@ int DlnaDmrSdk::stop() {
 
 void DlnaDmrSdk::param_init() {
     char m_uuid[32] = {0};
-    int64_t current_time = 0;//deviceCommonLib::deviceTools::currentTimeMs();
+    int64_t current_time = TimerUtil::currentTimeMs();
 
     set_friendly_name("jonny-dlna");  
     sprintf(m_uuid, "DUEROS-%s-%ld", get_friendly_name().c_str(), current_time);

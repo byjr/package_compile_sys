@@ -21,14 +21,12 @@ static enum MediaPlayerState m_mediaPlayerState = MEDIAPLAYER_STOPPED;
 
 void OutputFfmpeg::set_next_uri(const std::string uri) {
     APP_INFO("OutputFfmpeg::set_next_uri");
-    // m_mediaPlayer->setSource(uri);
 	m_mediaPlayer->audioPlay(uri, RES_FORMAT::AUDIO_MP3, 0, 15000);
 }
 
 void OutputFfmpeg::set_uri(const std::string uri, output_update_meta_cb_t meta_cb) {
     APP_INFO("OutputFfmpeg::set_uri: %s", uri.c_str());
     meta_update_callback_ = meta_cb;
-    // m_mediaPlayer->setSource(uri);
 	m_mediaPlayer->audioPlay(uri, RES_FORMAT::AUDIO_MP3, 0, 15000);
 }
 
@@ -85,7 +83,7 @@ int OutputFfmpeg::seek(long position_nanos) {
 
 int OutputFfmpeg::get_position(long* track_duration,
                                long* track_pos) {
-    //APP_INFO("OutputFfmpeg::get_position");
+    APP_INFO("OutputFfmpeg::get_position");
 	*track_pos = m_mediaPlayer->getProgress();
 	*track_duration = m_mediaPlayer->getDuration();
     return 0;
@@ -137,13 +135,14 @@ int OutputFfmpeg::get_state(void) {
         APP_INFO("OutputFfmpeg::get_state: %d", m_mediaPlayerState);
         break;
     }
-
     return m_mediaPlayerState;
 }
 
 int OutputFfmpeg::init(void) {
     APP_INFO("OutputFfmpeg::init duer_plug");
-
+	if(m_mediaPlayer.get()){
+		return 0;
+	}
     m_mediaPlayer = std::make_shared<AudioPlayerImpl>("default");
 	if(!m_mediaPlayer.get()){
 		s_err("new AudioPlayerImpl failed!");
@@ -190,11 +189,8 @@ void OutputFfmpeg::onPlaybackFinished() {
     */
 }
 
-void OutputFfmpeg::onPlaybackNearlyfinished() {
-	
-}
-
 void OutputFfmpeg::onPlaybackError() {
+	 APP_INFO("OutputFfmpeg::onPlaybackError");
     if (play_trans_callback_) {
         play_trans_callback_(PLAY_NO_MEDIA_PRESENT);
     }
@@ -212,17 +208,19 @@ void OutputFfmpeg::onPlaybackResumed() {
 }
 
 void OutputFfmpeg::onBufferUnderrun() {
-
+	APP_INFO("OutputFfmpeg::onBufferUnderrun");
 }
 
 void OutputFfmpeg::onBufferRefilled() {
-
+	APP_INFO("OutputFfmpeg::onBufferRefilled");	
 }
 
 void OutputFfmpeg::onRecvFirstpacket() {
-
+	APP_INFO("OutputFfmpeg::onRecvFirstpacket");	
 }
-
+void OutputFfmpeg::onPlaybackNearlyfinished() {
+	APP_INFO("OutputFfmpeg::onPlaybackNearlyFinished");	
+}
 }
 }
 

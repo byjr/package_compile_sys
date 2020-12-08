@@ -49,7 +49,7 @@ namespace duerOSDcsApp {
 			virtual void onBufferUnderrun() = 0;	 
 			virtual void onBufferRefilled() = 0; 
 			virtual void onRecvFirstpacket() = 0;
-			virtual void onPlaybackResumed() = 0;		
+			virtual void onPlaybackResumed() = 0;	
 		};
 
 	}  // mediaPlayer
