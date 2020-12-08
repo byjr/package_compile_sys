@@ -83,9 +83,11 @@ int OutputFfmpeg::seek(long position_nanos) {
 
 int OutputFfmpeg::get_position(long* track_duration,
                                long* track_pos) {
-    APP_INFO("OutputFfmpeg::get_position");
-	*track_pos = m_mediaPlayer->getProgress();
-	*track_duration = m_mediaPlayer->getDuration();
+	long pos = m_mediaPlayer->getProgress();
+	long duration = m_mediaPlayer->getDuration();
+	*track_pos = pos;
+	*track_duration = duration;
+	s_inf("process:[%ld/%ld%]",pos,duration);
     return 0;
 }
 
