@@ -1,9 +1,9 @@
 #!/bin/bash
 pkg_name=${0%/*}
 pkg_name=${pkg_name##*/}
-pkg_ver=1.6.5
+pkg_ver=1.6.22
 cur_archive_type=tar.bz2
-pkg_source_url=https://sourceforge.net/projects/pupnp/files/pupnp/libUPnP%20$pkg_ver/libupnp-$pkg_ver.tar.bz2/download
+pkg_source_url=https://netactuate.dl.sourceforge.net/project/pupnp/pupnp/libUPnP%20$pkg_ver/libupnp-$pkg_ver.tar.bz2
 source $TOP_DIR/include/gloable_utils.sh
 source $TOP_DIR/include/make_com_var.sh
 pkg_source_uri=$pkg_source_url
