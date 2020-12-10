@@ -13,7 +13,7 @@ function env_setup(){
 	echo $PATH > $env_bakup
 	env_revert
 	export LD_LIBRARY_PATH=$cur_dir/output/$pro_name/staging/usr/lib
-	export PATH=$cur_dir/output/$pro_name/staging/usr/bin:$PATH
+	export PATH=$cur_dir/output/$pro_name/staging/usr/bin:$cur_dir/output/$pro_name/staging/usr/sbin:$PATH
 	env_view
 }
 function env_revert(){

@@ -1,1 +1,1 @@
-g_dep_dic+=([ffmpeg]="x264")
+g_dep_dic+=([ffmpeg]="compiler")
