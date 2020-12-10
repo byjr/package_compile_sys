@@ -147,7 +147,7 @@ function def_install_target(){
 		cp -raf $so_list $PRO_TARGET_PATH/usr/lib/ && \
 		done_count=$((done_count+1))
 	fi
-	[ $done_count -gt 0 ] && return 0 || return 1
+	# [ $done_count -gt 0 ] && return 0 || return 1
 }
 function def_install(){
 	[ -e $dst_path/$install_sfile ] && return 0

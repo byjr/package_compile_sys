@@ -19,5 +19,17 @@ function env_setup(){
 function env_revert(){
 	export PATH=`cat $env_bakup`
 	export LD_LIBRARY_PATH=""
+	env_clear
 }
-env_view
+case $1 in
+	set|setup)
+		env_setup
+		;;		
+	rvt|revert)
+		env_revert
+		;;
+	*)	env_view
+		;;
+esac
+
+

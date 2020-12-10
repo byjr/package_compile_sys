@@ -1,0 +1,1 @@
+g_dep_dic+=([mpd]="compiler zlib curl alsa-lib libmpdclient expat boost libid3tag faad2 libopus")

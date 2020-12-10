@@ -23,4 +23,16 @@ export STRIP="$PRO_CROSS_PREFIX"strip
 export OBJCOPY="$PRO_CROSS_PREFIX"objcopy
 export OBJDUMP="$PRO_CROSS_PREFIX"objdump
 
+export M4=m4
+export TARGET_PREFIX=x86_64-linux-gnu-
+export CONFIGURE_FLAGS="--target=$TARGET --host=aarch64-poky-linux --build=x86_64-linux --with-libtool-sysroot=$PRO_STAG_PATH "
+export CFLAGS=" -O2 -pipe -g -feliminate-unused-debug-types -I$PRO_STAG_USR_PATH/include "
+export CXXFLAGS=" -O2 -pipe -g -feliminate-unused-debug-types "
+export LDFLAGS="-Wl,-O1 -Wl,--hash-style=gnu -Wl,--as-needed -L$PRO_STAG_USR_PATH/lib "
+export CPPFLAGS="-I$PRO_STAG_USR_PATH/include "
+export KCFLAGS="--sysroot=$PRO_STAG_PATH"
+export OECORE_DISTRO_VERSION="4.14-sumo"
+export OECORE_SDK_VERSION="4.14-sumo"
+export CROSS_COMPILE=x86_64-linux-gnu-
+
 g_dep_dic+=([compiler]="")
