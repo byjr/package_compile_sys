@@ -1,19 +1,20 @@
 #!/bin/bash
 pkg_name=${0%/*}
 pkg_name=${pkg_name##*/}
-pkg_ver=v9c
-cur_archive_type=tar.gz
-pkg_source_url="http://www.ijg.org/files/jpegsrc"
+pkg_ver=1.3.4
+cur_archive_type=tar.xz
+pkg_source_url=https://downloads.xiph.org/releases/ogg
 source $TOP_DIR/include/gloable_utils.sh
 source $TOP_DIR/include/make_com_var.sh
-pkg_source_uri=$pkg_source_url.$pkg_ver.$cur_archive_type
+
 function pkg_config(){
 	[ -e $dst_path/$config_sfile ] && return 0
 	func_info $0 $LINENO $FUNCNAME
 	cd $dst_path && \
-		./configure $CONFIGURE_FLAGS \
-			--prefix=$cur_prefix
-	res_info $? "[$0:$LINENO]:$FUNCNAME"			
+		./configure \
+			--prefix=$cur_prefix \
+			--enable-shared
+	res_info $? "[$0:$LINENO]:$FUNCNAME"
 }
 
 source $TOP_DIR/include/make_com_script.sh

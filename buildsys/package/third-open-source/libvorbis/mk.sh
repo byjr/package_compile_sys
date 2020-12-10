@@ -1,9 +1,9 @@
 #!/bin/bash
 pkg_name=${0%/*}
 pkg_name=${pkg_name##*/}
-pkg_ver=1.3.6
+pkg_ver=1.3.7
 cur_archive_type=tar.xz
-pkg_source_url="http://downloads.xiph.org/releases/vorbis"
+pkg_source_url="https://ftp.osuosl.org/pub/xiph/releases/vorbis"
 source $TOP_DIR/include/gloable_utils.sh
 source $TOP_DIR/include/make_com_var.sh
 
