@@ -343,14 +343,14 @@ int UpnpDevice::handle_action_request(struct upnp_device* priv,
         ar_event->ErrCode = 401;
         return -1;
     }
-	s_inf(__func__);
+	s_inf("ar_event->ActionName=%s",ar_event->ActionName);
     if (event_service->last_change) {
         ithread_mutex_lock(event_service->service_mutex);
         VariableContainer::get_instance()
 			.upnp_last_change_collector_start(event_service->last_change);
         ithread_mutex_unlock(event_service->service_mutex);
     }
-		s_inf(__func__);
+	s_inf("ar_event->ActionName=%s",ar_event->ActionName);
     if (event_action->callback) {
         struct action_event event;
         int rc = 0;
@@ -444,7 +444,7 @@ bool UpnpDevice::initialize_device(struct upnp_device_descriptor* device_def,
         if (ip_address == NULL) {
             s_err("ip_address is NULL, waite a second");
             sleep(1);
-            rc = UpnpInit(ip_address, port);
+            rc = UpnpInit2(ip_address, port);
         } else {
             s_err("UpnpInit(ip=%s, port=%d) Error: %s (%d)",
                                               ip_address, port, UpnpGetErrorMessage(rc), rc);

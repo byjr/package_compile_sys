@@ -26,7 +26,7 @@ void OutputFfmpeg::set_next_uri(const std::string uri) {
 
 void OutputFfmpeg::set_uri(const std::string uri, output_update_meta_cb_t meta_cb) {
     APP_INFO("OutputFfmpeg::set_uri: %s", uri.c_str());
-    meta_update_callback_ = meta_cb;
+    //meta_update_callback_ = meta_cb;
 	m_mediaPlayer->audioPlay(uri, RES_FORMAT::AUDIO_MP3, 0, 15000);
 }
 
@@ -85,9 +85,11 @@ int OutputFfmpeg::get_position(long* track_duration,
                                long* track_pos) {
 	long pos = m_mediaPlayer->getProgress();
 	long duration = m_mediaPlayer->getDuration();
-	*track_pos = pos;
-	*track_duration = duration;
-	s_inf("process:[%ld/%ld%]",pos,duration);
+	*track_pos = pos * 1000000;
+	*track_duration = duration * 1000000;
+	if(duration){
+		s_inf("process:[%02ld%]",(pos * 100)/duration);
+	}
     return 0;
 }
 

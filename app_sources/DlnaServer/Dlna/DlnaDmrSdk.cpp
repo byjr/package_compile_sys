@@ -61,7 +61,7 @@ int DlnaDmrSdk::get_listen_port() {
     return _listen_port;
 }
 
-static char* ip_address = nullptr;
+static char* ip_address = "192.168.1.116";
 
 int DlnaDmrSdk::start() {
     // dlna_dmr_sdk::add_output_module(std::shared_ptr<IOutput> output_module)在start()之前必须调用

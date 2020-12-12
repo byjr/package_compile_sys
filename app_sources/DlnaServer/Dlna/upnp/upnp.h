@@ -956,14 +956,14 @@ extern "C" {
  *     \li \c UPNP_E_OUTOF_SOCKET: An error ocurred creating a socket.
  *     \li \c UPNP_E_INTERNAL_ERROR: An internal error ocurred.
  */
-EXPORT_SPEC int UpnpInit(
+EXPORT_SPEC int UpnpInit2(
     /*! The host local IPv4 address to use, in string format, for example
      * "192.168.0.1", or \c NULL to use the first IPv4 adapter's IP address. */
     const char* HostIP,
     /*! Local Port to listen for incoming connections
      * \c NULL will pick an arbitrary free port. */
     unsigned short DestPort);
-
+#define UpnpInit(x...) UpnpInit2(x)
 /*!
  * \brief Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6).
  *

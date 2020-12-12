@@ -221,7 +221,7 @@ static int webserver_close(UpnpWebFileHandle fh) {
     return 0;
 }
 
-#if (UPNP_VERSION < 10607)
+#if 0//(UPNP_VERSION < 10607)
 static struct UpnpVirtualDirCallbacks virtual_dir_callbacks = {
     webserver_get_info,
     webserver_open,
