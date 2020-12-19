@@ -2,6 +2,12 @@
 #include <getopt.h>
 #include <string>
 #include <unordered_map>
+int fifotc_main(int argc,char* argv[]);
+int fifot_main(int argc,char* argv[]);
+int inTcpSrv_main(int argc,char* argv[]);
+int inTcpCli_main(int argc,char* argv[]);
+int UnTcpClient_main(int argc,char* argv[]);
+int UnTcpServer_main(int argc,char* argv[]);
 int getIp_main(int argc,char* argv[]);
 int TupleTest_main(int argc,char* argv[]);
 int UnicodeTool_main(int argc,char* argv[]);
@@ -15,6 +21,12 @@ typedef int (*MainImpl_t)(int argc,char* argv[]);
 
 int main(int argc,char* argv[]) {
 	std::unordered_map<std::string,MainImpl_t> mainMap;	
+	mainMap["fifotc"] = fifotc_main;
+	mainMap["fifot"] = fifot_main;
+	mainMap["inTcpSrv"] = inTcpSrv_main;
+	mainMap["inTcpCli"] = inTcpCli_main;
+	mainMap["UnTcpClient"] = UnTcpClient_main;
+	mainMap["UnTcpServer"] = UnTcpServer_main;
 	mainMap["getIp"] = getIp_main;
 	mainMap["TupleTest"] = TupleTest_main;
 	mainMap["UnicodeTool"] = UnicodeTool_main;
@@ -27,6 +39,7 @@ int main(int argc,char* argv[]) {
 	
 	if(argv[1] && func == STR(_PKG_NAME_)){
 		argv_shift(argv,1);
+		argc -= 1;
 	}
 	MainImpl_t theMain = mainMap[argv[0]];
 	if(theMain == nullptr){

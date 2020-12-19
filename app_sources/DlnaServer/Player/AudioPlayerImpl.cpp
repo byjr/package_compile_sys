@@ -165,8 +165,6 @@ void *AudioPlayerImpl::decodeFunc(void *arg) {
 			if (open_ret == 0) {
 				l_open_success_flag = true;
 				break;
-			} else {
-				player->freeFormatContext();
 			}
 		}
 
