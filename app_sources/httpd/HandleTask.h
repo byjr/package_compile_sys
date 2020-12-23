@@ -1,6 +1,12 @@
 #ifndef _TaskHandler_H
 #define _TaskHandler_H
-#include "TheCommon.h"
+#include <unordered_map>
+#include <atomic>
+#include <memory>
+#include <string.h>
+#include <mutex>
+#include <condition_variable>
+#include <thread>
 enum class SocktState{
 	min = -1,
 	rAble,
@@ -8,6 +14,7 @@ enum class SocktState{
 	closed,
 	max
 };
+typedef std::pair<struct sockaddr,socklen_t> PerrAddr_t;
 struct TaskHandlerPar{
 	int fd;
 	int epfd;
@@ -35,7 +42,7 @@ class TaskHandler{
 	std::atomic<bool> gotExitFlag;
 	std::atomic<bool> hadExitedFlag;
 	std::vector<char> mRbVct;
-	std::thread mTrd;
+	std::thread mTrd;	
 	bool waitState(SocktState state);
 	void notifyState(SocktState state);
 	bool getHeader(std::string& header);
@@ -54,7 +61,7 @@ public:
 	void notifyPeerClosed();
 	void stop();
 	bool isFinished();
-	TaskHandler(std::weak_ptr<TaskHandlerPar> par);
+	TaskHandler(std::shared_ptr<TaskHandlerPar>& par);
 	~TaskHandler();
 	bool sendPcmData(DataBuffer* buf);
 };

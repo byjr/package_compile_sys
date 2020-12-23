@@ -1,7 +1,12 @@
+#include "TheCommon.h"
 #include "HandleTask.h"
 #include "TcpServer.h"
-#define SOCK_MAX_CONN 1024
 #include <bitset>
+#include <sys/epoll.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#define SOCK_MAX_CONN 1024
 bool TcpServer::prepare(){
 	int ret = 0;
 	int yes = 1;
@@ -30,7 +35,7 @@ bool TcpServer::prepare(){
 
 		/* "address alnReadys in use" */
 		if( setsockopt(mSocket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1 ) {
-			show_errno(0, setsockopt);
+			show_errno(0, "setsockopt");
 			close(mSocket);
 			break;
 		}
@@ -56,15 +61,15 @@ bool TcpServer::prepare(){
 	}	
 	return true;		
 }
-bool TcpServer::run(){s_inf(__func__);
-	if(set_thread_name(NULL,"TcpServer")< 0){
+bool TcpServer::run(){
+	if(set_thread_name(0,"TcpServer")< 0){
 		s_err("set_thread_name:TcpServer failed!");
 	}
 	mEpFd = epoll_create1(0);
 	if(mEpFd == -1){
 		show_errno(0, "epoll_create1");
 		return false;			
-	}s_inf(__func__);
+	}
 	struct epoll_event ev;
 	ev.events = EPOLLIN;
 	ev.data.fd = mSocket;
@@ -73,15 +78,12 @@ bool TcpServer::run(){s_inf(__func__);
 		show_errno(0, "epoll_ctl");
 		close(mEpFd);
 		return false;			
-	}s_inf("mSocket:%d",mSocket);
+	}
 	std::vector<struct epoll_event> events(mPar->maxevents);
-	s_inf("events size:%d",events.size());
-	sigset_t sigmask = {0};
-	int nReadys = 0;s_inf(__func__);
-	for(;!gotExitFlag;){s_inf("epoll_wait ...");
+	int nReadys = 0;
+	for(;!gotExitFlag;){
 		for(int i=0;i<mPar->retryMax;i++){
 			nReadys = epoll_pwait(mEpFd, events.data(), mPar->maxevents, mPar->timeout_ms,NULL);
-			s_inf("nReadys:%d",nReadys);
 			if(nReadys == -1){
 				show_errno(0, "epoll_wait");
 				if(errno == EINTR){
@@ -92,7 +94,7 @@ bool TcpServer::run(){s_inf(__func__);
 		}		
 		for(int i=0;i<nReadys;i++){
 			int fd = events[i].data.fd;
-			int conn = -1;s_inf("fd:%d",fd);
+			int conn = -1;
 			if(fd == mSocket){
 				pAddr = std::make_shared<PerrAddr_t>();
 				pAddr->second = sizeof(pAddr->first);	
@@ -159,7 +161,7 @@ bool TcpServer::run(){s_inf(__func__);
 			}
 			s_inf("events:%s",std::bitset<32>(events[i].events).to_string().data());
 		}
-		s_inf("===============================mThMap size:%d",mThMap.size());
+		s_inf("===mThMap size:%lu",(unsigned long)mThMap.size());
 		for(auto it=mThMap.begin();it!=mThMap.end();){
 			if(!it->second){
 				continue;
@@ -170,21 +172,24 @@ bool TcpServer::run(){s_inf(__func__);
 				it++;
 			}
 		}
-	}		
+	}
+	return true;
 }
 
 TcpServer::TcpServer(std::weak_ptr<TcpServerPar> par){
 	gotExitFlag = false;
+	isReadyFlag = false;
 	mPar = par.lock();
 	if(prepare() == false){
 		s_err("");
 		return ;			
 	}
-	s_inf("mThMap size:%d",mThMap.size());
 	mTrd = std::thread([this]()->bool{
 		return run();
-	});		
+	});
+	isReadyFlag = true;
 }
+
 TcpServer::~TcpServer(){
 	if(mTrd.joinable()){
 		mTrd.join();

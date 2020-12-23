@@ -39,7 +39,7 @@ int main(int argc,char* argv[]) {
 	
 	if(argv[1] && func == STR(_PKG_NAME_)){
 		argv_shift(argv,1);
-		argc -= 1;
+		argc --;
 	}
 	MainImpl_t theMain = mainMap[argv[0]];
 	if(theMain == nullptr){

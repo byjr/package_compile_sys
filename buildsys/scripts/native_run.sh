@@ -9,7 +9,7 @@ pkg_name="$1"
 run_bin="TupleTest"
 # run_bin="EpollTest"
 ulimit -c unlimited
-c008-makeLinks.sh myBox $run_bin
+# c008-makeLinks.sh myBox $run_bin
 compile_run(){
 	rm -rf core
 	./mk.sh $@
@@ -17,7 +17,15 @@ compile_run(){
 	$run_bin -l 1111 || gdb $run_bin core
 	# $run_bin -l 1111 &
 }
-compile_run $@
+# compile_run $@
+
+multi_run(){
+	./mk.sh $@
+	[ $? != 0 ] && exit 1
+	myBox UnTcpServer -l1111 &
+	myBox UnTcpClient -l11111	
+}
+multi_run $@
 # run_pid=`ps | grep $run_bin| awk '{print $1}'`
 # while true;do
 	# cat /proc/$run_pid/stat | awk '{print $23}'

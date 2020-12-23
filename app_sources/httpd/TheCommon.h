@@ -11,14 +11,17 @@
 #include <thread>
 #include <sstream>
 #include <fstream>
-#include <lzUtils/common/fp_op.h>	
-#include <lzUtils/base.h>	
-#include <sys/epoll.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
 #include <string.h>
 #include <unistd.h>
+#ifdef USE_LZ_UTILS
+#include <lzUtils/base.h>
+#include <lzUtils/common/fd_op.h>
+#include <lzUtils/common/fp_op.h>
+#else
+#include "HttpdUtils.h"
+#define set_thread_name HttpdUtils::setTrdName
+#define get_size_by_path HttpdUtils::getBytes
+#define fd_set_flag HttpdUtils::setFdFlag
+#endif
 #include "DataBuffer.h"
-typedef std::pair<struct sockaddr,socklen_t> PerrAddr_t;
 #endif

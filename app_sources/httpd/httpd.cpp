@@ -1,31 +1,32 @@
 #include <unistd.h>
-#include <lzUtils/base.h>
-#include "TcpServer.h"
 #include <limits.h>
-int help_info(int argc, char *argv[]) {
-	s_err("%s help:", get_last_name(argv[0]));
-	s_err("\t-i [input path]");
-	s_err("\t-o [output url]");
-	s_err("\t-l [logLvCtrl]");
-	s_err("\t-p [logPath]");
-	s_err("\t-h show help");
-	return 0;
-}
-int TcpServTest_main(int argc,char* argv[]){
-	int opt  =-1;
+#include <getopt.h>
+#include <lzUtils/base.h>
+#include "DataBuffer.h"
+#include "TcpServer.h"
+int main(int argc,char* argv[]){
+	int opt = 0;
 	while ((opt = getopt(argc, argv, "l:p:h")) != -1) {
-		switch (opt) {
+		switch (opt) {		
 		case 'l':
 			lzUtils_logInit(optarg, NULL);
 			break;
 		case 'p':
 			lzUtils_logInit(NULL, optarg);
 			break;
+		case 'h':
+			printf("%s help:\n", get_last_name(argv[0]));
+			printf("\t-D [alsaDevice]\n");
+			printf("\t-l [logLvCtrl]\n");
+			printf("\t-d as a daemon excute\n");
+			printf("\t-k killall %s\n", get_last_name(argv[0]));
+			printf("\t-h show help\n");
+			return 0;
 		default: /* '?' */
-			return help_info(argc, argv);
-		}
+			printf("\terr option!\n");
+			return -1;
+		}		
 	}	
-		
 	std::unique_ptr<DataBuffer> mPlyBuf;
 	mPlyBuf = std::unique_ptr<DataBuffer>(new DataBuffer(3));
 	if(!mPlyBuf.get()){
@@ -38,15 +39,15 @@ int TcpServTest_main(int argc,char* argv[]){
 		s_err("");
 		return -1;
 	}
-	std::shared_ptr<TcpServerPar> mTcpServerPar;
-	mTcpServerPar = std::make_shared<TcpServerPar>();
-	mTcpServerPar->plyBuf = mPlyBuf.get();
-	mTcpServerPar->recBuf = mRecBuf.get();
+	std::shared_ptr<TcpServerPar> servPar;
+	servPar = std::make_shared<TcpServerPar>();
+	servPar->plyBuf = mPlyBuf.get();
+	servPar->recBuf = mRecBuf.get();
 	
-	std::unique_ptr<TcpServer> mTcpServer;
-	mTcpServer = std::unique_ptr<TcpServer>(new TcpServer(mTcpServerPar));
-	if(mTcpServer.get() == nullptr){
-		s_err("mTcpServer create failed!!");
+	std::unique_ptr<TcpServer> serv;
+	serv = std::unique_ptr<TcpServer>(new TcpServer(servPar));
+	if(!(serv.get() && serv->isReady())){
+		s_err("serv create failed!!");
 		return -1;
 	}
 	DataBuffer* mBuf = nullptr;
@@ -54,10 +55,10 @@ int TcpServTest_main(int argc,char* argv[]){
 		char c = getchar();
 		if( c == 'p'){
 			s_war("start to dump ply data %d times ...",i);
-			mBuf = mTcpServerPar->plyBuf;
+			mBuf = servPar->plyBuf;
 		}else if( c == 'r' ){
 			s_war("start to dump rec data %d times ...",i);
-			mBuf = mTcpServerPar->recBuf;
+			mBuf = servPar->recBuf;
 		}else{
 			continue;
 		}

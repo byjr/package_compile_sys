@@ -136,7 +136,7 @@ int fifot_main(int argc,char* argv[]){
 	}
 	for(int i=0;i< 100;i++){
 		getchar();
-		s_inf("start to run %d times ...",i);
+		s_war("start to run %d times ...",i);
 		FILE* fp = fopen("111.pcm","rb");
 		if(!fp){
 			show_errno(0,"open");
