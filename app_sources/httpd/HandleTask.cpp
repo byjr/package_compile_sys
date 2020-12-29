@@ -38,7 +38,7 @@ bool TaskHandler::getHeader(std::string& header){
 	char buf[LINE_BUFFER_SIZE+1];
 	std::size_t end = header.npos;
 	ssize_t res = 0,bakLen=0;
-	header = "";s_inf("%s/%d",__func__,mPar->fd);
+	header = "";
 	for(;!gotExitFlag;){
 		res = read(mPar->fd,buf,LINE_BUFFER_SIZE);
 		if(res <= 0){
@@ -125,9 +125,9 @@ bool TaskHandler::responseMime() {
 	return Send(strBuf.c_str(),strBuf.length());
 }
 static std::unordered_map<std::string,std::string> HttpMethodList{
-	{"GET","GET /"},
-	{"POST","POST /"},
-	{"PUT","PUT /"},
+	{"GET"		,"GET /"	},
+	{"POST"		,"POST /"	},
+	{"PUT"		,"PUT /"	},
 };
 bool TaskHandler::getContex(){
 	std::string header(""),key("");
@@ -261,8 +261,8 @@ bool TaskHandler::sendNormalFile(){
 	ifs.close();
 	return true;
 }
-bool TaskHandler::sendPcmData(DataBuffer* buf){
-	if(!buf){
+bool TaskHandler::sendPcmData(std::shared_ptr<DataBuffer>& buf){
+	if(!buf.get()){
 		s_err("");
 		return false;
 	}
@@ -281,48 +281,48 @@ bool TaskHandler::sendPcmData(DataBuffer* buf){
 }
 bool TaskHandler::doHandle(){
 	if(mMethod == "GET"){
-		s_inf("Command=%s",mCommand.data());
-		for(auto i:mParMap){
-			s_inf("%s=%s",i.first.data(),i.second.data());
-		}
-		for(auto i:mCtxMap){
-			s_inf("%s=%s",i.first.data(),i.second.data());
-		}
+		// s_inf("Command=%s",mCommand.data());
+		// for(auto i:mParMap){
+			// s_inf("%s=%s",i.first.data(),i.second.data());
+		// }
+		// for(auto i:mCtxMap){
+			// s_inf("%s=%s",i.first.data(),i.second.data());
+		// }
 		if(mCommand == ""){
-			if(!EpollWrapper::mod_evt(mPar->epfd,mPar->fd,WRITE_EVT_FLAGS)){
-				s_err("EpollWrapper::mod_evt failed!");
-				return false;
-			}			
-			mCommand = "index.html";
-			mCtxMap["Accept"]="text/html";
-			if(!responseMime()){
-				s_err("responseMime failed!");
-				return false;
-			}
-			return sendNormalFile();
+			// if(!EpollWrapper::mod_evt(mPar->epfd,mPar->fd,WRITE_EVT_FLAGS)){
+				// s_err("EpollWrapper::mod_evt failed!");
+				// return false;
+			// }			
+			// mCommand = "index.html";
+			// mCtxMap["Accept"]="text/html";
+			// if(!responseMime()){
+				// s_err("responseMime failed!");
+				// return false;
+			// }
+			// return sendNormalFile();
 		}else if(mCommand.find(".html") != mCommand.npos){
-			if(!EpollWrapper::mod_evt(mPar->epfd,mPar->fd,WRITE_EVT_FLAGS)){
-				s_err("EpollWrapper::mod_evt failed!");
-				return false;
-			}			
-			mCtxMap["Accept"]="text/html";
-			if(!responseMime()){
-				s_err("responseMime failed!");
-				return false;
-			}
-			return sendNormalFile();
+			// if(!EpollWrapper::mod_evt(mPar->epfd,mPar->fd,WRITE_EVT_FLAGS)){
+				// s_err("EpollWrapper::mod_evt failed!");
+				// return false;
+			// }			
+			// mCtxMap["Accept"]="text/html";
+			// if(!responseMime()){
+				// s_err("responseMime failed!");
+				// return false;
+			// }
+			// return sendNormalFile();
 		}else if(mCommand == "SendApInf"){
-			if(!EpollWrapper::mod_evt(mPar->epfd,mPar->fd,WRITE_EVT_FLAGS)){
-				s_err("EpollWrapper::mod_evt failed!");
-				return false;
-			}
-			mCommand = "connect.html";
-			mCtxMap["Accept"]="text/html";
-			if(!responseMime()){
-				s_err("responseMime failed!");
-				return false;
-			}
-			return sendNormalFile();
+			// if(!EpollWrapper::mod_evt(mPar->epfd,mPar->fd,WRITE_EVT_FLAGS)){
+				// s_err("EpollWrapper::mod_evt failed!");
+				// return false;
+			// }
+			// mCommand = "connect.html";
+			// mCtxMap["Accept"]="text/html";
+			// if(!responseMime()){
+				// s_err("responseMime failed!");
+				// return false;
+			// }
+			// return sendNormalFile();
 		}else if(mCommand == "playData.pcm"){
 			if(mPar->plyBuf->isBusying()){
 				mHandleMsg = "play data dump channel is busy!";
@@ -354,18 +354,18 @@ bool TaskHandler::doHandle(){
 				s_err("responseMime failed!");
 				return false;
 			}
-			return sendPcmData(mPar->recBuf);	
+			return sendPcmData(mPar->recBuf);
 		}else{
-			if(!EpollWrapper::mod_evt(mPar->epfd,mPar->fd,WRITE_EVT_FLAGS)){
-				s_err("EpollWrapper::mod_evt failed!");
-				return false;
-			}
-			mCtxMap["Accept"]="application/octet-stream";
-			if(!responseMime()){
-				s_err("responseMime failed!");
-				return false;
-			}
-			return sendNormalFile();		
+			// if(!EpollWrapper::mod_evt(mPar->epfd,mPar->fd,WRITE_EVT_FLAGS)){
+				// s_err("EpollWrapper::mod_evt failed!");
+				// return false;
+			// }
+			// mCtxMap["Accept"]="application/octet-stream";
+			// if(!responseMime()){
+				// s_err("responseMime failed!");
+				// return false;
+			// }
+			// return sendNormalFile();		
 		}
 	}else if(mMethod == "POST"){
 		
@@ -421,7 +421,7 @@ void TaskHandler::stop(){
 bool TaskHandler::isFinished(){
 	return hadExitedFlag;
 }
-TaskHandler::TaskHandler(std::shared_ptr<TaskHandlerPar>& par){
+TaskHandler::TaskHandler(std::unique_ptr<TaskHandlerPar>& par){
 	mPar = std::move(par);
 	gotExitFlag = false;
 	hadExitedFlag = false;

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 project(${PKG_NAME})
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -g -DUSE_LZ_UTILS")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wfatal-errors")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror -Wfatal-errors")
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_WIN_API_")
 endif()

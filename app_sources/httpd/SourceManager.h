@@ -1,13 +1,13 @@
 
 class SourceManager{
-	std::shared_ptr<DataBuffer> mIn;
-	std::unordered_map<int,std::shared_ptr<DataBuffer>> mOuts;
+	std::unique_ptr<DataBuffer> mIn;
+	std::unordered_map<int,std::unique_ptr<DataBuffer>> mOuts;
 	std::mutex oMux;
 	std::mutex iMux;
 	std::thread mTrd;	
 	std::atomic<bool> goExitFlag,isExitedFlag;
 public:
-	void addOutput(int fd,std::shared_ptr<DataBuffer> out){
+	void addOutput(int fd,std::unique_ptr<DataBuffer> out){
 		std::unique_lock<std::mutex> lk(oMux);
 		mOuts[fd] = out;
 	}
@@ -15,7 +15,7 @@ public:
 		std::unique_lock<std::mutex> lk(oMux);
 		mOuts.erease(fd);
 	}
-	void setInput(std::shared_ptr<DataBuffer> in){
+	void setInput(std::unique_ptr<DataBuffer> in){
 		std::unique_lock<std::mutex> lk(iMux);
 		mIn.reset();
 		mIn = in;
@@ -25,7 +25,7 @@ public:
 		isExitedFlag = false;
 		mTrd = std::thread([this](){			
 			bool res = false;
-			std::shared_ptr<data_unit> inData;
+			std::unique_ptr<data_unit> inData;
 			for(;!goExitFlag;){
 				{//read lock scope
 					std::unique_lock<std::mutex> lk(iMux);
@@ -41,7 +41,7 @@ public:
 				{//write lock scope
 					std::unique_lock<std::mutex> lk(oMux);
 					for(auto i:mOuts){
-						auto data = make_shared<data_unit>(inData.get());
+						auto data = make_unq<data_unit>(inData.get());
 						if(data.get()){
 							i.second->crcPush(data);
 						}

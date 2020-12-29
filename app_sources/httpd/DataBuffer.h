@@ -20,7 +20,7 @@ public:
 	size_t capacity();
 	bool resize(size_t size);
 };
-typedef std::shared_ptr<data_unit> data_ptr;
+typedef std::unique_ptr<data_unit> data_ptr;
 class DataBuffer{
 	std::size_t max;
 	std::mutex mu;

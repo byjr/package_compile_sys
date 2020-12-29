@@ -6,8 +6,8 @@ struct TcpServerPar{
 	int maxevents;
 	int timeout_ms;
 	int retryMax;
-	DataBuffer* plyBuf;
-	DataBuffer* recBuf;	
+	std::shared_ptr<DataBuffer> plyBuf;
+	std::shared_ptr<DataBuffer> recBuf;
 	TcpServerPar(){
 		port = 10080;
 		maxevents = 1024;
@@ -18,17 +18,15 @@ struct TcpServerPar{
 class TcpServer{
 	int mSocket;
 	int mEpFd;
-	std::shared_ptr<TcpServerPar> mPar;
+	std::unique_ptr<TcpServerPar> mPar;
 	std::unordered_map<int,std::shared_ptr<TaskHandler>> mThMap;
-	std::shared_ptr<TaskHandlerPar> mTaskHandlerPar;
-	std::shared_ptr<TaskHandler> mTaskHandler;
+	std::unique_ptr<TaskHandlerPar> mTaskHandlerPar;
 	std::thread mTrd;
 	std::atomic<bool> gotExitFlag,isReadyFlag;
-	std::shared_ptr<PerrAddr_t> pAddr;
 	bool prepare();
 	bool run();
 public:
-	TcpServer(std::weak_ptr<TcpServerPar> par);
+	TcpServer(std::unique_ptr<TcpServerPar>& par);
 	~TcpServer();
 	bool isReady(){
 		return isReadyFlag;

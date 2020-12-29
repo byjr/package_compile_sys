@@ -4,6 +4,12 @@
 #include <lzUtils/base.h>
 #include "DataBuffer.h"
 #include "TcpServer.h"
+namespace std{
+	template<typename T, typename... Ts>
+	std::unique_ptr<T> make_unq(Ts&&... params){
+		return std::unique_ptr<T>(new T(std::forward<Ts>(params)...));
+	}
+}
 int main(int argc,char* argv[]){
 	int opt = 0;
 	while ((opt = getopt(argc, argv, "l:p:h")) != -1) {
@@ -27,38 +33,34 @@ int main(int argc,char* argv[]){
 			return -1;
 		}		
 	}	
-	std::unique_ptr<DataBuffer> mPlyBuf;
-	mPlyBuf = std::unique_ptr<DataBuffer>(new DataBuffer(3));
+	auto mPlyBuf = std::make_shared<DataBuffer>(3);
 	if(!mPlyBuf.get()){
 		s_err("");
 		return -1;
 	}
-	std::unique_ptr<DataBuffer> mRecBuf;
-	mRecBuf = std::unique_ptr<DataBuffer>(new DataBuffer(3));
+	auto mRecBuf = std::make_shared<DataBuffer>(3);
 	if(!mRecBuf.get()){
 		s_err("");
 		return -1;
 	}
-	std::shared_ptr<TcpServerPar> servPar;
-	servPar = std::make_shared<TcpServerPar>();
-	servPar->plyBuf = mPlyBuf.get();
-	servPar->recBuf = mRecBuf.get();
+	auto servPar = std::make_unq<TcpServerPar>();
+	servPar->plyBuf = mPlyBuf;
+	servPar->recBuf = mRecBuf;
 	
-	std::unique_ptr<TcpServer> serv;
-	serv = std::unique_ptr<TcpServer>(new TcpServer(servPar));
+	auto serv = std::make_unq<TcpServer>(servPar);
 	if(!(serv.get() && serv->isReady())){
 		s_err("serv create failed!!");
 		return -1;
 	}
-	DataBuffer* mBuf = nullptr;
+	std::shared_ptr<DataBuffer> mBuf;
 	for(int i=0;i< 10000;i++){
 		char c = getchar();
 		if( c == 'p'){
 			s_war("start to dump ply data %d times ...",i);
-			mBuf = servPar->plyBuf;
+			mBuf = std::move(mPlyBuf);
 		}else if( c == 'r' ){
 			s_war("start to dump rec data %d times ...",i);
-			mBuf = servPar->recBuf;
+			mBuf = std::move(mRecBuf);
 		}else{
 			continue;
 		}
@@ -71,7 +73,7 @@ int main(int argc,char* argv[]){
 		int res = 0;
 		data_ptr data;
 		do{
-			data = std::make_shared<data_unit>(PIPE_BUF);
+			data = std::make_unq<data_unit>(PIPE_BUF);
 			res = fread(data->data(),1,data->size(),fp);
 			if(res <=0 ){
 				if(feof(fp)){

@@ -7,6 +7,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <thread>
+#include <sys/socket.h>
 enum class SocktState{
 	min = -1,
 	rAble,
@@ -14,23 +15,25 @@ enum class SocktState{
 	closed,
 	max
 };
-typedef std::pair<struct sockaddr,socklen_t> PerrAddr_t;
+struct sockaddr_t{
+	struct sockaddr addr;
+	socklen_t		bytes;
+};
 struct TaskHandlerPar{
 	int fd;
 	int epfd;
 	size_t retryMax;
-	std::shared_ptr<PerrAddr_t> peerAddr;
-	DataBuffer* plyBuf;
-	DataBuffer* recBuf;
+	std::unique_ptr<sockaddr_t> peerAddr;
+	std::shared_ptr<DataBuffer> plyBuf;
+	std::shared_ptr<DataBuffer> recBuf;
 	TaskHandlerPar(){
 		fd  = -1;
 		epfd = -1;
 		retryMax = 10;
-		plyBuf = recBuf = nullptr;
 	}
 };
 class TaskHandler{
-	std::shared_ptr<TaskHandlerPar> mPar;
+	std::unique_ptr<TaskHandlerPar> mPar;
 	std::mutex mu;
 	std::condition_variable cv;
 	SocktState mSktSt;
@@ -61,8 +64,8 @@ public:
 	void notifyPeerClosed();
 	void stop();
 	bool isFinished();
-	TaskHandler(std::shared_ptr<TaskHandlerPar>& par);
+	TaskHandler(std::unique_ptr<TaskHandlerPar>& par);
 	~TaskHandler();
-	bool sendPcmData(DataBuffer* buf);
+	bool sendPcmData(std::shared_ptr<DataBuffer>& buf);
 };
 #endif

@@ -13,6 +13,12 @@
 #include <fstream>
 #include <string.h>
 #include <unistd.h>
+namespace std{
+	template<typename T, typename... Ts>
+	std::unique_ptr<T> make_unq(Ts&&... params){
+		return std::unique_ptr<T>(new T(std::forward<Ts>(params)...));
+	}
+}
 #ifdef USE_LZ_UTILS
 #include <lzUtils/base.h>
 #include <lzUtils/common/fd_op.h>
@@ -24,4 +30,5 @@
 #define fd_set_flag HttpdUtils::setFdFlag
 #endif
 #include "DataBuffer.h"
+
 #endif

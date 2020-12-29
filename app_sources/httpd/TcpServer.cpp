@@ -96,35 +96,35 @@ bool TcpServer::run(){
 			int fd = events[i].data.fd;
 			int conn = -1;
 			if(fd == mSocket){
-				pAddr = std::make_shared<PerrAddr_t>();
-				pAddr->second = sizeof(pAddr->first);	
+				auto pAddr = std::make_unq<sockaddr_t>();
+				pAddr->bytes = sizeof(pAddr->addr);
 				for(int i=0;i<mPar->retryMax;i++){
-					conn = accept4(fd,&pAddr->first,&pAddr->second,SOCK_NONBLOCK|SOCK_CLOEXEC);
+					conn = accept4(fd,&pAddr->addr,&pAddr->bytes,SOCK_NONBLOCK|SOCK_CLOEXEC);
 					if( conn == -1){
 						show_errno(0, "epoll_wait");
 						if(errno == EAGAIN | errno == EWOULDBLOCK | errno == EINTR){
 							continue;
 						}
-					}					
+					}
 					break;
 				}
 				if(conn == -1){
 					continue;
 				}
-				mTaskHandlerPar = std::make_shared<TaskHandlerPar>();
+				mTaskHandlerPar = std::make_unq<TaskHandlerPar>();
 				mTaskHandlerPar->fd = conn;
 				mTaskHandlerPar->epfd = mEpFd;
 				mTaskHandlerPar->retryMax = mPar->retryMax;
-				mTaskHandlerPar->peerAddr = pAddr;
+				mTaskHandlerPar->peerAddr = std::move(pAddr);
 				mTaskHandlerPar->plyBuf = mPar->plyBuf;
 				mTaskHandlerPar->recBuf = mPar->recBuf;
-				mTaskHandler = std::make_shared<TaskHandler>(mTaskHandlerPar);
-				if(mTaskHandler.get() == nullptr){
+				auto hd = std::make_shared<TaskHandler>(mTaskHandlerPar);
+				if(hd.get() == nullptr){
 					s_err("");
 					close(fd);
 					break;
 				}
-				mThMap[conn] = std::move(mTaskHandler);
+				mThMap[conn] = std::move(hd);
 			}else{
 				do{				
 					if(events[i].events & EPOLLHUP){
@@ -176,10 +176,10 @@ bool TcpServer::run(){
 	return true;
 }
 
-TcpServer::TcpServer(std::weak_ptr<TcpServerPar> par){
+TcpServer::TcpServer(std::unique_ptr<TcpServerPar>& par){
 	gotExitFlag = false;
 	isReadyFlag = false;
-	mPar = par.lock();
+	mPar = std::move(par);
 	if(prepare() == false){
 		s_err("");
 		return ;			

@@ -2,6 +2,8 @@
 #include <getopt.h>
 #include <string>
 #include <unordered_map>
+int shrbd_main(int argc,char* argv[]);
+int shrbc_main(int argc,char* argv[]);
 int fifotc_main(int argc,char* argv[]);
 int fifot_main(int argc,char* argv[]);
 int inTcpSrv_main(int argc,char* argv[]);
@@ -21,6 +23,8 @@ typedef int (*MainImpl_t)(int argc,char* argv[]);
 
 int main(int argc,char* argv[]) {
 	std::unordered_map<std::string,MainImpl_t> mainMap;	
+	mainMap["shrbd"] = shrbd_main;
+	mainMap["shrbc"] = shrbc_main;
 	mainMap["fifotc"] = fifotc_main;
 	mainMap["fifot"] = fifot_main;
 	mainMap["inTcpSrv"] = inTcpSrv_main;
