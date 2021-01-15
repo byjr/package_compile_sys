@@ -109,7 +109,7 @@ typedef pthread_attr_t ithread_attr_t;
  *      Thread start routine
  *      Internal Use Only.
  ***************************************************************************/
-typedef void* (*start_routine)(void* arg);
+typedef void *(*start_routine)(void *arg);
 
 
 /****************************************************************************
@@ -198,9 +198,9 @@ typedef ithread_mutex_t ithread_rwlock_t;
  *      0 on success, Nonzero on failure.
  ***************************************************************************/
 static UPNP_INLINE int ithread_initialize_library(void) {
-    int ret = 0;
+	int ret = 0;
 
-    return ret;
+	return ret;
 }
 
 
@@ -216,9 +216,9 @@ static UPNP_INLINE int ithread_initialize_library(void) {
  *      0 on success, Nonzero on failure.
  ***************************************************************************/
 static UPNP_INLINE int ithread_cleanup_library(void) {
-    int ret = 0;
+	int ret = 0;
 
-    return ret;
+	return ret;
 }
 
 
@@ -234,13 +234,13 @@ static UPNP_INLINE int ithread_cleanup_library(void) {
  *      0 on success, Nonzero on failure.
  ***************************************************************************/
 static UPNP_INLINE int ithread_initialize_thread(void) {
-    int ret = 0;
+	int ret = 0;
 
 #if defined(WIN32) && defined(PTW32_STATIC_LIB)
-    ret = !pthread_win32_thread_attach_np();
+	ret = !pthread_win32_thread_attach_np();
 #endif
 
-    return ret;
+	return ret;
 }
 
 
@@ -256,13 +256,13 @@ static UPNP_INLINE int ithread_initialize_thread(void) {
  *      0 on success, Nonzero on failure.
  ***************************************************************************/
 static UPNP_INLINE int ithread_cleanup_thread(void) {
-    int ret = 0;
+	int ret = 0;
 
 #if defined(WIN32) && defined(PTW32_STATIC_LIB)
-    ret = !pthread_win32_thread_detach_np();
+	ret = !pthread_win32_thread_detach_np();
 #endif
 
-    return ret;
+	return ret;
 }
 
 
@@ -935,7 +935,7 @@ static UPNP_INLINE int ithread_cleanup_thread(void) {
 #if !defined(PTHREAD_MUTEX_RECURSIVE) && !defined(__DragonFly__) && !defined(UPNP_USE_MSVCPP)
 /* !defined(UPNP_USE_MSVCPP) should probably also have pthreads version check - but it's not clear if that is possible */
 /* NK: Added for satisfying the gcc compiler */
-EXPORT_SPEC int pthread_mutexattr_setkind_np(pthread_mutexattr_t* attr, int kind);
+EXPORT_SPEC int pthread_mutexattr_setkind_np(pthread_mutexattr_t *attr, int kind);
 #endif
 
 

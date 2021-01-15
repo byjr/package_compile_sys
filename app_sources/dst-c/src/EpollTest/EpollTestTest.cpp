@@ -10,8 +10,8 @@ int help_info(int argc, char *argv[]) {
 	s_err("\t-h show help");
 	return 0;
 }
-int EpollTest_main(int argc,char* argv[]){
-	int opt  =-1;
+int EpollTest_main(int argc, char *argv[]) {
+	int opt  = -1;
 	while ((opt = getopt(argc, argv, "l:p:h")) != -1) {
 		switch (opt) {
 		case 'l':
@@ -23,12 +23,12 @@ int EpollTest_main(int argc,char* argv[]){
 		default: /* '?' */
 			return help_info(argc, argv);
 		}
-	}	
+	}
 	std::shared_ptr<TcpServerPar> mTcpServerPar =
-	std::make_shared<TcpServerPar>();	
+		std::make_shared<TcpServerPar>();
 	std::unique_ptr<TcpServer> mTcpServer;
 	mTcpServer = std::unique_ptr<TcpServer>(new TcpServer(mTcpServerPar));
-	if(mTcpServer.get() == nullptr){
+	if(mTcpServer.get() == nullptr) {
 		s_err("mTcpServer create failed!!");
 		return -1;
 	}

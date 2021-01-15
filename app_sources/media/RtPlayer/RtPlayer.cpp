@@ -129,7 +129,7 @@ static int help_info(int argc, char *argv[]) {
 	printf("\t-i [input device]\n");
 	printf("\t-o [output device]\n");
 	printf("\t-m [max buffer size]\n");
-	printf("\t-t [mChunkTimeMs]\n");	
+	printf("\t-t [mChunkTimeMs]\n");
 	printf("\t-l [logLvCtrl]\n");
 	printf("\t-p [logPath]\n");
 	printf("\t-h show help\n");

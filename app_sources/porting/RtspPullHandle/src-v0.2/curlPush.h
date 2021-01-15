@@ -5,22 +5,22 @@
 #include <lzUtils/base.h>
 #include "streamHandle.h"
 #include <string>
-class curlPushCliPar{
+class curlPushCliPar {
 public:
 	std::string mDstPath;
 	char *userpwd;
 	BAStream *vBAs;
 };
-class curlPushCli{
+class curlPushCli {
 	curlPushCliPar *mPar;
 	bool mPushState;
-public:	
-	curlPushCli(curlPushCliPar* par){
+public:
+	curlPushCli(curlPushCliPar *par) {
 		mPar = par;
 		mPushState = false;
-		curl_global_init(CURL_GLOBAL_ALL);	
+		curl_global_init(CURL_GLOBAL_ALL);
 	}
-	~curlPushCli(){
+	~curlPushCli() {
 		curl_global_cleanup();
 	}
 	static size_t read_callback(void *ptr, size_t size, size_t nmemb, curlPushCli *cli);

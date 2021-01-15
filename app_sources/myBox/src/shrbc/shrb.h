@@ -20,14 +20,14 @@ class ShareMemSync {
 
 	inline asize_t rAble() {
 		return wpos - rpos;
-	}	
-public:
-	void checkInfo(){
-		
 	}
-	void init(int size){
+public:
+	void checkInfo() {
+
+	}
+	void init(int size) {
 		capacity = size - sizeof(ShareMemSync);
-		wpos = rpos = 0;		
+		wpos = rpos = 0;
 	}
 	void clear() {
 		wpos = 0;
@@ -43,19 +43,19 @@ public:
 		wpos += size;
 		return size;
 	}
-	bool write(char* buf,asize_t size,asize_t retry){
+	bool write(char *buf, asize_t size, asize_t retry) {
 		asize_t count = 0;
 		asize_t res = 0;
-		for(int i=0;count < size && i < retry;i++){
-			res = remWrite(buf+count,size-count);
-			if(res == 0){
-				usleep(5*1000);
+		for(int i = 0; count < size && i < retry; i++) {
+			res = remWrite(buf + count, size - count);
+			if(res == 0) {
+				usleep(5 * 1000);
 				continue;
 			}
 			count += res;
 		}
-		if(count < size){
-			s_err("write failed,loss %zu bytes",size-count);
+		if(count < size) {
+			s_err("write failed,loss %zu bytes", size - count);
 			return false;
 		}
 		return true;
@@ -69,18 +69,18 @@ public:
 		rpos += size;
 		return size;
 	}
-	bool read(char* buf,asize_t size,asize_t retry){
+	bool read(char *buf, asize_t size, asize_t retry) {
 		asize_t count = 0;
 		asize_t res = 0;
-		for(size_t i=0;count < size && i < retry;i++){
-			res = remRead(buf+count,size-count);
-			if(res == 0){
-				usleep(5*1000);
+		for(size_t i = 0; count < size && i < retry; i++) {
+			res = remRead(buf + count, size - count);
+			if(res == 0) {
+				usleep(5 * 1000);
 				continue;
 			}
 			count += res;
 		}
-		if(count < size){
+		if(count < size) {
 			return false;
 		}
 		return true;

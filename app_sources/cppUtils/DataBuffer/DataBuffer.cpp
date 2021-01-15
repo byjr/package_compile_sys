@@ -17,7 +17,7 @@ namespace cppUtils {
 		mSize = mCapacity = size;
 		memcpy(mData, data, size);
 	}
-	data_unit::data_unit(data_ptr& data){
+	data_unit::data_unit(data_ptr &data) {
 		mData = new char[data->size()];
 		if(!mData) {
 			s_err("");
@@ -72,7 +72,6 @@ namespace cppUtils {
 	}
 	void data_unit::repFill(char ch) {
 		size_t rem = mCapacity - mSize;
-		// s_war("rem=%zu,mCapacity=%zu,mSize=%zu",rem,mCapacity,mSize);
 		if(rem > 0) {
 			memset(mData + mSize, ch, rem);
 		}
@@ -89,8 +88,7 @@ namespace cppUtils {
 		if(q.size() > max) {
 			return false;
 		}
-		// s_inf("one:%p,front:%p",one.get(),q.front().get());
-		q.push(std::move(one));
+		q.push(one);
 		lk.unlock();
 		cv.notify_one();
 		return true;
@@ -104,7 +102,7 @@ namespace cppUtils {
 			lk.lock();
 			if(gotExitFlag)	return false;
 		}
-		q.push(std::move(one));
+		q.push(one);
 		lk.unlock();
 		cv.notify_one();
 		return true;
@@ -114,51 +112,40 @@ namespace cppUtils {
 		if(q.size() >= max) {
 			q.pop();
 		}
-		q.push(std::move(one));
-		// s_inf("one:%p,back:%p",one.get(),q.back().get());
+		q.push(one);
 		lk.unlock();
 		cv.notify_one();
 		return true;
 	}
 	bool DataBuffer::read(data_ptr &one) {
 		if(q.empty()) {
-			// s_war("wait_for gotExitFlag!");
 			return false;
 		}
-		one = std::move(q.front());
+		one = q.front();
 		q.pop();
 		return true;
 	}
 	bool DataBuffer::wbRead(data_ptr &one) {
 		std::unique_lock<std::mutex> lk(mu);
-		auto unint_dur = std::chrono::seconds(1);
 		for(; !gotExitFlag;) {
-			cv.wait_for(lk, unint_dur, [&]()->bool{return (!q.empty() || gotExitFlag);});
-			if(gotExitFlag) {
-				return false;
-			}
+			cv.wait_for(lk, std::chrono::seconds(1),
+						[&]()->bool{return (!q.empty() || gotExitFlag);});
 			if(!q.empty()) {
-				one = std::move(q.front());
+				one = q.front();
 				q.pop();
 				return true;
 			}
 		}
 		return false;
 	}
-	bool DataBuffer::read(data_ptr &one, size_t _secs) {
+	bool DataBuffer::read(data_ptr &one, size_t _ms) {
 		std::unique_lock<std::mutex> lk(mu);
-		auto unint_dur = std::chrono::milliseconds(10);
-		int count = std::chrono::seconds(_secs) / unint_dur;
-		for(int i = 0; i < count; i++) {
-			cv.wait_for(lk, unint_dur, [&]()->bool{return (!q.empty() || gotExitFlag);});
-			if(gotExitFlag) {
-				return false;
-			}
-			if(!q.empty()) {
-				one = std::move(q.front());
-				q.pop();
-				return true;
-			}
+		cv.wait_for(lk, std::chrono::milliseconds(_ms),
+					[&]()->bool{return (!q.empty() || gotExitFlag);});
+		if(!q.empty()) {
+			one = q.front();
+			q.pop();
+			return true;
 		}
 		return false;
 	}

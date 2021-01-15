@@ -3,8 +3,7 @@
 extern void doBuilderPattern();
 extern int  doProxyPattern();
 extern int do_interpreter();
-int main()
-{
+int main() {
 	// doBuilderPattern();
 	// doProxyPattern();
 	do_interpreter() ;

@@ -25,7 +25,7 @@ namespace duerOSDcsApp {
 			MEDIAPLAYER_PLAYING,
 			MEDIAPLAYER_STOPPED,
 			MEDIAPLAYER_PAUSED,
-			MEDIAPLAYER_FINISHED		
+			MEDIAPLAYER_FINISHED
 		};
 
 		enum AudioPlayerFinishStatus {
@@ -41,15 +41,15 @@ namespace duerOSDcsApp {
 		class AudioPlayerListener {
 		public:
 			virtual void onPlaybackStarted() = 0;
-			virtual void onPlaybackStopped() = 0 ;				 
-			virtual void onPlaybackPaused() = 0;				 
-			virtual void onPlaybackFinished() = 0;				 
-			virtual void onPlaybackNearlyfinished() = 0 ;				 
-			virtual void onPlaybackError() = 0;				 
-			virtual void onBufferUnderrun() = 0;	 
-			virtual void onBufferRefilled() = 0; 
+			virtual void onPlaybackStopped() = 0 ;
+			virtual void onPlaybackPaused() = 0;
+			virtual void onPlaybackFinished() = 0;
+			virtual void onPlaybackNearlyfinished() = 0 ;
+			virtual void onPlaybackError() = 0;
+			virtual void onBufferUnderrun() = 0;
+			virtual void onBufferRefilled() = 0;
 			virtual void onRecvFirstpacket() = 0;
-			virtual void onPlaybackResumed() = 0;	
+			virtual void onPlaybackResumed() = 0;
 		};
 
 	}  // mediaPlayer

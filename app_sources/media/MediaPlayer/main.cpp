@@ -4,7 +4,7 @@
 int main(int argc, char *argv[]) {
 	int opt = 0;
 	while ((opt = getopt(argc, argv, "l:p:h")) != -1) {
-		switch (opt) {		
+		switch (opt) {
 		case 'l':
 			lzUtils_logInit(optarg, NULL);
 			break;
@@ -22,15 +22,15 @@ int main(int argc, char *argv[]) {
 		default: /* '?' */
 			printf("\terr option!\n");
 			return -1;
-		}		
+		}
 	}
 	auto playerPar = std::make_shared<MediaPlayerPar>();
-	if(!playerPar.get()){
+	if(!playerPar.get()) {
 		s_err("");
 		return -1;
 	}
 	auto player = std::make_shared<MediaPlayer>(playerPar);
-	if(!(player.get() && player->isInitDone())){
+	if(!(player.get() && player->isInitDone())) {
 		s_err("");
 		return -1;
 	}

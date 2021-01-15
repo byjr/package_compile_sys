@@ -1,16 +1,16 @@
 #include "MyTmplate.h"
-namespace cppUtils{
-	bool MyTmplate::isReady(){
-		return isReadyFlag;
+namespace cppUtils {
+	bool MyTmplate::isReady() {
+		return mIsReadyFlag;
 	}
-	MyTmplate::MyTmplate(std::shared_ptr<MyTmplatePar>& par):
+	MyTmplate::MyTmplate(std::shared_ptr<MyTmplatePar> &par):
 		mPar			{	par		},
-		isReadyFlag		{	false	},
-		gotExitedFlag	{	false	}{
+		mIsReadyFlag		{	false	},
+		mGotExitFlag	{	false	} {
 
 	}
-	MyTmplate::~MyTmplate(){
-		
+	MyTmplate::~MyTmplate() {
+
 	}
 }
 using namespace cppUtils;
@@ -24,8 +24,8 @@ static int help_info(int argc, char *argv[]) {
 	s_err("\t-h show help");
 	return 0;
 }
-int MyTmplate_main(int argc,char* argv[]){
-	int opt  =-1;
+int MyTmplate_main(int argc, char *argv[]) {
+	int opt  = -1;
 	while ((opt = getopt(argc, argv, "l:p:h")) != -1) {
 		switch (opt) {
 		case 'l':
@@ -40,9 +40,9 @@ int MyTmplate_main(int argc,char* argv[]){
 	}
 	auto par = std::make_shared<MyTmplatePar>();
 	auto ptr = std::make_shared<MyTmplate>(par);
-	if(!(ptr && ptr->isReady())){
+	if(!(ptr && ptr->isReady())) {
 		s_err("new MyTmplate failed!");
 		return -1;
 	}
-    return 0;
+	return 0;
 }

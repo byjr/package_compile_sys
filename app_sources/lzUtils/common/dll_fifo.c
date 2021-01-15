@@ -208,7 +208,7 @@ void *dll_fifo_query ( dll_fifo_t *ptr, ssize_t n ) {
 			if ( ptr->mPar->dat_show ) {
 				ptr->mPar->dat_show ( ptr->mPar->dat_par, nd->data );
 			} else {
-				s_inf ( "nd[%u]:data=%p", i,nd->data );
+				s_inf ( "nd[%u]:data=%p", i, nd->data );
 			}
 		}
 		return NULL;
@@ -247,7 +247,7 @@ void *dll_fifo_rquery ( dll_fifo_t *ptr, ssize_t n ) {
 			if ( ptr->mPar->dat_show ) {
 				ptr->mPar->dat_show ( ptr->mPar->dat_par, nd->data );
 			} else {
-				s_inf ( "nd[%u]:data=%p", i,nd->data );
+				s_inf ( "nd[%u]:data=%p", i, nd->data );
 			}
 		}
 		return NULL;

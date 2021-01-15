@@ -4,27 +4,27 @@
 extern "C" {
 #endif
 
-typedef void (*pBigTopHeap_showOne)(void*);
-typedef int (*pBigTopHeap_isSorted)(void*,void*);
+typedef void (*pBigTopHeap_showOne)(void *);
+typedef int (*pBigTopHeap_isSorted)(void *, void *);
 
-typedef struct BigTopHeapPar_s{
+typedef struct BigTopHeapPar_s {
 	pBigTopHeap_showOne showOne;
 	pBigTopHeap_isSorted isSorted;
 	size_t max;//容量
-}BigTopHeapPar_t;
+} BigTopHeapPar_t;
 
-typedef struct BigTopHeap_s{
+typedef struct BigTopHeap_s {
 	BigTopHeapPar_t *par;
-	void** A;
+	void **A;
 	size_t count;
-}BigTopHeap_t;
+} BigTopHeap_t;
 
-BigTopHeap_t* BigTopHeap_create(BigTopHeapPar_t*);
-int BigTopHeap_push(BigTopHeap_t* ptr,void* data);
-void* BigTopHeap_pop(BigTopHeap_t* ptr);
-void* BigTopHeap_get(BigTopHeap_t* ptr,size_t idx);
-void BigTopHeap_show(BigTopHeap_t* ptr);
-void BigTopHeap_destroy(BigTopHeap_t* ptr);
+BigTopHeap_t *BigTopHeap_create(BigTopHeapPar_t *);
+int BigTopHeap_push(BigTopHeap_t *ptr, void *data);
+void *BigTopHeap_pop(BigTopHeap_t *ptr);
+void *BigTopHeap_get(BigTopHeap_t *ptr, size_t idx);
+void BigTopHeap_show(BigTopHeap_t *ptr);
+void BigTopHeap_destroy(BigTopHeap_t *ptr);
 
 #ifdef __cplusplus
 }

@@ -50,8 +50,8 @@
 #include <sys/stat.h>
 #include <sys/prctl.h>
 #include <fcntl.h>
-struct Utils{
-	static ssize_t getBytes(const char* path){
+struct Utils {
+	static ssize_t getBytes(const char *path) {
 		struct stat lstat;
 		int ret = stat ( path, &lstat );
 		if ( ret < 0 ) return -1;
@@ -87,5 +87,5 @@ struct Utils{
 		return 0;
 	}
 };
-	
+
 #endif//_APP_SOURCES_HTTPD_UTILS_H_

@@ -9,41 +9,41 @@
 extern "C" {
 #include <libavformat/avformat.h>
 }
-enum class dumpSteamStatus{
+enum class dumpSteamStatus {
 	START,
 	CYCW,
 	DUMP,
 	GETI,
 	DONE,
 };
-class RtspCliPar{
+class RtspCliPar {
 public:
-	char* iPath;
-	char* oSufix;
+	char *iPath;
+	char *oSufix;
 	size_t fps;
-	char* bakPath;
+	char *bakPath;
 };
-class PackPar{
+class PackPar {
 public:
-	BAStream* vBAs;
-	BAStream* aBAs;
-	AVFormatContext* ifmt_ctx;
+	BAStream *vBAs;
+	BAStream *aBAs;
+	AVFormatContext *ifmt_ctx;
 	std::string oPath;
 };
 
-class RtspClient{
+class RtspClient {
 	RtspCliPar *mParam;
 	std::thread mPullTread;
 	int vsIdx;
 	int asIdx;
 	volatile dumpSteamStatus mBAStream_status;
 public:
-	RtspClient(RtspCliPar* par);
-	int mediaPackageUp(PackPar* par);
+	RtspClient(RtspCliPar *par);
+	int mediaPackageUp(PackPar *par);
 	int pullSteamLoop();
 	std::string getTimeStemp();
-	void setBAStreamStatus(){
-		if(mBAStream_status != dumpSteamStatus::GETI){
+	void setBAStreamStatus() {
+		if(mBAStream_status != dumpSteamStatus::GETI) {
 			mBAStream_status = dumpSteamStatus::GETI;
 		}
 	}

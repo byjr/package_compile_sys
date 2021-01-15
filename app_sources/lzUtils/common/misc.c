@@ -338,17 +338,17 @@ int cmd_excute(const char *fmt, ...) {
 	}
 	int res = system(cmd);
 	if(res == -1) {
-		s_err("cmd_excute:%s can't be excuted!",cmd);
+		s_err("cmd_excute:%s can't be excuted!", cmd);
 		goto exit;
 	}
 #ifndef _WIN_API_
 	if(!WIFEXITED(res)) {
-		s_err("cmd_excute:%s abort!",cmd);
+		s_err("cmd_excute:%s abort!", cmd);
 		goto exit;
 	}
 	ret = WEXITSTATUS(res);
 #endif
-	s_dbg("cmd_excute: %s exited:%d",cmd,ret);
+	s_dbg("cmd_excute: %s exited:%d", cmd, ret);
 exit:
 	if(cmd) {
 		free(cmd);
@@ -459,10 +459,10 @@ char *dup_argl_cmd(const char *argl) {
 	}
 	return cmd;
 }
-void argv_shift(char* argv[],size_t n){
+void argv_shift(char *argv[], size_t n) {
 	int i = 0;
-	for(;argv[i+n];i++){
-		argv[i]=argv[i+n];
+	for(; argv[i + n]; i++) {
+		argv[i] = argv[i + n];
 	}
 }
 #ifndef _WIN_API_

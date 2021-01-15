@@ -52,7 +52,7 @@ int WaitOthersInstsExit(const char *name, size_t _10ms);
 int openInputByName ( const char *inputNmae );
 int set_thread_name(pthread_t ptid, const char *name);
 int WaitOthersInstsExit ( const char *name, size_t _10ms );
-void argv_shift(char* argv[],size_t n);
+void argv_shift(char *argv[], size_t n);
 #ifdef _WIN_API_
 void *memmem ( const void *mp, size_t mb, const void *sp, size_t sb );
 #endif

@@ -4,28 +4,28 @@
 #include <deque>
 #include <condition_variable>
 #include <chrono>
-class MTQueuePar{
-public:	
+class MTQueuePar {
+public:
 	size_t mMax;
 	void (*destroyOne)(void *);
 };
-class MTQueue{
-	std::deque<void*> q;
+class MTQueue {
+	std::deque<void *> q;
 	std::mutex mu;
 	std::condition_variable cond;
 	size_t maxCount;
 	volatile bool mIsWaitWasExited;
 	void (*destroyOne)(void *);
 public:
-	MTQueue(MTQueuePar* par);
-	void* read();
-	void* read(size_t tdMsec);
-	int write(void* one,size_t tdMsec);
-	int write(void* one);
-	int cycWrite(void* one);
+	MTQueue(MTQueuePar *par);
+	void *read();
+	void *read(size_t tdMsec);
+	int write(void *one, size_t tdMsec);
+	int write(void *one);
+	int cycWrite(void *one);
 	void clear();
 	size_t getSize();
-	void setWaitExitState();	
+	void setWaitExitState();
 	~MTQueue();
 };
 #endif

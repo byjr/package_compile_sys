@@ -70,23 +70,23 @@ extern "C" {
  *    \li \c UPNP_ALL [3]
  */
 typedef enum Upnp_Module {
-    SSDP,
-    SOAP,
-    GENA,
-    TPOOL,
-    MSERV,
-    DOM,
-    API,
-    HTTP
+	SSDP,
+	SOAP,
+	GENA,
+	TPOOL,
+	MSERV,
+	DOM,
+	API,
+	HTTP
 }
 Dbg_Module;
 
 /*@{*/
 typedef enum Upnp_LogLevel_e {
-    UPNP_CRITICAL,
-    UPNP_PACKET,
-    UPNP_INFO,
-    UPNP_ALL
+	UPNP_CRITICAL,
+	UPNP_PACKET,
+	UPNP_INFO,
+	UPNP_ALL
 } Upnp_LogLevel;
 /*@}*/
 
@@ -104,7 +104,7 @@ typedef enum Upnp_LogLevel_e {
 int UpnpInitLog(void);
 #else
 static UPNP_INLINE int UpnpInitLog(void) {
-    return UPNP_E_SUCCESS;
+	return UPNP_E_SUCCESS;
 }
 #endif
 /*!
@@ -112,12 +112,12 @@ static UPNP_INLINE int UpnpInitLog(void) {
  */
 #ifdef DEBUG
 void UpnpSetLogLevel(
-    /*! [in] Log level. */
-    Upnp_LogLevel log_level);
+	/*! [in] Log level. */
+	Upnp_LogLevel log_level);
 #else
 static UPNP_INLINE void UpnpSetLogLevel(Upnp_LogLevel log_level) {
-    return;
-    log_level = log_level;
+	return;
+	log_level = log_level;
 }
 #endif
 
@@ -136,16 +136,16 @@ static UPNP_INLINE void UpnpCloseLog(void) {
  */
 #ifdef DEBUG
 void UpnpSetLogFileNames(
-    /*! [in] Name of the error file. */
-    const char* ErrFileName,
-    /*! [in] Name of the information file. */
-    const char* InfoFileName);
+	/*! [in] Name of the error file. */
+	const char *ErrFileName,
+	/*! [in] Name of the information file. */
+	const char *InfoFileName);
 #else
-static UPNP_INLINE void UpnpSetLogFileNames(const char* ErrFileName,
-        const char* InfoFileName) {
-    return;
-    ErrFileName = ErrFileName;
-    InfoFileName = InfoFileName;
+static UPNP_INLINE void UpnpSetLogFileNames(const char *ErrFileName,
+		const char *InfoFileName) {
+	return;
+	ErrFileName = ErrFileName;
+	InfoFileName = InfoFileName;
 }
 #endif
 
@@ -157,17 +157,17 @@ static UPNP_INLINE void UpnpSetLogFileNames(const char* ErrFileName,
  *  right file descriptor.
  */
 #ifdef DEBUG
-FILE* UpnpGetDebugFile(
-    /*! [in] The level of the debug logging. It will decide whether debug
-     * statement will go to standard output, or any of the log files. */
-    Upnp_LogLevel level,
-    /*! [in] debug will go in the name of this module. */
-    Dbg_Module module);
+FILE *UpnpGetDebugFile(
+	/*! [in] The level of the debug logging. It will decide whether debug
+	 * statement will go to standard output, or any of the log files. */
+	Upnp_LogLevel level,
+	/*! [in] debug will go in the name of this module. */
+	Dbg_Module module);
 #else
-static UPNP_INLINE FILE* UpnpGetDebugFile(Upnp_LogLevel level, Dbg_Module module) {
-    return NULL;
-    level = level;
-    module = module;
+static UPNP_INLINE FILE *UpnpGetDebugFile(Upnp_LogLevel level, Dbg_Module module) {
+	return NULL;
+	level = level;
+	module = module;
 }
 #endif
 
@@ -178,16 +178,16 @@ static UPNP_INLINE FILE* UpnpGetDebugFile(Upnp_LogLevel level, Dbg_Module module
  */
 #ifdef DEBUG
 int DebugAtThisLevel(
-    /*! [in] The level of the debug logging. It will decide whether debug
-     * statement will go to standard output, or any of the log files. */
-    Upnp_LogLevel DLevel,
-    /*! [in] Debug will go in the name of this module. */
-    Dbg_Module Module);
+	/*! [in] The level of the debug logging. It will decide whether debug
+	 * statement will go to standard output, or any of the log files. */
+	Upnp_LogLevel DLevel,
+	/*! [in] Debug will go in the name of this module. */
+	Dbg_Module Module);
 #else
 static UPNP_INLINE int DebugAtThisLevel(Upnp_LogLevel DLevel, Dbg_Module Module) {
-    return 0;
-    DLevel = DLevel;
-    Module = Module;
+	return 0;
+	DLevel = DLevel;
+	Module = Module;
 }
 #endif
 
@@ -197,20 +197,20 @@ static UPNP_INLINE int DebugAtThisLevel(Upnp_LogLevel DLevel, Dbg_Module Module)
  */
 #ifdef DEBUG
 void UpnpPrintf(
-    /*! [in] The level of the debug logging. It will decide whether debug
-     * statement will go to standard output, or any of the log files. */
-    Upnp_LogLevel DLevel,
-    /*! [in] debug will go in the name of this module. */
-    Dbg_Module Module,
-    /*! [in] Name of the file from where debug statement is coming. */
-    const char* DbgFileName,
-    /*! [in] Line number of the file from where debug statement is coming. */
-    int DbgLineNo,
-    /*! [in] Printf like format specification. */
-    const char* FmtStr,
-    /*! [in] Printf like Variable number of arguments that will go in the
-     * debug statement. */
-    ...)
+	/*! [in] The level of the debug logging. It will decide whether debug
+	 * statement will go to standard output, or any of the log files. */
+	Upnp_LogLevel DLevel,
+	/*! [in] debug will go in the name of this module. */
+	Dbg_Module Module,
+	/*! [in] Name of the file from where debug statement is coming. */
+	const char *DbgFileName,
+	/*! [in] Line number of the file from where debug statement is coming. */
+	int DbgLineNo,
+	/*! [in] Printf like format specification. */
+	const char *FmtStr,
+	/*! [in] Printf like Variable number of arguments that will go in the
+	 * debug statement. */
+	...)
 #if (__GNUC__ >= 3)
 /* This enables printf like format checking by the compiler. */
 __attribute__((format(__printf__, 5, 6)))
@@ -218,13 +218,13 @@ __attribute__((format(__printf__, 5, 6)))
 ;
 #else /* DEBUG */
 static UPNP_INLINE void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
-                                   const char* DbgFileName, int DbgLineNo, const char* FmtStr, ...) {
-    return;
-    DLevel = DLevel;
-    Module = Module;
-    DbgFileName = DbgFileName;
-    DbgLineNo = DbgLineNo;
-    FmtStr = FmtStr;
+								   const char *DbgFileName, int DbgLineNo, const char *FmtStr, ...) {
+	return;
+	DLevel = DLevel;
+	Module = Module;
+	DbgFileName = DbgFileName;
+	DbgLineNo = DbgLineNo;
+	FmtStr = FmtStr;
 }
 #endif /* DEBUG */
 
@@ -234,20 +234,20 @@ static UPNP_INLINE void UpnpPrintf(Upnp_LogLevel DLevel, Dbg_Module Module,
  */
 #ifdef DEBUG
 void UpnpDisplayFileAndLine(
-    /*! [in] File descriptor where line number and file name will be
-     * written. */
-    FILE* fd,
-    /*! [in] Name of the file. */
-    const char* DbgFileName,
-    /*! [in] Line number of the file. */
-    int DbgLineNo);
+	/*! [in] File descriptor where line number and file name will be
+	 * written. */
+	FILE *fd,
+	/*! [in] Name of the file. */
+	const char *DbgFileName,
+	/*! [in] Line number of the file. */
+	int DbgLineNo);
 #else
-static UPNP_INLINE void UpnpDisplayFileAndLine(FILE* fd,
-        const char* DbgFileName, int DbgLineNo) {
-    return;
-    fd = fd;
-    DbgFileName = DbgFileName;
-    DbgLineNo = DbgLineNo;
+static UPNP_INLINE void UpnpDisplayFileAndLine(FILE *fd,
+		const char *DbgFileName, int DbgLineNo) {
+	return;
+	fd = fd;
+	DbgFileName = DbgFileName;
+	DbgLineNo = DbgLineNo;
 }
 #endif
 
@@ -256,22 +256,22 @@ static UPNP_INLINE void UpnpDisplayFileAndLine(FILE* fd,
  */
 #ifdef DEBUG
 void UpnpDisplayBanner(
-    /*! [in] file descriptor where the banner will be written. */
-    FILE* fd,
-    /*! [in] The buffer that will be written. */
-    const char** lines,
-    /*! [in] Size of the buffer. */
-    size_t size,
-    /*! [in] This parameter provides the width of the banner. */
-    size_t starlength);
+	/*! [in] file descriptor where the banner will be written. */
+	FILE *fd,
+	/*! [in] The buffer that will be written. */
+	const char **lines,
+	/*! [in] Size of the buffer. */
+	size_t size,
+	/*! [in] This parameter provides the width of the banner. */
+	size_t starlength);
 #else
-static UPNP_INLINE void UpnpDisplayBanner(FILE* fd, const char** lines,
-        size_t size, int starlength) {
-    return;
-    fd = fd;
-    lines = lines;
-    size = size;
-    starlength = starlength;
+static UPNP_INLINE void UpnpDisplayBanner(FILE *fd, const char **lines,
+		size_t size, int starlength) {
+	return;
+	fd = fd;
+	lines = lines;
+	size = size;
+	starlength = starlength;
 }
 #endif
 

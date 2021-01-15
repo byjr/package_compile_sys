@@ -79,7 +79,7 @@ namespace duerOSDcsApp {
 
 			void handleHungryState();
 
-			
+
 			void pushStream(unsigned int channels, const void *buffer, unsigned long buff_size);
 
 			void onStreamInterrupt() override;

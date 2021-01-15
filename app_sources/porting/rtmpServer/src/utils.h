@@ -18,8 +18,7 @@
 
 template<class Key, class Value>
 Value get(const std::map<Key, Value> &map, const Key &k,
-	  const Value &def = Value())
-{
+		  const Value &def = Value()) {
 	typename std::map<Key, Value>::const_iterator i = map.find(k);
 	if (i == map.end())
 		return def;

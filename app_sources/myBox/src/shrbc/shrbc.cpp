@@ -9,10 +9,10 @@
 #include <fstream>
 #include <vector>
 #include "shrb.h"
-static char* mBuffer = NULL;
-static size_t mSize = 8*1024 + sizeof(ShareMemSync);
+static char *mBuffer = NULL;
+static size_t mSize = 8 * 1024 + sizeof(ShareMemSync);
 #define SHMEME_PATCH "/shm_test"
-static char* shrb_create(const char *name, size_t size) {
+static char *shrb_create(const char *name, size_t size) {
 	int fail = 0;
 	int fd = shm_open(name, O_RDWR | O_CREAT, 0777);
 	if(fd <= 0) {
@@ -34,7 +34,7 @@ static char* shrb_create(const char *name, size_t size) {
 			show_errno(0, "mmap");
 			fail = 2;
 			break;
-		}		
+		}
 		close(fd);
 	} while(0);
 	switch(fail) {
@@ -56,7 +56,7 @@ char *shrb_get(const char *name, size_t size) {
 	if(fd <= 0) {
 		show_errno(0, "shrb_get/shm_open");
 		return shrb_create(name, size);
-	}	
+	}
 	char *_shrb = NULL;
 	size_t bytes = sizeof(char) + size * 2;
 	do {
@@ -85,8 +85,8 @@ void shrb_detach(char *ptr) {
 	}
 	munmap(ptr, mSize);
 }
-int shrbd_main(int argc,char* argv[]){
-	int opt  =-1;
+int shrbd_main(int argc, char *argv[]) {
+	int opt  = -1;
 	while ((opt = getopt(argc, argv, "l:p:h")) != -1) {
 		switch (opt) {
 		case 'l':
@@ -99,43 +99,43 @@ int shrbd_main(int argc,char* argv[]){
 			return -1;
 		}
 	}
-	char *mBuffer = shrb_get(SHMEME_PATCH,mSize);
-	if(mBuffer == NULL){
+	char *mBuffer = shrb_get(SHMEME_PATCH, mSize);
+	if(mBuffer == NULL) {
 		s_err("");
 		return -1;
-	}	
-	auto mShm = (ShareMemSync*) mBuffer;
-	memset(mBuffer,0,sizeof(ShareMemSync));
-	mShm->init(mSize);	
+	}
+	auto mShm = (ShareMemSync *) mBuffer;
+	memset(mBuffer, 0, sizeof(ShareMemSync));
+	mShm->init(mSize);
 	mShm->checkInfo();
-	std::ifstream ifs("in.bin",std::ios::binary);
-	if(ifs.is_open() == false){
+	std::ifstream ifs("in.bin", std::ios::binary);
+	if(ifs.is_open() == false) {
 		s_err("");
 		return -1;
 	}
 	std::vector<char> buf(2345);
 	size_t offset = 0;
 	sleep(2);
-	for(;;){
-		ifs.read(buf.data(),buf.size());
-		if(ifs.gcount() <= 0){
-			if(ifs.eof()){
+	for(;;) {
+		ifs.read(buf.data(), buf.size());
+		if(ifs.gcount() <= 0) {
+			if(ifs.eof()) {
 				s_war("EOF");
 				break;
 			}
-			show_errno(0,read);			
-		}		
-		while(!mShm->write(buf.data(),ifs.gcount(),100)){
-			usleep(10*1000);
+			show_errno(0, read);
+		}
+		while(!mShm->write(buf.data(), ifs.gcount(), 100)) {
+			usleep(10 * 1000);
 		}
 		offset += ifs.gcount();
-		s_inf("offset=%d",offset);
+		s_inf("offset=%d", offset);
 	}
 	ifs.close();
-    return 0;
+	return 0;
 }
-int shrbc_main(int argc,char* argv[]){
-	int opt  =-1;
+int shrbc_main(int argc, char *argv[]) {
+	int opt  = -1;
 	while ((opt = getopt(argc, argv, "l:p:h")) != -1) {
 		switch (opt) {
 		case 'l':
@@ -148,37 +148,37 @@ int shrbc_main(int argc,char* argv[]){
 			return -1;
 		}
 	}
-	char *mBuffer = shrb_get(SHMEME_PATCH,mSize);
-	if(mBuffer == NULL){
+	char *mBuffer = shrb_get(SHMEME_PATCH, mSize);
+	if(mBuffer == NULL) {
 		s_err("");
 		return -1;
 	}
-	auto mShm = (ShareMemSync*) mBuffer;
+	auto mShm = (ShareMemSync *) mBuffer;
 	mShm->checkInfo();
-	std::ofstream ofs("out.bin",std::ios::binary);
+	std::ofstream ofs("out.bin", std::ios::binary);
 
-	if(ofs.is_open() == false){
+	if(ofs.is_open() == false) {
 		s_err("");
 		return -1;
 	}
 	std::vector<char> buf(1234);
 	size_t res = 0;
-	size_t offset=0;
-	for(;;){		
-		res = mShm->remRead(buf.data(),buf.size());
-		if(res == 0){
-			usleep(1000*2);
+	size_t offset = 0;
+	for(;;) {
+		res = mShm->remRead(buf.data(), buf.size());
+		if(res == 0) {
+			usleep(1000 * 2);
 			continue;
 		}
 		offset += res;
-		ofs.write(buf.data(),res);
-		if(ofs.good() == false){
-			show_errno(0,wrute);			
+		ofs.write(buf.data(), res);
+		if(ofs.good() == false) {
+			show_errno(0, wrute);
 		}
 		ofs.flush();
-		s_inf("offset=%d",offset);
+		s_inf("offset=%d", offset);
 	}
 	ofs.close();
-    return 0;	
-    return 0;
+	return 0;
+	return 0;
 }

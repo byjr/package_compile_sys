@@ -1,86 +1,74 @@
 #include "One2Multi.h"
-namespace cppUtils{
-	void One2Multi::addOutput(int idx,buf_ptr& buf){
-		std::unique_lock<std::mutex> lk(mPar->mu);
-		mPar->outBufs[idx]=buf;
+#include <vector>
+#include <fstream>
+#include <mutex>
+namespace cppUtils {
+	void One2Multi::addObserver(ProcessInterFace *ob) {
+		mObservers.push_back(ob);
 	}
-	void One2Multi::delOutput(int idx){
-		std::unique_lock<std::mutex> lk(mPar->mu);
-		mPar->outBufs.erase(idx);
+	void One2Multi::addOutput(int i, buf_ptr &buf) {
+		std::unique_lock<std::mutex> lk(*(mPar->mtxPtr));
+		mPar->inBufs[i] = buf;
 	}
-	void One2Multi::setExit(bool graceful){
+	void One2Multi::delOutput(int i) {
+		std::unique_lock<std::mutex> lk(*(mPar->mtxPtr));
+		mPar->inBufs.erase(i);
+	}
+	bool One2Multi::setExit(bool graceful) {
 		isGracefulFlag = graceful;
-		gotExitedFlag = true;
+		mGotExitFlag = true;
 	}
-	void One2Multi::stop(){
-		gotExitedFlag = true;
+	bool One2Multi::stop() {
+		s_war("stop o2m ...");
+		mGotExitFlag = true;
+		for(auto i : mPar->inBufs) {
+			i.second->stop();
+		}
+		return true;
 	}
-	bool One2Multi::isReady(){
-		return isReadyFlag;
+	bool One2Multi::wait() {
+		return mThread.get();
 	}
-	One2Multi::One2Multi(std::shared_ptr<One2MultiPar>& par):
+	bool One2Multi::isReady() {
+		return mIsReadyFlag;
+	}
+	bool One2Multi::notifyExit() {
+		for(auto i : mObservers) {
+			i->onProcessExit();
+		}
+		return true;
+	}
+	One2Multi::One2Multi(std::shared_ptr<One2MultiPar> &par):
 		mPar			{	par		},
-		isReadyFlag		{	false	},
-		gotExitedFlag	{	false	},
-		isGracefulFlag	{	true	}{
-		mThread = std::async([this]()->bool{
-			data_ptr inData,outData;
-			bool res = true;
-			for(;!gotExitedFlag;){
-				if(!mPar->inBuf->wbRead(inData)){
-					s_err("wbRead");
+		mIsReadyFlag	{	false	},
+		mGotExitFlag	{	false	},
+		isGracefulFlag	{	true	} {
+		mThread = std::async(std::launch::async, [this]()->bool{
+			data_ptr inData, outData;
+			for(; !mGotExitFlag;) {
+				std::unique_lock<std::mutex> lk(*(mPar->mtxPtr));
+				if(!mPar->inBufs.begin()->second->wbRead(inData)) {
+					s_war("One2Multi read exit!");
+					setExit(true);
 					break;
 				}
-				if(gotExitedFlag) break;
-				{
-					std::unique_lock<std::mutex> lk(mPar->mu);
-					for(auto o:mPar->outBufs){
-						if(gotExitedFlag) break;
-						if(!o.second) continue;
-						outData = std::make_shared<data_unit>(inData);
-						if(!o.second->crcWrite(outData)){
-							s_err("wbWrite");
-							continue;
-						}
-					}					
+				if(mGotExitFlag) break;
+				lk.unlock();
+				for(auto o : mPar->outBufs) {
+					if(mGotExitFlag) break;
+					if(!o.second) continue;
+					if(!o.second->wbWrite(inData)) {
+						s_war("One2Multi write exit!");
+						setExit(true);
+						break;
+					}
 				}
+				lk.lock();
 			}
+			mIsReadyFlag = false;
 			return isGracefulFlag;
 		});
-		isReadyFlag = true;
+		mIsReadyFlag = true;
 	}
-	One2Multi::~One2Multi(){}
-}
-using namespace cppUtils;
-#include <lzUtils/base.h>
-static int help_info(int argc, char *argv[]) {
-	s_err("%s help:", get_last_name(argv[0]));
-	s_err("\t-i [input path]");
-	s_err("\t-o [output url]");
-	s_err("\t-l [logLvCtrl]");
-	s_err("\t-p [logPath]");
-	s_err("\t-h show help");
-	return 0;
-}
-int One2Multi_main(int argc,char* argv[]){
-	int opt  =-1;
-	while ((opt = getopt(argc, argv, "l:p:h")) != -1) {
-		switch (opt) {
-		case 'l':
-			lzUtils_logInit(optarg, NULL);
-			break;
-		case 'p':
-			lzUtils_logInit(NULL, optarg);
-			break;
-		default: /* '?' */
-			return help_info(argc, argv);
-		}
-	}
-	auto par = std::make_shared<One2MultiPar>();	
-	auto ptr = std::make_shared<One2Multi>(par);
-	if(!(ptr && ptr->isReady())){
-		s_err("new One2Multi failed!");
-		return -1;
-	}
-    return 0;
+	One2Multi::~One2Multi() {}
 }

@@ -62,12 +62,12 @@ void lzUtils_rlog (
 #define s_errn()     	tlog(_TRC,1,"got error!");
 //这一组宏 都是不带锁的，适用于信号回调函数中，但不能用于多线程程序调试
 #define raw_nl(x...)    rlog(_RAW,0,x);
-#define err_nl(x...)    dlog(_ERR,0,x);
-#define war_nl(x...)    dlog(_WAR,0,x);
-#define inf_nl(x...)    dlog(_INF,0,x);
-#define dbg_nl(x...)    dlog(_DBG,0,x);
-#define trc_nl(x...)    dlog(_TRC,0,x);
-#define errn_l()     	dlog(_TRC,0,"got error!");
+#define err_nl(x...)    tlog(_ERR,0,x);
+#define war_nl(x...)    tlog(_WAR,0,x);
+#define inf_nl(x...)    tlog(_INF,0,x);
+#define dbg_nl(x...)    tlog(_DBG,0,x);
+#define trc_nl(x...)    tlog(_TRC,0,x);
+#define errn_l()     	tlog(_TRC,0,"got error!");
 
 #define err_t(x...)     tlog(_ERR,1,x);
 #define war_t(x...)     tlog(_WAR,1,x);

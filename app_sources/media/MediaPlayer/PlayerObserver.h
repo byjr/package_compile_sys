@@ -1,6 +1,6 @@
 #ifndef PlayerObserver_H_
 #define PlayerObserver_H_
-class PlayerObserver{
+class PlayerObserver {
 	virtual bool onPlaybackStarted() 		= 0 ;
 	virtual bool onPlaybackStopped() 		= 0 ;
 	virtual bool onPlaybackPaused() 		= 0 ;

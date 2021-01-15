@@ -11,8 +11,8 @@
 #include <thread>
 #include <sstream>
 #include <fstream>
-#include <lzUtils/common/fp_op.h>	
-#include <lzUtils/base.h>	
+#include <lzUtils/common/fp_op.h>
+#include <lzUtils/base.h>
 #include <sys/epoll.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -20,5 +20,5 @@
 #include <string.h>
 #include <unistd.h>
 #include "DataBuffer.h"
-typedef std::pair<struct sockaddr,socklen_t> PerrAddr_t;
+typedef std::pair<struct sockaddr, socklen_t> PerrAddr_t;
 #endif

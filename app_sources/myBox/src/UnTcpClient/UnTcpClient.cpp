@@ -36,75 +36,75 @@ static int fd_set_flag(int fd, int flag) {
 	}
 	return 0;
 }
-class UnTcpClient{
-    int cfd;
+class UnTcpClient {
+	int cfd;
 	bool initDoneFlag;
-	std::atomic<bool> gotExitFlag;	
-public:	
-	UnTcpClient(const char* addr){
+	std::atomic<bool> gotExitFlag;
+public:
+	UnTcpClient(const char *addr) {
 		initDoneFlag = false;
-		gotExitFlag = false;		
-        struct sockaddr_in my_addr;		
+		gotExitFlag = false;
+		struct sockaddr_in my_addr;
 		cfd = socket(AF_INET, SOCK_STREAM, 0);
-		if(cfd < 0){
-			show_errno(0,"socket");
+		if(cfd < 0) {
+			show_errno(0, "socket");
 			return;
 		}
 		memset(&my_addr, 0, sizeof(struct sockaddr_in));
 		my_addr.sin_family = AF_INET;
 		my_addr.sin_port = htons(6666);
-		if(inet_pton(AF_INET, "127.0.0.1", &my_addr.sin_addr) < 0){
-			show_errno(0,"connect");
-			return ;			
-		}
-		if (connect(cfd, (struct sockaddr *)&my_addr, sizeof(my_addr)) < 0) {
-			show_errno(0,"connect");
+		if(inet_pton(AF_INET, "127.0.0.1", &my_addr.sin_addr) < 0) {
+			show_errno(0, "connect");
 			return ;
 		}
-		if(fd_set_flag(cfd,O_NONBLOCK) < 0){
+		if (connect(cfd, (struct sockaddr *)&my_addr, sizeof(my_addr)) < 0) {
+			show_errno(0, "connect");
+			return ;
+		}
+		if(fd_set_flag(cfd, O_NONBLOCK) < 0) {
 			return;
 		}
 		initDoneFlag = true;
 	}
-	~UnTcpClient(){
-		if(cfd > 0){
+	~UnTcpClient() {
+		if(cfd > 0) {
 			close(cfd);
 		}
 	}
-	bool isInitDone(){
+	bool isInitDone() {
 		return initDoneFlag;
 	}
-	bool run(){
-		std::ifstream ifs("in.bin",std::ios::binary);
-		if(!ifs.is_open()){
-			show_errno(0,"ifs open");
-			return false;		
+	bool run() {
+		std::ifstream ifs("in.bin", std::ios::binary);
+		if(!ifs.is_open()) {
+			show_errno(0, "ifs open");
+			return false;
 		}
-		std::vector<char> buffer(1024*4);
-		for(;!gotExitFlag;){
-			ifs.read(buffer.data(),buffer.size());
-			if(ifs.gcount() <= 0){
-				if(ifs.eof()){
+		std::vector<char> buffer(1024 * 4);
+		for(; !gotExitFlag;) {
+			ifs.read(buffer.data(), buffer.size());
+			if(ifs.gcount() <= 0) {
+				if(ifs.eof()) {
 					s_war("got eof!!");
 					break;
 				}
-				show_errno(0,"ifs read");
+				show_errno(0, "ifs read");
 				break;
 			}
 			int res = 0;
 			size_t count  = 0;
-			for(int i =0; i< 10 && count < buffer.size() && !gotExitFlag;){
-				res = write(cfd,buffer.data()+count,buffer.size()-count);
-				if(res <= 0){
-					if(errno == EINTR){
+			for(int i = 0; i < 10 && count < buffer.size() && !gotExitFlag;) {
+				res = write(cfd, buffer.data() + count, buffer.size() - count);
+				if(res <= 0) {
+					if(errno == EINTR) {
 						continue;
 					}
-					if(errno == EAGAIN){
+					if(errno == EAGAIN) {
 						i++;
 						s_war("retry ...!!");
 						continue;
 					}
-					show_errno(0,"socket write!!!");
+					show_errno(0, "socket write!!!");
 					break;
 				}
 				count += res;
@@ -116,8 +116,8 @@ public:
 		return true;
 	}
 };
-int UnTcpClient_main(int argc,char* argv[]){
-	int opt  =-1;
+int UnTcpClient_main(int argc, char *argv[]) {
+	int opt  = -1;
 	while ((opt = getopt(argc, argv, "l:p:h")) != -1) {
 		switch (opt) {
 		case 'l':
@@ -129,10 +129,10 @@ int UnTcpClient_main(int argc,char* argv[]){
 		default: /* '?' */
 			return help_info(argc, argv);
 		}
-	}		
-	std::unique_ptr<UnTcpClient> cli = 
+	}
+	std::unique_ptr<UnTcpClient> cli =
 		std::unique_ptr<UnTcpClient>(new UnTcpClient("/tmp/audioDump"));
-	if(!cli->isInitDone()){
+	if(!cli->isInitDone()) {
 		s_err("UnTcpClient create failed!!!");
 		return -1;
 	}
@@ -140,5 +140,5 @@ int UnTcpClient_main(int argc,char* argv[]){
 	s_war("exit main()...");
 	cli.reset();
 	s_war("exit main()!!!!");
-    return 0;
+	return 0;
 }

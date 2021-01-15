@@ -7,9 +7,9 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #define SOCK_MAX_CONN 1024
-bool TcpServer::prepare(){
+bool TcpServer::prepare() {
 	int ret = 0;
-#if 0	
+#if 0
 	int yes = 1;
 	char addr_service[8] = {0};
 	sprintf(addr_service, "%d", mPar->port);
@@ -57,75 +57,75 @@ bool TcpServer::prepare(){
 	freeaddrinfo(result);
 #else
 	mSocket = socket(AF_INET, SOCK_STREAM, 0);
-	if(mSocket < 0){
-		show_errno(0,"socket");
+	if(mSocket < 0) {
+		show_errno(0, "socket");
 		return false;
 	}
 	struct sockaddr_in addr;
 	addr.ai_family = AF_INET;
 	addr.sin_port = htons(10080);
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	if(bind(mSocket, (struct sockaddr *)&addr, sizeof(addr)) == -1){
-		show_errno(0,"bind");
+	if(bind(mSocket, (struct sockaddr *)&addr, sizeof(addr)) == -1) {
+		show_errno(0, "bind");
 		close(mSocket);
-		return false;		
+		return false;
 	}
 #endif
-	if(listen(mSocket, SOCK_MAX_CONN) != 0){
+	if(listen(mSocket, SOCK_MAX_CONN) != 0) {
 		show_errno(0, "listen");
 		close(mSocket);
 		return false;
-	}	
-	return true;		
+	}
+	return true;
 }
-bool TcpServer::run(){
-	if(set_thread_name(0,"TcpServer")< 0){
+bool TcpServer::run() {
+	if(set_thread_name(0, "TcpServer") < 0) {
 		s_err("set_thread_name:TcpServer failed!");
 	}
 	mEpFd = epoll_create1(0);
-	if(mEpFd == -1){
+	if(mEpFd == -1) {
 		show_errno(0, "epoll_create1");
-		return false;			
+		return false;
 	}
 	struct epoll_event ev;
 	ev.events = EPOLLIN;
 	ev.data.fd = mSocket;
-	int res = epoll_ctl(mEpFd,EPOLL_CTL_ADD,mSocket,&ev);
-	if(res == -1){
+	int res = epoll_ctl(mEpFd, EPOLL_CTL_ADD, mSocket, &ev);
+	if(res == -1) {
 		show_errno(0, "epoll_ctl");
 		close(mEpFd);
-		return false;			
+		return false;
 	}
 	std::vector<struct epoll_event> events(mPar->maxevents);
 	int nReadys = 0;
-	for(;!gotExitFlag;){
-		for(int i=0;i<mPar->retryMax;i++){
-			nReadys = epoll_pwait(mEpFd, events.data(), mPar->maxevents, mPar->timeout_ms,NULL);
-			if(nReadys == -1){
+	for(; !gotExitFlag;) {
+		for(int i = 0; i < mPar->retryMax; i++) {
+			nReadys = epoll_pwait(mEpFd, events.data(), mPar->maxevents, mPar->timeout_ms, NULL);
+			if(nReadys == -1) {
 				show_errno(0, "epoll_wait");
-				if(errno == EINTR){
+				if(errno == EINTR) {
 					continue;
 				}
 			}
 			break;
-		}		
-		for(int i=0;i<nReadys;i++){
+		}
+		for(int i = 0; i < nReadys; i++) {
 			int fd = events[i].data.fd;
 			int conn = -1;
-			if(fd == mSocket){
+			if(fd == mSocket) {
 				auto pAddr = std::make_unq<sockaddr_t>();
 				pAddr->bytes = sizeof(pAddr->addr);
-				for(int i=0;i<mPar->retryMax;i++){
-					conn = accept4(fd,&pAddr->addr,&pAddr->bytes,SOCK_NONBLOCK|SOCK_CLOEXEC);
-					if( conn == -1){
+				for(int i = 0; i < mPar->retryMax; i++) {
+					conn = accept4(fd, &pAddr->addr, &pAddr->bytes, SOCK_NONBLOCK | SOCK_CLOEXEC);
+					if( conn == -1) {
 						show_errno(0, "epoll_wait");
-						if(errno == EAGAIN | errno == EWOULDBLOCK | errno == EINTR){
+						if(errno == EAGAIN | errno == EWOULDBLOCK | errno == EINTR) {
 							continue;
 						}
 					}
 					break;
 				}
-				if(conn == -1){
+				if(conn == -1) {
 					continue;
 				}
 				mTaskHandlerPar = std::make_unq<TaskHandlerPar>();
@@ -136,56 +136,56 @@ bool TcpServer::run(){
 				mTaskHandlerPar->plyBuf = mPar->plyBuf;
 				mTaskHandlerPar->recBuf = mPar->recBuf;
 				auto hd = std::make_shared<TaskHandler>(mTaskHandlerPar);
-				if(hd.get() == nullptr){
+				if(hd.get() == nullptr) {
 					s_err("");
 					close(fd);
 					break;
 				}
 				mThMap[conn] = std::move(hd);
-			}else{
-				do{				
-					if(events[i].events & EPOLLHUP){
+			} else {
+				do {
+					if(events[i].events & EPOLLHUP) {
 						s_inf("EPOLLHUP is set!!!");
 						auto hd = mThMap[fd];
-						if(hd){
+						if(hd) {
 							hd->notifyPeerClosed();
 						}
 						break;
 					}
-					if(events[i].events & EPOLLERR){
+					if(events[i].events & EPOLLERR) {
 						s_err("EPOLLERR is set!!!");
 						auto hd = mThMap[fd];
-						if(hd){
+						if(hd) {
 							hd->notifyPeerClosed();
 						}
 						break;
 					}
-					if(events[i].events & EPOLLIN){
+					if(events[i].events & EPOLLIN) {
 						s_inf("EPOLLIN is set!!!");
 						auto hd = mThMap[fd];
-						if(hd){
+						if(hd) {
 							hd->notifyReadAble();
-						}						
+						}
 					}
-					if(events[i].events & EPOLLOUT){
+					if(events[i].events & EPOLLOUT) {
 						s_inf("EPOLLOUT is set!!!");
 						auto hd = mThMap[fd];
-						if(hd){
+						if(hd) {
 							hd->notifyWriteAble();
-						}						
-					}			
-				}while(0);
+						}
+					}
+				} while(0);
 			}
-			s_inf("events:%s",std::bitset<32>(events[i].events).to_string().data());
+			s_inf("events:%s", std::bitset<32>(events[i].events).to_string().data());
 		}
-		s_inf("===mThMap size:%lu",(unsigned long)mThMap.size());
-		for(auto it=mThMap.begin();it!=mThMap.end();){
-			if(!it->second){
+		s_inf("===mThMap size:%lu", (unsigned long)mThMap.size());
+		for(auto it = mThMap.begin(); it != mThMap.end();) {
+			if(!it->second) {
 				continue;
 			}
-			if(it->second->isFinished()){
-				it=mThMap.erase(it);
-			}else{
+			if(it->second->isFinished()) {
+				it = mThMap.erase(it);
+			} else {
 				it++;
 			}
 		}
@@ -193,13 +193,13 @@ bool TcpServer::run(){
 	return true;
 }
 
-TcpServer::TcpServer(std::unique_ptr<TcpServerPar>& par){
+TcpServer::TcpServer(std::unique_ptr<TcpServerPar> &par) {
 	gotExitFlag = false;
 	isReadyFlag = false;
 	mPar = std::move(par);
-	if(prepare() == false){
+	if(prepare() == false) {
 		s_err("");
-		return ;			
+		return ;
 	}
 	mTrd = std::thread([this]()->bool{
 		return run();
@@ -207,9 +207,9 @@ TcpServer::TcpServer(std::unique_ptr<TcpServerPar>& par){
 	isReadyFlag = true;
 }
 
-TcpServer::~TcpServer(){
-	if(mTrd.joinable()){
+TcpServer::~TcpServer() {
+	if(mTrd.joinable()) {
 		mTrd.join();
 	}
 }
-// }	
+// }

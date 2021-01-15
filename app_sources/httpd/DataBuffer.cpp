@@ -2,68 +2,68 @@
 #include <thread>
 #include "TheCommon.h"
 #include "DataBuffer.h"
-data_unit::~data_unit(){
-	if(data_ptr){
+data_unit::~data_unit() {
+	if(data_ptr) {
 		delete data_ptr;
 	}
 }
 
-data_unit::data_unit(const void* data,size_t size){
+data_unit::data_unit(const void *data, size_t size) {
 	data_ptr = new char[size];
-	if(!data_ptr){
+	if(!data_ptr) {
 		s_err("");
 		return;
 	}
 	data_size = space_size = size;
-	memcpy(data_ptr,data,size);
+	memcpy(data_ptr, data, size);
 }
-data_unit::data_unit(data_unit* old){
+data_unit::data_unit(data_unit *old) {
 	data_size = space_size = old->size();
 	data_ptr = new char[data_size];
-	if(!data_ptr){
+	if(!data_ptr) {
 		s_err("");
 		return;
 	}
-	memcpy(data_ptr,old->data(),data_size);	
+	memcpy(data_ptr, old->data(), data_size);
 }
-data_unit::data_unit(size_t size,char ch){
+data_unit::data_unit(size_t size, char ch) {
 	data_ptr = new char[size];
-	if(!data_ptr){
+	if(!data_ptr) {
 		s_err("");
 		return;
 	}
-	memset(data_ptr,ch,size);
+	memset(data_ptr, ch, size);
 	data_size = space_size = size;
 }
-data_unit::data_unit(size_t size){
+data_unit::data_unit(size_t size) {
 	data_ptr = new char[size];
-	if(!data_ptr){
+	if(!data_ptr) {
 		s_err("");
 		return;
 	}
 	data_size = space_size = size;
-}	
-char* data_unit::data(){
+}
+char *data_unit::data() {
 	return data_ptr;
 }
-size_t data_unit::size(){
+size_t data_unit::size() {
 	return data_size;
 }
-size_t data_unit::capacity(){
+size_t data_unit::capacity() {
 	return space_size;
 }
-bool data_unit::resize(size_t size){
-	if(!data_ptr){
+bool data_unit::resize(size_t size) {
+	if(!data_ptr) {
 		s_err("");
 		return false;
 	}
-	if(size > space_size){
+	if(size > space_size) {
 		auto ptr = new char[size];
-		if(!ptr){
+		if(!ptr) {
 			s_err("oom");
 			return false;
 		}
-		memcpy(ptr,data_ptr,data_size);
+		memcpy(ptr, data_ptr, data_size);
 		free(data_ptr);
 		data_ptr = ptr;
 	}
@@ -72,14 +72,14 @@ bool data_unit::resize(size_t size){
 }
 
 DataBuffer::DataBuffer(std::size_t max):
-gotExitFlag{false}{
+	gotExitFlag{false} {
 	this->max = max;
 	isBusyFlag = false;
 }
-void DataBuffer::setExitFlag(){
+void DataBuffer::setExitFlag() {
 	gotExitFlag = true;
 }
-bool DataBuffer::push(data_ptr& one){
+bool DataBuffer::push(data_ptr &one) {
 	std::unique_lock<std::mutex> lk(mu);
 	if(q.size() > max) {
 		return false;
@@ -88,9 +88,9 @@ bool DataBuffer::push(data_ptr& one){
 	q.push(std::move(one));
 	lk.unlock();
 	cv.notify_one();
-	return true;	
+	return true;
 }
-bool DataBuffer::wbPush(data_ptr& one){
+bool DataBuffer::wbPush(data_ptr &one) {
 	std::unique_lock<std::mutex> lk(mu);
 	while(q.size() >= max) {
 		if(gotExitFlag)	return false;
@@ -102,9 +102,9 @@ bool DataBuffer::wbPush(data_ptr& one){
 	q.push(std::move(one));
 	lk.unlock();
 	cv.notify_one();
-	return true;	
+	return true;
 }
-bool DataBuffer::crcPush(data_ptr& one){
+bool DataBuffer::crcPush(data_ptr &one) {
 	std::unique_lock<std::mutex> lk(mu);
 	if(q.size() >= max) {
 		q.pop();
@@ -113,22 +113,10 @@ bool DataBuffer::crcPush(data_ptr& one){
 	// s_inf("one:%p,back:%p",one.get(),q.back().get());
 	lk.unlock();
 	cv.notify_one();
-	return true;	
+	return true;
 }
-bool DataBuffer::pop(data_ptr& one){
-	if(q.empty()){
-		s_war("wait_for gotExitFlag!");
-		return false;
-	}
-	one = std::move(q.front());
-	q.pop();
-	return true;		
-}
-bool DataBuffer::wbPop(data_ptr& one){
-	std::unique_lock<std::mutex> lk(mu);
-	auto unint_dur = std::chrono::milliseconds(10);
-	cv.wait_for(lk,unint_dur, [&]()->bool{return (!q.empty() || gotExitFlag);});
-	if(gotExitFlag){
+bool DataBuffer::pop(data_ptr &one) {
+	if(q.empty()) {
 		s_war("wait_for gotExitFlag!");
 		return false;
 	}
@@ -136,16 +124,28 @@ bool DataBuffer::wbPop(data_ptr& one){
 	q.pop();
 	return true;
 }
-bool DataBuffer::pop(data_ptr& one,size_t _secs){
+bool DataBuffer::wbPop(data_ptr &one) {
+	std::unique_lock<std::mutex> lk(mu);
+	auto unint_dur = std::chrono::milliseconds(10);
+	cv.wait_for(lk, unint_dur, [&]()->bool{return (!q.empty() || gotExitFlag);});
+	if(gotExitFlag) {
+		s_war("wait_for gotExitFlag!");
+		return false;
+	}
+	one = std::move(q.front());
+	q.pop();
+	return true;
+}
+bool DataBuffer::pop(data_ptr &one, size_t _secs) {
 	std::unique_lock<std::mutex> lk(mu);
 	auto unint_dur = std::chrono::milliseconds(10);
 	int count = std::chrono::seconds(_secs) / unint_dur;
-	for(int i = 0;i < count;i++){
-		cv.wait_for(lk,unint_dur, [&]()->bool{return (!q.empty() || gotExitFlag);});
-		if(gotExitFlag){
+	for(int i = 0; i < count; i++) {
+		cv.wait_for(lk, unint_dur, [&]()->bool{return (!q.empty() || gotExitFlag);});
+		if(gotExitFlag) {
 			return false;
 		}
-		if(!q.empty()){
+		if(!q.empty()) {
 			one = std::move(q.front());
 			q.pop();
 			return true;
@@ -153,10 +153,10 @@ bool DataBuffer::pop(data_ptr& one,size_t _secs){
 	}
 	return false;
 }
-std::size_t DataBuffer::size(){
+std::size_t DataBuffer::size() {
 	std::unique_lock<std::mutex> lk(mu);
 	return q.size();
 }
-void DataBuffer::stop(){
+void DataBuffer::stop() {
 	gotExitFlag = true;
 }

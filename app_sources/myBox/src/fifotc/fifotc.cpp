@@ -21,7 +21,7 @@
 #define PLY_PCM_DUMP_FIFO "/tmp/ply.fifo"
 #define REC_PCM_DUMP_FIFO "/tmp/rec.fifo"
 using namespace std::chrono;
-enum class SocktState{
+enum class SocktState {
 	min = -1,
 	rAble,
 	wAble,
@@ -37,8 +37,8 @@ static int help_info(int argc, char *argv[]) {
 	s_err("\t-h show help");
 	return 0;
 }
-int fifotc_main(int argc,char* argv[]){
-	int opt  =-1;
+int fifotc_main(int argc, char *argv[]) {
+	int opt  = -1;
 	while ((opt = getopt(argc, argv, "l:p:h")) != -1) {
 		switch (opt) {
 		case 'l':
@@ -50,39 +50,39 @@ int fifotc_main(int argc,char* argv[]){
 		default: /* '?' */
 			return help_info(argc, argv);
 		}
-	}		
-	FILE* fp = fopen("222.pcm","wb");
-	if(!fp){
-		show_errno(0,"open");
+	}
+	FILE *fp = fopen("222.pcm", "wb");
+	if(!fp) {
+		show_errno(0, "open");
 		return -1;
 	}
-	#define BUF_BYTES (PIPE_BUF)
+#define BUF_BYTES (PIPE_BUF)
 	char buf[BUF_BYTES];
 	size_t size = sizeof(buf);
 
-	FILE* rfp = fopen(REC_PCM_DUMP_FIFO,"rb");
-	if(!rfp){
-		show_errno(0,REC_PCM_DUMP_FIFO);
-		return -1;		
+	FILE *rfp = fopen(REC_PCM_DUMP_FIFO, "rb");
+	if(!rfp) {
+		show_errno(0, REC_PCM_DUMP_FIFO);
+		return -1;
 	}
-	int rsize = 0,wsize = 0;
-	do{		
-		rsize = fread(buf,1,size,rfp);
-		if(rsize <=0 ){
-			if(feof(rfp)){
+	int rsize = 0, wsize = 0;
+	do {
+		rsize = fread(buf, 1, size, rfp);
+		if(rsize <= 0 ) {
+			if(feof(rfp)) {
 				s_war("got eof!");
 				break;
 			}
-			show_errno(0,"open");
+			show_errno(0, "open");
 			return -1;
 		}
-		wsize = fwrite(buf,1,rsize,fp);
-		if(wsize < rsize){
-			show_errno(0,"fwrite");
+		wsize = fwrite(buf, 1, rsize, fp);
+		if(wsize < rsize) {
+			show_errno(0, "fwrite");
 			return -1;
 		}
-	}while(!feof(rfp));
+	} while(!feof(rfp));
 	fclose(fp);
 	fclose(rfp);
-    return 0;
+	return 0;
 }

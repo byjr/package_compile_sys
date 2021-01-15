@@ -4,27 +4,27 @@
 #include <cppUtils/MTQueue/MTQueue.h>
 #include <thread>
 #include <atomic>
-class RtPlayerPar{
+class RtPlayerPar {
 public:
-	alsa_args_t* pRecPar;
-	alsa_args_t* pPlyPar;
-	MTQueuePar* pMTQPar;
+	alsa_args_t *pRecPar;
+	alsa_args_t *pPlyPar;
+	MTQueuePar *pMTQPar;
 	size_t mChunkTimeMs;
 };
-class RtPlayer{
-	RtPlayerPar* mPar;
-	alsa_ctrl_t* mRec;
-	alsa_ctrl_t* mPly;
+class RtPlayer {
+	RtPlayerPar *mPar;
+	alsa_ctrl_t *mRec;
+	alsa_ctrl_t *mPly;
 	std::thread mPlyTrd;
 	std::thread mRecTrd;
-	MTQueue* mMTQ;
+	MTQueue *mMTQ;
 	std::atomic<bool> mPauseFlag;
 	std::atomic<bool> mFullFlag;
 	size_t mChunkBytes;
 public:
-	RtPlayer(RtPlayerPar* par);
+	RtPlayer(RtPlayerPar *par);
 	~RtPlayer();
 	void pause();
 	void resume();
-};	
+};
 #endif

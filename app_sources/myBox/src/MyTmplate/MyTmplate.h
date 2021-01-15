@@ -1,16 +1,16 @@
 #ifndef _APP_SOURCES_MYBOX_SRC_ONE2MULTI_ONE2MULTI_H_
 #define _APP_SOURCES_MYBOX_SRC_ONE2MULTI_ONE2MULTI_H_
 #include <memory>
-namespace cppUtils{
-	struct MyTmplatePar{
-		
+namespace cppUtils {
+	struct MyTmplatePar {
+
 	};
-	class MyTmplate{
+	class MyTmplate {
 		std::shared_ptr<MyTmplatePar> mPar;
-		bool isReadyFlag,gotExitedFlag;
+		bool mIsReadyFlag, mGotExitFlag;
 	public:
 		bool isReady();
-		MyTmplate(std::shared_ptr<MyTmplatePar>& par);
+		MyTmplate(std::shared_ptr<MyTmplatePar> &par);
 		~MyTmplate();
 	};
 }

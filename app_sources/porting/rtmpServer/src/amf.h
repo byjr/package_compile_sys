@@ -78,36 +78,32 @@ public:
 	AMFValue(const AMFValue &from);
 	~AMFValue();
 
-	AMFType type() const { return m_type; }
+	AMFType type() const {
+		return m_type;
+	}
 
-	std::string as_string() const
-	{
+	std::string as_string() const {
 		assert(m_type == AMF_STRING);
 		return *m_value.string;
 	}
-	double as_number() const
-	{
+	double as_number() const {
 		assert(m_type == AMF_NUMBER);
 		return m_value.number;
 	}
-	double as_integer() const
-	{
+	double as_integer() const {
 		assert(m_type == AMF_INTEGER);
 		return m_value.integer;
 	}
-	bool as_boolean() const
-	{
+	bool as_boolean() const {
 		assert(m_type == AMF_BOOLEAN);
 		return m_value.boolean;
 	}
-	amf_object_t as_object() const
-	{
+	amf_object_t as_object() const {
 		assert(m_type == AMF_OBJECT);
 		return *m_value.object;
 	}
 
-	AMFValue get(const std::string &s) const
-	{
+	AMFValue get(const std::string &s) const {
 		assert(m_type == AMF_OBJECT);
 		amf_object_t::const_iterator i = m_value.object->find(s);
 		if (i == m_value.object->end())
@@ -115,8 +111,7 @@ public:
 		return i->second;
 	}
 
-	void set(const std::string &s, const AMFValue &val)
-	{
+	void set(const std::string &s, const AMFValue &val) {
 		assert(m_type == AMF_OBJECT);
 		m_value.object->insert(std::make_pair(s, val));
 	}

@@ -10,45 +10,45 @@
 #include "DlnaDmrInterfaceOutput.h"
 
 namespace duerOSDcsApp {
-namespace dueros_dlna {
+	namespace dueros_dlna {
 
-class DlnaDmrSdk {
-public:
-    DlnaDmrSdk();
+		class DlnaDmrSdk {
+		public:
+			DlnaDmrSdk();
 
-    void add_output_module(std::shared_ptr<IOutput> output_module);
+			void add_output_module(std::shared_ptr<IOutput> output_module);
 
-    void set_uuid(std::string uuid);
+			void set_uuid(std::string uuid);
 
-    std::string get_uuid();
+			std::string get_uuid();
 
-    void set_friendly_name(std::string name);
+			void set_friendly_name(std::string name);
 
-    std::string get_friendly_name();
+			std::string get_friendly_name();
 
-    void set_listen_port(int port);
+			void set_listen_port(int port);
 
-    int get_listen_port();
+			int get_listen_port();
 
-    int start();
+			int start();
 
-    int stop();
+			int stop();
 
-private:
-    void param_init();
+		private:
+			void param_init();
 
-    void param_reset();
+			void param_reset();
 
-    static void log_variable_change(void* userdata, int var_num,
-                                    const char* variable_name,
-                                    const char* old_value,
-                                    const char* variable_value);
+			static void log_variable_change(void *userdata, int var_num,
+											const char *variable_name,
+											const char *old_value,
+											const char *variable_value);
 
-private:
-    int _listen_port;
-    std::string _uuid;
-    std::string _friendly_name;
-};
-}
+		private:
+			int _listen_port;
+			std::string _uuid;
+			std::string _friendly_name;
+		};
+	}
 }
 #endif //DLNA_DMR_SDK_H

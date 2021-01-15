@@ -7,14 +7,14 @@
 #include <atomic>
 namespace cppUtils {
 	class data_unit;
-	typedef std::shared_ptr<data_unit> data_ptr;	
+	typedef std::shared_ptr<data_unit> data_ptr;
 	class data_unit {
 		char *mData;
 		size_t mSize;
 		size_t mCapacity;
 	public:
 		~data_unit();
-		data_unit(data_ptr& data);
+		data_unit(data_ptr &data);
 		data_unit(const void *data, size_t size);
 		data_unit(size_t size, char ch);
 		data_unit(size_t size);

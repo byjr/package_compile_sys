@@ -12,8 +12,8 @@
 #include <thread>
 #include <sstream>
 #include <fstream>
-#include <lzUtils/common/fp_op.h>	
-#include <lzUtils/base.h>	
+#include <lzUtils/common/fp_op.h>
+#include <lzUtils/base.h>
 #include <sys/epoll.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -35,7 +35,7 @@ static int help_info(int argc, char *argv[]) {
 int epollfd = -1;
 bool gotExitFlag = false;
 size_t retryMax = 10;
-int create_listen_fd(){
+int create_listen_fd() {
 	int ret = 0;
 	int yes = 1;
 	char addr_service[8] = {0};
@@ -82,30 +82,31 @@ int create_listen_fd(){
 		return -1;
 	}
 	freeaddrinfo(result);
-	if(listen(mSocket, SOCK_MAX_CONN) != 0){
+	if(listen(mSocket, SOCK_MAX_CONN) != 0) {
 		show_errno(0, "listen");
 		close(mSocket);
 		return -1;
-	}	
-	return mSocket;	
+	}
+	return mSocket;
 }
 
-bool getline(std::string& line,int fd){
-	char buf[LINE_BUFFER_SIZE+1];
+bool getline(std::string &line, int fd) {
+	char buf[LINE_BUFFER_SIZE + 1];
 	std::size_t end = std::string::npos;
 	ssize_t res = 0;
 	line = "";
-	size_t retryCount = 0;s_inf("read fd=%d",fd);
-	for(;!gotExitFlag;){
+	size_t retryCount = 0;
+	s_inf("read fd=%d", fd);
+	for(; !gotExitFlag;) {
 		// res = read(fd,buf,sizeof(buf));
-		res = read(fd,buf,LINE_BUFFER_SIZE);
-		if(res <= 0){
-			show_errno(0,"read failed");
-			s_err("res=%d",res);
-			if(errno == EAGAIN || errno == EWOULDBLOCK ||errno == EINTR){
-				s_err("retry count %d ...",retryCount);
-				if(++retryCount < retryMax){
-					usleep(100*1000);
+		res = read(fd, buf, LINE_BUFFER_SIZE);
+		if(res <= 0) {
+			show_errno(0, "read failed");
+			s_err("res=%d", res);
+			if(errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR) {
+				s_err("retry count %d ...", retryCount);
+				if(++retryCount < retryMax) {
+					usleep(100 * 1000);
 					continue;
 				}
 			}
@@ -113,91 +114,91 @@ bool getline(std::string& line,int fd){
 		}
 		retryCount = 0;
 		buf[res] = 0;
-		s_inf("read data:%s",buf);
+		s_inf("read data:%s", buf);
 		line += buf;
 		end = line.find(LINE_END_MARK);
-		if(end == line.npos){
+		if(end == line.npos) {
 			continue;
 		}
 	}
-	if(line == LINE_END_MARK){
+	if(line == LINE_END_MARK) {
 	}
-	line = line.substr(0,end);
-	if(gotExitFlag){
+	line = line.substr(0, end);
+	if(gotExitFlag) {
 		return false;
-	}	
+	}
 	return true;
 }
-void do_use_fd(int fd){
+void do_use_fd(int fd) {
 	std::string line;
-	if(getline(line,fd) == false){
+	if(getline(line, fd) == false) {
 		s_err("getline false！");
 		return;
 	}
 	s_inf(line.data());
 }
-int epoll_run(){
-	#define MAX_EVENTS 10
+int epoll_run() {
+#define MAX_EVENTS 10
 	struct epoll_event ev, events[MAX_EVENTS];
 	int listen_sock, conn_sock, nfds;
 	listen_sock = create_listen_fd();
-	if(listen_sock < 0){
+	if(listen_sock < 0) {
 		s_err("");
-        exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	/* Code to set up listening socket, 'listen_sock',
 	  (socket(), bind(), listen()) omitted */
 
 	epollfd = epoll_create1(0);
 	if (epollfd == -1) {
-	   perror("epoll_create1");
-	   exit(EXIT_FAILURE);
+		perror("epoll_create1");
+		exit(EXIT_FAILURE);
 	}
 
 	ev.events = EPOLLIN;
 	ev.data.fd = listen_sock;
 	if (epoll_ctl(epollfd, EPOLL_CTL_ADD, listen_sock, &ev) == -1) {
-	   perror("epoll_ctl: listen_sock");
-	   exit(EXIT_FAILURE);
+		perror("epoll_ctl: listen_sock");
+		exit(EXIT_FAILURE);
 	}
 
 	for (;;) {
-	   nfds = epoll_wait(epollfd, events, MAX_EVENTS, -1);
-	   if (nfds == -1) {
-		   perror("epoll_wait");
-		   exit(EXIT_FAILURE);
-	   }
+		nfds = epoll_wait(epollfd, events, MAX_EVENTS, -1);
+		if (nfds == -1) {
+			perror("epoll_wait");
+			exit(EXIT_FAILURE);
+		}
 		int n = 0;
 		struct sockaddr local;
 		socklen_t addrlen = sizeof(local);
-	   for (n = 0; n < nfds; ++n) {
-		   if (events[n].data.fd == listen_sock) {
-			   conn_sock = accept(listen_sock,
-							   (struct sockaddr *) &local, &addrlen);
-			   if (conn_sock == -1) {
-				   perror("accept");
-				   exit(EXIT_FAILURE);
-			   }
-			   // setnonblocking(conn_sock);
-				if(fd_set_flag(conn_sock,O_NONBLOCK)< 0){
+		for (n = 0; n < nfds; ++n) {
+			if (events[n].data.fd == listen_sock) {
+				conn_sock = accept(listen_sock,
+								   (struct sockaddr *) &local, &addrlen);
+				if (conn_sock == -1) {
+					perror("accept");
+					exit(EXIT_FAILURE);
+				}
+				// setnonblocking(conn_sock);
+				if(fd_set_flag(conn_sock, O_NONBLOCK) < 0) {
 					perror("fd_set_flag");
-				   exit(EXIT_FAILURE);
-				}			   
-			   ev.events = EPOLLIN | EPOLLET;
-			   ev.data.fd = conn_sock;
-			   if (epoll_ctl(epollfd, EPOLL_CTL_ADD, conn_sock,
-						   &ev) == -1) {
-				   perror("epoll_ctl: conn_sock");
-				   exit(EXIT_FAILURE);
-			   }
-		   } else {
-			   do_use_fd(events[n].data.fd);
-		   }
-	   }
-	}		
+					exit(EXIT_FAILURE);
+				}
+				ev.events = EPOLLIN | EPOLLET;
+				ev.data.fd = conn_sock;
+				if (epoll_ctl(epollfd, EPOLL_CTL_ADD, conn_sock,
+							  &ev) == -1) {
+					perror("epoll_ctl: conn_sock");
+					exit(EXIT_FAILURE);
+				}
+			} else {
+				do_use_fd(events[n].data.fd);
+			}
+		}
+	}
 }
-int EpollTest_main(int argc,char* argv[]){
-	int opt  =-1;
+int EpollTest_main(int argc, char *argv[]) {
+	int opt  = -1;
 	while ((opt = getopt(argc, argv, "l:p:h")) != -1) {
 		switch (opt) {
 		case 'l':
@@ -209,6 +210,6 @@ int EpollTest_main(int argc,char* argv[]){
 		default: /* '?' */
 			return help_info(argc, argv);
 		}
-	}	
+	}
 	return epoll_run();
 }
