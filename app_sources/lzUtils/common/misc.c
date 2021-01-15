@@ -211,7 +211,7 @@ int my_popen ( const char *fmt, ... ) {
 		fcntl ( fileno ( pfile ), F_SETFD, FD_CLOEXEC );
 #endif
 		while ( !feof ( pfile ) ) {
-			fgets ( buf, sizeof buf, pfile );
+			if(fgets ( buf, sizeof buf, pfile ));
 		}
 		//              s_inf("%s",buf);
 		status = pclose ( pfile );
@@ -274,7 +274,7 @@ char *cmd_res_get ( char *buf, size_t bytes, const char *cmd, ... ) {
 	va_list args;
 	va_start ( args, ( char * ) cmd );
 	char *cmdBuf = NULL;
-	vasprintf ( &cmdBuf, cmd, args );
+	if(vasprintf ( &cmdBuf, cmd, args ));
 	va_end ( args );
 	//打开命令执行句柄
 	FILE *fp = popen ( cmdBuf, "r" );
@@ -330,7 +330,7 @@ int cmd_excute(const char *fmt, ...) {
 	char *cmd = NULL;
 	va_list args;
 	va_start(args, fmt);
-	vasprintf(&cmd, fmt, args);
+	if(vasprintf(&cmd, fmt, args));
 	va_end(args);
 	if(!cmd) {
 		s_err("%s/vasprintf oom", __func__);
@@ -605,7 +605,7 @@ size_t base64Decode ( char *base64, size_t baseSize, char *bin, size_t binSize )
 int unique_process_lock(const char *name) {
 	int ret = -1;
 	char *path = NULL;
-	asprintf(&path, "/var/run/%s.pid", get_last_name(name));
+	if(asprintf(&path, "/var/run/%s.pid", get_last_name(name)));
 	if(!path) {
 		s_err("%s/asprintf oom", __func__);
 		exit(-1);
@@ -625,7 +625,7 @@ int unique_process_lock(const char *name) {
 		goto exit;
 	}
 	char *ctx = NULL;
-	asprintf(&ctx, "%d", getpid());
+	if(asprintf(&ctx, "%d", getpid()));
 	if(!ctx) {
 		s_err("%s/asprintf oom", __func__);
 		exit(-1);
@@ -650,7 +650,7 @@ exit:
 int is_process_has_locked(const char *name) {
 	int ret = -1;
 	char *path = NULL;
-	asprintf(&path, "/var/run/%s.pid", get_last_name(name));
+	if(asprintf(&path, "/var/run/%s.pid", get_last_name(name)));
 	if(!path) {
 		s_err("%s/asprintf oom", __func__);
 		goto exit;

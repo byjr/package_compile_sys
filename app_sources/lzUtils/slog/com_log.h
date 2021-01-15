@@ -11,6 +11,7 @@ extern "C" {
 #include <stdarg.h>
 #include <pthread.h>
 #include <sys/time.h>
+#include <unistd.h>
 
 #define _STR(s)     #s
 #define STR(s)      _STR(s)

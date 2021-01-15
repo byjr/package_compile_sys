@@ -17,7 +17,7 @@ link_directories(${CMAKE_LIBRARY_PATH})
 
 add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCES})
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME}	
 	lzUtils
 )
 

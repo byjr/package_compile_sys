@@ -9,6 +9,7 @@
 #define SOCK_MAX_CONN 1024
 bool TcpServer::prepare(){
 	int ret = 0;
+#if 0	
 	int yes = 1;
 	char addr_service[8] = {0};
 	sprintf(addr_service, "%d", mPar->port);
@@ -54,6 +55,22 @@ bool TcpServer::prepare(){
 		return false;
 	}
 	freeaddrinfo(result);
+#else
+	mSocket = socket(AF_INET, SOCK_STREAM, 0);
+	if(mSocket < 0){
+		show_errno(0,"socket");
+		return false;
+	}
+	struct sockaddr_in addr;
+	addr.ai_family = AF_INET;
+	addr.sin_port = htons(10080);
+	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	if(bind(mSocket, (struct sockaddr *)&addr, sizeof(addr)) == -1){
+		show_errno(0,"bind");
+		close(mSocket);
+		return false;		
+	}
+#endif
 	if(listen(mSocket, SOCK_MAX_CONN) != 0){
 		show_errno(0, "listen");
 		close(mSocket);

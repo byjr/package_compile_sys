@@ -149,7 +149,7 @@ bool dll_fifo_erase ( dll_fifo_t *ptr, void *data ) {
 		}
 	}
 	if ( ! ( idx && ( idx->data == data ) ) ) {
-		s_err ( "can't find node: 0x%08x", ( unsigned int ) data );
+		s_err ( "can't find node: %p", data );
 		return false;
 	}
 	if ( idx->prev ) {
@@ -208,7 +208,7 @@ void *dll_fifo_query ( dll_fifo_t *ptr, ssize_t n ) {
 			if ( ptr->mPar->dat_show ) {
 				ptr->mPar->dat_show ( ptr->mPar->dat_par, nd->data );
 			} else {
-				s_inf ( "nd[%u]:data=0x%08x", i, ( unsigned int ) nd->data );
+				s_inf ( "nd[%u]:data=%p", i,nd->data );
 			}
 		}
 		return NULL;
@@ -218,7 +218,7 @@ void *dll_fifo_query ( dll_fifo_t *ptr, ssize_t n ) {
 			if ( ptr->mPar->dat_show ) {
 				ptr->mPar->dat_show ( ptr->mPar->dat_par, nd->data );
 			} else {
-				s_inf ( "dll_fifo[%u]=%d", i, ( int ) nd->data );
+				s_inf ( "dll_fifo[%u]=%p", i, nd->data );
 			}
 			return nd->data;
 		}
@@ -247,7 +247,7 @@ void *dll_fifo_rquery ( dll_fifo_t *ptr, ssize_t n ) {
 			if ( ptr->mPar->dat_show ) {
 				ptr->mPar->dat_show ( ptr->mPar->dat_par, nd->data );
 			} else {
-				s_inf ( "nd[%u]:data=0x%08x", i, ( unsigned int ) nd->data );
+				s_inf ( "nd[%u]:data=%p", i,nd->data );
 			}
 		}
 		return NULL;
@@ -258,7 +258,7 @@ void *dll_fifo_rquery ( dll_fifo_t *ptr, ssize_t n ) {
 			if ( ptr->mPar->dat_show ) {
 				ptr->mPar->dat_show ( ptr->mPar->dat_par, nd->data );
 			} else {
-				s_inf ( "dll_fifo[%u]=%d", i, ( int ) nd->data );
+				s_inf ( "dll_fifo[%u]=%p", i, nd->data );
 			}
 			return nd->data;
 		}

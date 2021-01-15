@@ -10,7 +10,7 @@
 #include <vector>
 #include "shrb.h"
 static char* mBuffer = NULL;
-static size_t mSize = 10*1024 + sizeof(ShareMemSync);
+static size_t mSize = 8*1024 + sizeof(ShareMemSync);
 #define SHMEME_PATCH "/shm_test"
 static char* shrb_create(const char *name, size_t size) {
 	int fail = 0;
@@ -125,7 +125,7 @@ int shrbd_main(int argc,char* argv[]){
 			}
 			show_errno(0,read);			
 		}		
-		while(!mShm->write(buf.data(),ifs.gcount())){
+		while(!mShm->write(buf.data(),ifs.gcount(),100)){
 			usleep(10*1000);
 		}
 		offset += ifs.gcount();
@@ -156,6 +156,7 @@ int shrbc_main(int argc,char* argv[]){
 	auto mShm = (ShareMemSync*) mBuffer;
 	mShm->checkInfo();
 	std::ofstream ofs("out.bin",std::ios::binary);
+
 	if(ofs.is_open() == false){
 		s_err("");
 		return -1;

@@ -15,7 +15,7 @@ char *lzUtils_getTimeMs ( char *ts, size_t size ) {
 	if ( gettimeofday ( &tv, NULL ) < 0 ) {
 		return NULL;
 	}
-	snprintf ( ts, size, "%08lu.%06lu", tv.tv_sec % 100000000, tv.tv_usec );
+	snprintf ( ts, size, "%09lu.%03lu", tv.tv_sec, tv.tv_usec/1000 );
 	return ts;
 }
 int lzUtils_logInit ( const char *ctrl, const char *path ) {
@@ -44,7 +44,7 @@ void lzUtils_slog ( log_type_t n, char lock, char *log_ctrl_set, const char *ts,
 #ifdef _WIN_API_
 		fprintf ( fp, "[%s%s %s:%d]:", ts, logCtrlArray[n].name, get_last_name ( file ), line );
 #else
-		fprintf ( fp, "[%s%s%s\033[0m %s:%d]:", ts, logCtrlArray[n].color, logCtrlArray[n].name, get_last_name ( file ), line );
+		fprintf ( fp, "%s [(%d/%ld) %s%s\033[0m %s:%d]:",ts,getpid(),syscall(SYS_gettid),logCtrlArray[n].color, logCtrlArray[n].name, get_last_name ( file ), line );
 
 #endif
 		va_start ( args, fmt );

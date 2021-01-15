@@ -57,7 +57,7 @@ bool TcpServer::prepare(){
 	return true;		
 }
 bool TcpServer::run(){s_inf(__func__);
-	if(set_thread_name(NULL,"TcpServer")< 0){
+	if(set_thread_name(0,"TcpServer")< 0){
 		s_err("set_thread_name:TcpServer failed!");
 	}
 	mEpFd = epoll_create1(0);

@@ -403,7 +403,7 @@ bool TaskHandler::doHandle(){
 bool TaskHandler::run(){
 	bool succeed = false;
 	do{
-		if(set_thread_name(NULL,"TaskHandler")< 0){
+		if(set_thread_name(0,"TaskHandler")< 0){
 			s_err("set_thread_name:TaskHandler failed!");
 			break;
 		}

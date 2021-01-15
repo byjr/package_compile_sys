@@ -29,7 +29,6 @@ extern int fexec ( char *argl, char block );
 extern int my_popen ( const char *fmt, ... );
 extern int my_popen_get ( char *rbuf, int rbuflen, const char *cmd, ... );
 int cmd_excute(const char *fmt, ...);
-char *cmd_res_get(char *buf, size_t bytes, const char *cmd, ...);
 extern int pkill ( const char *name, int sig );
 extern size_t get_pids_by_name ( const char *pidName, pid_t **pp_pid, size_t max );
 char **argl_to_argv ( char argl[], int *pArgc );

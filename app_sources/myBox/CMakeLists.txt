@@ -24,6 +24,7 @@ link_directories(
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
 
 target_link_libraries(${PROJECT_NAME}
+	cppUtils
 	lzUtils
 	pthread
 	rt

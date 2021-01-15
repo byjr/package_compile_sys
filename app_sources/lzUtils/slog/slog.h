@@ -54,12 +54,12 @@ void lzUtils_rlog (
 
 //这一组宏 都是带锁的，适用于多线程程序调试，单不能用于信号回调函数中
 #define s_raw(x...)     rlog(_RAW,1,x);//以原始方式打印，但是带锁，也可以进行开关操作
-#define s_err(x...)     dlog(_ERR,1,x);
-#define s_war(x...)     dlog(_WAR,1,x);
-#define s_inf(x...)     dlog(_INF,1,x);
-#define s_dbg(x...)     dlog(_DBG,1,x);
-#define s_trc(x...)     dlog(_TRC,1,x);
-
+#define s_err(x...)     tlog(_ERR,1,x);
+#define s_war(x...)     tlog(_WAR,1,x);
+#define s_inf(x...)     tlog(_INF,1,x);
+#define s_dbg(x...)     tlog(_DBG,1,x);
+#define s_trc(x...)     tlog(_TRC,1,x);
+#define s_errn()     	tlog(_TRC,1,"got error!");
 //这一组宏 都是不带锁的，适用于信号回调函数中，但不能用于多线程程序调试
 #define raw_nl(x...)    rlog(_RAW,0,x);
 #define err_nl(x...)    dlog(_ERR,0,x);
@@ -67,13 +67,14 @@ void lzUtils_rlog (
 #define inf_nl(x...)    dlog(_INF,0,x);
 #define dbg_nl(x...)    dlog(_DBG,0,x);
 #define trc_nl(x...)    dlog(_TRC,0,x);
-
+#define errn_l()     	dlog(_TRC,0,"got error!");
 
 #define err_t(x...)     tlog(_ERR,1,x);
 #define war_t(x...)     tlog(_WAR,1,x);
 #define inf_t(x...)     tlog(_INF,1,x);
 #define dbg_t(x...)     tlog(_DBG,1,x);
 #define trc_t(x...)     tlog(_TRC,1,x);
+#define errn_t()     	tlog(_TRC,1,"got error!");
 
 #define disp_syserr(ret, msg) ({\
 	int num=(ret);\

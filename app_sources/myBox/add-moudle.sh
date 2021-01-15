@@ -33,14 +33,14 @@ function add_main_ctt(){
 function make_dst_archive(){
 	cd $work_dir
 	rm -rf $dst_name
-	cp -rf MyClass $dst_name
+	cp -rf MyTmplate $dst_name
 	local sub_files=`find $dst_name -type f`
 	local new_file_name=""
 	for i in $sub_files
 	do
-		sed -i "s/MyClass/$dst_name/g" $i
+		sed -i "s/MyTmplate/$dst_name/g" $i
 		[ $? != 0 ] && return 1
-		new_file_name=`echo $i | sed "s/MyClass/$dst_name/g"`
+		new_file_name=`echo $i | sed "s/MyTmplate/$dst_name/g"`
 		mv $i $new_file_name
 	done	
 }
